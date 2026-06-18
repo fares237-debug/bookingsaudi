@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تسجيل الدخول | بوكنق السعودية</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --dark: #0A0A0F;
+    --dark2: #13131A;
+    --dark3: #1C1C26;
+    --white: #F8F4EE;
+    --gray: #8A8A9A;
+    --green: #2ECC71;
+    --red: #E74C3C;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Tajawal',sans-serif; background:var(--dark); color:var(--white); min-height:100vh; display:flex; }
+
+  /* LEFT PANEL */
+  .left-panel {
+    flex:1; background:var(--dark2);
+    display:flex; flex-direction:column;
+    justify-content:center; align-items:center;
+    padding:60px 40px; position:relative; overflow:hidden;
+  }
+  .left-panel::before {
+    content:''; position:absolute; inset:0;
+    background:radial-gradient(ellipse at 30% 50%, rgba(201,168,76,0.08) 0%, transparent 60%),
+               radial-gradient(ellipse at 80% 20%, rgba(201,168,76,0.05) 0%, transparent 50%);
+  }
+  .left-panel::after {
+    content:'🏨'; position:absolute; bottom:-40px; left:-40px;
+    font-size:300px; opacity:0.03;
+  }
+  .panel-content { position:relative; z-index:1; text-align:center; max-width:420px; }
+  .panel-logo { display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:48px; }
+  .logo-icon { width:52px; height:52px; background:linear-gradient(135deg,var(--gold),var(--gold-light)); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:24px; }
+  .logo-text { font-size:24px; font-weight:900; background:linear-gradient(135deg,var(--gold),var(--gold-light)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+
+  .panel-title { font-size:36px; font-weight:900; line-height:1.3; margin-bottom:16px; }
+  .panel-title span { background:linear-gradient(135deg,var(--gold),var(--gold-light)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .panel-desc { font-size:16px; color:var(--gray); line-height:1.8; margin-bottom:48px; }
+
+  .features-list { display:flex; flex-direction:column; gap:14px; text-align:right; }
+  .feature-item { display:flex; align-items:center; gap:12px; }
+  .feature-check { width:28px; height:28px; border-radius:8px; background:rgba(46,204,113,0.15); border:1px solid rgba(46,204,113,0.3); display:flex; align-items:center; justify-content:center; color:var(--green); font-size:13px; flex-shrink:0; }
+  .feature-text { font-size:14px; color:var(--gray); }
+  .feature-text strong { color:var(--white); }
+
+  .stats-row { display:flex; gap:32px; justify-content:center; margin-top:48px; }
+  .stat { text-align:center; }
+  .stat-num { font-size:24px; font-weight:900; background:linear-gradient(135deg,var(--gold),var(--gold-light)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .stat-label { font-size:12px; color:var(--gray); margin-top:2px; }
+
+  /* RIGHT PANEL - FORM */
+  .right-panel {
+    width:480px; flex-shrink:0;
+    background:var(--dark); display:flex; flex-direction:column;
+    justify-content:center; padding:48px 40px;
+    border-right:1px solid rgba(201,168,76,0.1);
+    overflow-y:auto;
+  }
+
+  /* TABS */
+  .auth-tabs { display:flex; background:var(--dark3); border-radius:14px; padding:4px; margin-bottom:32px; }
+  .auth-tab {
+    flex:1; padding:12px; text-align:center; border-radius:10px;
+    cursor:pointer; font-size:15px; font-weight:700;
+    transition:0.3s; color:var(--gray); border:none;
+    font-family:'Tajawal',sans-serif; background:transparent;
+  }
+  .auth-tab.active { background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--dark); }
+
+  /* FORMS */
+  .auth-form { display:none; animation:fadeIn 0.3s ease; }
+  .auth-form.show { display:block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+  .form-title { font-size:24px; font-weight:900; margin-bottom:6px; }
+  .form-subtitle { font-size:14px; color:var(--gray); margin-bottom:28px; }
+
+  /* SOCIAL LOGIN */
+  .social-btns { display:flex; gap:10px; margin-bottom:20px; }
+  .social-btn {
+    flex:1; display:flex; align-items:center; justify-content:center; gap:8px;
+    background:var(--dark3); border:1px solid rgba(255,255,255,0.1);
+    border-radius:12px; padding:12px; cursor:pointer; transition:0.3s;
+    font-family:'Tajawal',sans-serif; font-size:13px; color:var(--white);
+    font-weight:600;
+  }
+  .social-btn:hover { border-color:rgba(201,168,76,0.3); background:rgba(201,168,76,0.05); }
+  .social-icon { font-size:20px; }
+
+  .divider { display:flex; align-items:center; gap:12px; margin:20px 0; }
+  .divider::before, .divider::after { content:''; flex:1; height:1px; background:rgba(255,255,255,0.08); }
+  .divider span { font-size:12px; color:var(--gray); }
+
+  /* FIELDS */
+  .field { margin-bottom:16px; }
+  .field label { display:block; font-size:12px; color:var(--gold); font-weight:700; margin-bottom:6px; }
+  .input-wrap { position:relative; }
+  .input-wrap .input-icon { position:absolute; right:14px; top:50%; transform:translateY(-50%); font-size:16px; pointer-events:none; }
+  .input-wrap .input-toggle { position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:16px; cursor:pointer; }
+  .field input, .field select {
+    width:100%; background:var(--dark3);
+    border:1.5px solid rgba(255,255,255,0.08);
+    border-radius:12px; padding:13px 44px 13px 44px;
+    color:var(--white); font-family:'Tajawal',sans-serif;
+    font-size:14px; outline:none; transition:0.3s;
+  }
+  .field input:focus, .field select:focus { border-color:var(--gold); box-shadow:0 0 0 3px rgba(201,168,76,0.1); }
+  .field input.error { border-color:var(--red); }
+  .field input.success { border-color:var(--green); }
+  .field-error { font-size:11px; color:var(--red); margin-top:5px; display:none; }
+  .field-error.show { display:block; }
+
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+  /* USER TYPE */
+  .user-type-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px; }
+  .user-type-btn {
+    padding:14px; border-radius:12px; cursor:pointer; transition:0.3s;
+    border:1.5px solid rgba(255,255,255,0.08); background:var(--dark3);
+    text-align:center; font-family:'Tajawal',sans-serif;
+  }
+  .user-type-btn:hover { border-color:rgba(201,168,76,0.3); }
+  .user-type-btn.selected { border-color:var(--gold); background:rgba(201,168,76,0.1); }
+  .user-type-icon { font-size:24px; margin-bottom:6px; }
+  .user-type-label { font-size:13px; font-weight:700; }
+  .user-type-sub { font-size:11px; color:var(--gray); margin-top:2px; }
+
+  /* PASSWORD STRENGTH */
+  .password-strength { margin-top:8px; }
+  .strength-bars { display:flex; gap:4px; margin-bottom:4px; }
+  .strength-bar { flex:1; height:3px; border-radius:2px; background:rgba(255,255,255,0.1); transition:0.3s; }
+  .strength-label { font-size:11px; color:var(--gray); }
+
+  /* PHONE FIELD */
+  .phone-wrap { display:flex; gap:8px; }
+  .country-code {
+    background:var(--dark3); border:1.5px solid rgba(255,255,255,0.08);
+    border-radius:12px; padding:13px 12px; color:var(--white);
+    font-family:'Tajawal',sans-serif; font-size:14px; outline:none;
+    white-space:nowrap; cursor:pointer; transition:0.3s;
+  }
+  .country-code:hover { border-color:var(--gold); }
+
+  /* OTP */
+  .otp-section { display:none; }
+  .otp-section.show { display:block; }
+  .otp-inputs { display:flex; gap:10px; justify-content:center; margin:20px 0; }
+  .otp-input {
+    width:52px; height:56px; text-align:center;
+    background:var(--dark3); border:1.5px solid rgba(255,255,255,0.1);
+    border-radius:12px; color:var(--white); font-size:22px; font-weight:800;
+    font-family:'Tajawal',sans-serif; outline:none; transition:0.3s;
+  }
+  .otp-input:focus { border-color:var(--gold); box-shadow:0 0 0 3px rgba(201,168,76,0.1); }
+
+  /* CHECKBOX */
+  .checkbox-wrap { display:flex; align-items:flex-start; gap:10px; cursor:pointer; margin-bottom:20px; }
+  .checkbox-wrap input { display:none; }
+  .checkbox { width:20px; height:20px; border-radius:6px; border:1.5px solid rgba(255,255,255,0.2); flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:0.2s; margin-top:1px; }
+  .checkbox-wrap input:checked ~ .checkbox { background:var(--gold); border-color:var(--gold); color:var(--dark); }
+  .checkbox-wrap input:checked ~ .checkbox::after { content:'✓'; font-size:12px; font-weight:800; }
+  .checkbox-label { font-size:13px; color:var(--gray); line-height:1.6; }
+  .checkbox-label a { color:var(--gold); text-decoration:none; }
+
+  /* SUBMIT BUTTON */
+  .btn-submit {
+    width:100%; background:linear-gradient(135deg,var(--gold),var(--gold-light));
+    color:var(--dark); border:none; border-radius:14px;
+    padding:15px; font-family:'Tajawal',sans-serif;
+    font-size:16px; font-weight:900; cursor:pointer; transition:0.3s;
+    margin-bottom:16px; position:relative; overflow:hidden;
+  }
+  .btn-submit:hover { transform:translateY(-2px); box-shadow:0 10px 30px rgba(201,168,76,0.4); }
+  .btn-submit:active { transform:translateY(0); }
+  .btn-submit.loading { opacity:0.8; pointer-events:none; }
+
+  .form-footer { text-align:center; font-size:13px; color:var(--gray); }
+  .form-footer a { color:var(--gold); text-decoration:none; font-weight:700; }
+
+  /* SUCCESS STATE */
+  .success-state { display:none; text-align:center; padding:20px 0; }
+  .success-state.show { display:block; animation:fadeIn 0.4s ease; }
+  .success-icon-big { font-size:70px; margin-bottom:16px; }
+  .success-title { font-size:24px; font-weight:900; margin-bottom:8px; }
+  .success-title span { background:linear-gradient(135deg,var(--gold),var(--gold-light)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .success-desc { color:var(--gray); font-size:14px; line-height:1.7; margin-bottom:24px; }
+
+  /* FORGOT PASSWORD */
+  .forgot-link { text-align:left; margin-bottom:16px; }
+  .forgot-link a { font-size:13px; color:var(--gold); text-decoration:none; }
+
+  /* STEPS INDICATOR */
+  .reg-steps { display:flex; gap:6px; margin-bottom:24px; }
+  .reg-step { flex:1; height:3px; border-radius:2px; background:rgba(255,255,255,0.1); transition:0.3s; }
+  .reg-step.done { background:var(--gold); }
+
+  @media(max-width:900px) {
+    .left-panel { display:none; }
+    .right-panel { width:100%; border-right:none; padding:32px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LEFT PANEL -->
+<div class="left-panel">
+  <div class="panel-content">
+    <div class="panel-logo">
+      <div class="logo-icon">🏨</div>
+      <div class="logo-text">بوكنق السعودية</div>
+    </div>
+    <h1 class="panel-title">أكبر منصة حجوزات<br><span>في المملكة</span></h1>
+    <p class="panel-desc">سجّل دخولك واستمتع بأفضل تجربة حجز فنادق وشقق في السعودية</p>
+    <div class="features-list">
+      <div class="feature-item">
+        <div class="feature-check">✓</div>
+        <div class="feature-text"><strong>+5,000 عقار</strong> فنادق وشقق ومنتجعات</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-check">✓</div>
+        <div class="feature-text"><strong>أفضل سعر مضمون</strong> أو نرد الفرق</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-check">✓</div>
+        <div class="feature-text"><strong>إلغاء مجاني</strong> على معظم الحجوزات</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-check">✓</div>
+        <div class="feature-text"><strong>دعم 24/7</strong> باللغة العربية</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-check">✓</div>
+        <div class="feature-text"><strong>دفع آمن</strong> مدى، Apple Pay، STC Pay</div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-num">+500K</div><div class="stat-label">حجز ناجح</div></div>
+      <div class="stat"><div class="stat-num">4.9⭐</div><div class="stat-label">تقييم المستخدمين</div></div>
+      <div class="stat"><div class="stat-num">+100</div><div class="stat-label">مدينة سعودية</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT PANEL -->
+<div class="right-panel">
+
+  <!-- TABS -->
+  <div class="auth-tabs">
+    <button class="auth-tab active" onclick="switchTab('login')">تسجيل الدخول</button>
+    <button class="auth-tab" onclick="switchTab('register')">إنشاء حساب</button>
+  </div>
+
+  <!-- LOGIN FORM -->
+  <div class="auth-form show" id="loginForm">
+    <div class="form-title">مرحباً بعودتك 👋</div>
+    <div class="form-subtitle">سجّل دخولك للوصول إلى حجوزاتك</div>
+
+    <div class="social-btns">
+      <button class="social-btn" onclick="socialLogin('Google')">
+        <span class="social-icon">🌐</span> Google
+      </button>
+      <button class="social-btn" onclick="socialLogin('Apple')">
+        <span class="social-icon">🍎</span> Apple
+      </button>
+      <button class="social-btn" onclick="socialLogin('Twitter')">
+        <span class="social-icon">𝕏</span> Twitter
+      </button>
+    </div>
+
+    <div class="divider"><span>أو بالبريد الإلكتروني</span></div>
+
+    <div class="field">
+      <label>البريد الإلكتروني أو الجوال</label>
+      <div class="input-wrap">
+        <span class="input-icon">📧</span>
+        <input type="text" id="loginEmail" placeholder="example@email.com" oninput="validateLogin()">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>كلمة المرور</label>
+      <div class="input-wrap">
+        <span class="input-icon">🔒</span>
+        <input type="password" id="loginPass" placeholder="••••••••" oninput="validateLogin()">
+        <span class="input-toggle" onclick="togglePass('loginPass',this)">👁️</span>
+      </div>
+    </div>
+
+    <div class="forgot-link"><a href="#" onclick="showForgot()">نسيت كلمة المرور؟</a></div>
+
+    <label class="checkbox-wrap">
+      <input type="checkbox" checked>
+      <span class="checkbox"></span>
+      <span class="checkbox-label">تذكّرني على هذا الجهاز</span>
+    </label>
+
+    <button class="btn-submit" id="loginBtn" onclick="doLogin()">
+      🔑 تسجيل الدخول
+    </button>
+
+    <div class="form-footer">
+      ليس لديك حساب؟ <a href="#" onclick="switchTab('register')">إنشاء حساب مجاني</a>
+    </div>
+  </div>
+
+  <!-- REGISTER FORM -->
+  <div class="auth-form" id="registerForm">
+    <div class="form-title">إنشاء حساب جديد ✨</div>
+    <div class="form-subtitle">انضم لأكبر منصة حجوزات في السعودية</div>
+
+    <!-- STEP INDICATOR -->
+    <div class="reg-steps" id="regSteps">
+      <div class="reg-step done" id="step1bar"></div>
+      <div class="reg-step" id="step2bar"></div>
+      <div class="reg-step" id="step3bar"></div>
+    </div>
+
+    <!-- STEP 1: USER TYPE -->
+    <div id="regStep1">
+      <div style="font-size:14px;font-weight:700;margin-bottom:14px;">نوع الحساب</div>
+      <div class="user-type-grid">
+        <div class="user-type-btn selected" onclick="selectType(this,'guest')">
+          <div class="user-type-icon">🧳</div>
+          <div class="user-type-label">مسافر</div>
+          <div class="user-type-sub">أبحث عن حجوزات</div>
+        </div>
+        <div class="user-type-btn" onclick="selectType(this,'owner')">
+          <div class="user-type-icon">🏨</div>
+          <div class="user-type-label">مالك عقار</div>
+          <div class="user-type-sub">أريد إضافة عقاراتي</div>
+        </div>
+      </div>
+
+      <div class="social-btns">
+        <button class="social-btn" onclick="socialLogin('Google')">
+          <span class="social-icon">🌐</span> Google
+        </button>
+        <button class="social-btn" onclick="socialLogin('Apple')">
+          <span class="social-icon">🍎</span> Apple
+        </button>
+      </div>
+      <div class="divider"><span>أو أدخل بياناتك</span></div>
+
+      <div class="form-row">
+        <div class="field">
+          <label>الاسم الأول</label>
+          <div class="input-wrap">
+            <span class="input-icon">👤</span>
+            <input type="text" id="regFname" placeholder="محمد">
+          </div>
+        </div>
+        <div class="field">
+          <label>اسم العائلة</label>
+          <div class="input-wrap">
+            <span class="input-icon">👤</span>
+            <input type="text" id="regLname" placeholder="العتيبي">
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>البريد الإلكتروني</label>
+        <div class="input-wrap">
+          <span class="input-icon">📧</span>
+          <input type="email" id="regEmail" placeholder="example@email.com" oninput="checkEmail(this)">
+        </div>
+        <div class="field-error" id="emailError">البريد الإلكتروني مستخدم مسبقاً</div>
+      </div>
+
+      <div class="field">
+        <label>رقم الجوال</label>
+        <div class="phone-wrap">
+          <div class="country-code">🇸🇦 +966</div>
+          <div class="input-wrap" style="flex:1">
+            <span class="input-icon">📱</span>
+            <input type="tel" placeholder="5xxxxxxxx" style="padding-right:44px;">
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>كلمة المرور</label>
+        <div class="input-wrap">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="regPass" placeholder="8 أحرف على الأقل" oninput="checkStrength(this)" style="padding-left:44px;">
+          <span class="input-toggle" onclick="togglePass('regPass',this)">👁️</span>
+        </div>
+        <div class="password-strength" id="strengthMeter" style="display:none;">
+          <div class="strength-bars">
+            <div class="strength-bar" id="sb1"></div>
+            <div class="strength-bar" id="sb2"></div>
+            <div class="strength-bar" id="sb3"></div>
+            <div class="strength-bar" id="sb4"></div>
+          </div>
+          <div class="strength-label" id="strengthLabel">ضعيفة</div>
+        </div>
+      </div>
+
+      <label class="checkbox-wrap">
+        <input type="checkbox" id="termsCheck">
+        <span class="checkbox"></span>
+        <span class="checkbox-label">أوافق على <a href="#">الشروط والأحكام</a> و<a href="#">سياسة الخصوصية</a></span>
+      </label>
+
+      <button class="btn-submit" onclick="goStep2()">التالي ←</button>
+    </div>
+
+    <!-- STEP 2: OTP -->
+    <div id="regStep2" style="display:none;">
+      <div style="text-align:center;padding:10px 0 20px;">
+        <div style="font-size:48px;margin-bottom:12px;">📱</div>
+        <div style="font-size:18px;font-weight:800;margin-bottom:8px;">تحقق من رقم جوالك</div>
+        <div style="font-size:14px;color:var(--gray);">أرسلنا رمز التحقق إلى<br><strong style="color:var(--white);">+966 5x xxx xxxx</strong></div>
+      </div>
+      <div class="otp-inputs">
+        <input class="otp-input" type="text" maxlength="1" oninput="otpMove(this,0)">
+        <input class="otp-input" type="text" maxlength="1" oninput="otpMove(this,1)">
+        <input class="otp-input" type="text" maxlength="1" oninput="otpMove(this,2)">
+        <input class="otp-input" type="text" maxlength="1" oninput="otpMove(this,3)">
+        <input class="otp-input" type="text" maxlength="1" oninput="otpMove(this,4)">
+        <input class="otp-input" type="text" maxlength="1" oninput="otpMove(this,5)">
+      </div>
+      <div style="text-align:center;font-size:13px;color:var(--gray);margin-bottom:24px;">
+        لم تستلم الرمز؟ <a href="#" style="color:var(--gold);" onclick="resendOTP()">إعادة الإرسال</a>
+        <span id="otpTimer"> (59 ث)</span>
+      </div>
+      <button class="btn-submit" onclick="verifyOTP()">✅ تحقق وأكمل التسجيل</button>
+      <div style="text-align:center;margin-top:12px;"><a href="#" style="color:var(--gray);font-size:13px;" onclick="goStep1()">← رجوع</a></div>
+    </div>
+
+    <!-- STEP 3: SUCCESS -->
+    <div id="regStep3" style="display:none;">
+      <div class="success-state show">
+        <div class="success-icon-big">🎉</div>
+        <div class="success-title">تم إنشاء حسابك<br><span>بنجاح!</span></div>
+        <div class="success-desc">مرحباً بك في بوكنق السعودية!<br>الآن يمكنك حجز أفضل الفنادق والشقق بأفضل الأسعار.</div>
+        <button class="btn-submit" onclick="location.href='booking-saudi.html'">🏠 ابدأ الاستكشاف</button>
+        <div style="text-align:center;margin-top:12px;">
+          <a href="dashboard.html" style="color:var(--gold);font-size:13px;">لوحة التحكم ←</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FORGOT PASSWORD (hidden) -->
+  <div class="auth-form" id="forgotForm">
+    <div style="margin-bottom:20px;">
+      <a href="#" onclick="switchTab('login')" style="color:var(--gray);font-size:13px;text-decoration:none;">← رجوع لتسجيل الدخول</a>
+    </div>
+    <div class="form-title">استعادة كلمة المرور 🔐</div>
+    <div class="form-subtitle">أدخل بريدك الإلكتروني وسنرسل لك رابط الاستعادة</div>
+    <div class="field">
+      <label>البريد الإلكتروني</label>
+      <div class="input-wrap">
+        <span class="input-icon">📧</span>
+        <input type="email" placeholder="example@email.com">
+      </div>
+    </div>
+    <button class="btn-submit" onclick="sendReset()">📨 إرسال رابط الاستعادة</button>
+  </div>
+
+</div>
+
+<script>
+let currentTab = 'login';
+let otpTimerInterval;
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.auth-tab').forEach((t,i) => {
+    t.classList.toggle('active', (tab==='login'&&i===0)||(tab==='register'&&i===1));
+  });
+  document.getElementById('loginForm').classList.toggle('show', tab==='login');
+  document.getElementById('registerForm').classList.toggle('show', tab==='register');
+  document.getElementById('forgotForm').classList.remove('show');
+}
+
+function socialLogin(provider) {
+  const btn = event.currentTarget;
+  btn.textContent = '⏳ جاري الاتصال...';
+  setTimeout(() => {
+    btn.textContent = '✅ تم الاتصال';
+    setTimeout(() => location.href='dashboard.html', 800);
+  }, 1500);
+}
+
+function togglePass(id, icon) {
+  const inp = document.getElementById(id);
+  if(inp.type==='password') { inp.type='text'; icon.textContent='🙈'; }
+  else { inp.type='password'; icon.textContent='👁️'; }
+}
+
+function validateLogin() {
+  const email = document.getElementById('loginEmail').value;
+  const pass = document.getElementById('loginPass').value;
+  const btn = document.getElementById('loginBtn');
+  btn.style.opacity = (email.length>3 && pass.length>5) ? '1' : '0.6';
+}
+
+function doLogin() {
+  const email = document.getElementById('loginEmail').value;
+  const pass = document.getElementById('loginPass').value;
+  if(!email || !pass) { alert('يرجى ملء جميع الحقول'); return; }
+  const btn = document.getElementById('loginBtn');
+  btn.textContent = '⏳ جاري تسجيل الدخول...';
+  btn.classList.add('loading');
+  setTimeout(() => {
+    location.href = 'dashboard.html';
+  }, 1800);
+}
+
+function checkEmail(inp) {
+  const err = document.getElementById('emailError');
+  if(inp.value.includes('test@')) {
+    inp.classList.add('error');
+    err.classList.add('show');
+  } else if(inp.value.includes('@') && inp.value.includes('.')) {
+    inp.classList.remove('error');
+    inp.classList.add('success');
+    err.classList.remove('show');
+  } else {
+    inp.classList.remove('error','success');
+    err.classList.remove('show');
+  }
+}
+
+function checkStrength(inp) {
+  const meter = document.getElementById('strengthMeter');
+  const val = inp.value;
+  meter.style.display = val.length ? 'block' : 'none';
+  let score = 0;
+  if(val.length>=8) score++;
+  if(/[A-Z]/.test(val)||/[a-z]/.test(val)) score++;
+  if(/[0-9]/.test(val)) score++;
+  if(/[^A-Za-z0-9]/.test(val)) score++;
+  const colors = ['var(--red)','var(--orange)','var(--gold)','var(--green)'];
+  const labels = ['ضعيفة جداً','ضعيفة','جيدة','قوية جداً ✅'];
+  for(let i=1;i<=4;i++) {
+    const bar = document.getElementById('sb'+i);
+    bar.style.background = i<=score ? colors[score-1] : 'rgba(255,255,255,0.1)';
+  }
+  document.getElementById('strengthLabel').textContent = labels[score-1]||'أدخل كلمة مرور';
+  document.getElementById('strengthLabel').style.color = score>0?colors[score-1]:colors[0];
+}
+
+function selectType(el, type) {
+  document.querySelectorAll('.user-type-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function goStep2() {
+  const terms = document.getElementById('termsCheck').checked;
+  if(!terms) { alert('يرجى الموافقة على الشروط والأحكام'); return; }
+  document.getElementById('regStep1').style.display='none';
+  document.getElementById('regStep2').style.display='block';
+  document.getElementById('step2bar').classList.add('done');
+  startOTPTimer();
+  document.querySelector('.otp-input').focus();
+}
+
+function goStep1() {
+  document.getElementById('regStep2').style.display='none';
+  document.getElementById('regStep1').style.display='block';
+  clearInterval(otpTimerInterval);
+}
+
+function otpMove(inp, idx) {
+  if(inp.value.length===1) {
+    const inputs = document.querySelectorAll('.otp-input');
+    if(idx<5) inputs[idx+1].focus();
+  }
+}
+
+function startOTPTimer() {
+  let sec = 59;
+  clearInterval(otpTimerInterval);
+  otpTimerInterval = setInterval(() => {
+    document.getElementById('otpTimer').textContent = ` (${sec} ث)`;
+    if(--sec<0) { clearInterval(otpTimerInterval); document.getElementById('otpTimer').textContent=''; }
+  }, 1000);
+}
+
+function resendOTP() { startOTPTimer(); alert('تم إعادة إرسال الرمز!'); }
+
+function verifyOTP() {
+  const inputs = document.querySelectorAll('.otp-input');
+  const otp = [...inputs].map(i=>i.value).join('');
+  if(otp.length<6) { alert('يرجى إدخال رمز التحقق كاملاً'); return; }
+  document.getElementById('regStep2').style.display='none';
+  document.getElementById('regStep3').style.display='block';
+  document.getElementById('step3bar').classList.add('done');
+  clearInterval(otpTimerInterval);
+}
+
+function sendReset() {
+  alert('✅ تم إرسال رابط الاستعادة! تحقق من بريدك الإلكتروني.');
+  switchTab('login');
+}
+
+function showForgot() {
+  document.getElementById('loginForm').classList.remove('show');
+  document.getElementById('forgotForm').classList.add('show');
+}
+</script>
+</body>
+</html>

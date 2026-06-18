@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>حسابي وحجوزاتي | بوكنق السعودية</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C; --gold-light: #E8C97A;
+    --dark: #0A0A0F; --dark2: #13131A; --dark3: #1C1C26; --dark4: #22222E;
+    --white: #F8F4EE; --gray: #8A8A9A;
+    --green: #2ECC71; --red: #E74C3C; --blue: #3498DB; --orange: #E67E22; --purple: #9B59B6;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Tajawal',sans-serif; background:var(--dark); color:var(--white); display:flex; min-height:100vh; }
+
+  /* SIDEBAR */
+  .sidebar {
+    width:260px; flex-shrink:0; background:var(--dark2);
+    border-left:1px solid rgba(201,168,76,0.12);
+    display:flex; flex-direction:column;
+    position:fixed; height:100vh; overflow-y:auto; z-index:50;
+  }
+
+  .profile-section {
+    padding:28px 20px; border-bottom:1px solid rgba(255,255,255,0.06);
+    text-align:center;
+  }
+  .avatar-wrap { position:relative; display:inline-block; margin-bottom:14px; }
+  .avatar {
+    width:80px; height:80px; border-radius:50%;
+    background:linear-gradient(135deg,var(--gold),var(--gold-light));
+    display:flex; align-items:center; justify-content:center;
+    font-size:32px; font-weight:900; color:var(--dark);
+    border:3px solid rgba(201,168,76,0.3);
+  }
+  .avatar-edit {
+    position:absolute; bottom:0; left:0;
+    width:26px; height:26px; border-radius:50%;
+    background:var(--dark3); border:2px solid var(--dark2);
+    display:flex; align-items:center; justify-content:center;
+    font-size:12px; cursor:pointer;
+  }
+  .profile-name { font-size:17px; font-weight:800; margin-bottom:4px; }
+  .profile-email { font-size:12px; color:var(--gray); margin-bottom:12px; }
+  .profile-badges { display:flex; gap:6px; justify-content:center; flex-wrap:wrap; }
+  .pbadge { padding:3px 10px; border-radius:6px; font-size:11px; font-weight:700; }
+  .pbadge-gold { background:rgba(201,168,76,0.15); color:var(--gold); border:1px solid rgba(201,168,76,0.2); }
+  .pbadge-green { background:rgba(46,204,113,0.15); color:var(--green); }
+
+  .sidebar-stats { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:rgba(255,255,255,0.05); border-top:1px solid rgba(255,255,255,0.05); border-bottom:1px solid rgba(255,255,255,0.05); }
+  .sstat { padding:14px; text-align:center; background:var(--dark2); }
+  .sstat-num { font-size:20px; font-weight:900; color:var(--gold); }
+  .sstat-lbl { font-size:11px; color:var(--gray); margin-top:2px; }
+
+  .sidebar-menu { padding:12px 0; flex:1; }
+  .menu-section-lbl { font-size:10px; color:var(--gray); font-weight:700; letter-spacing:1.5px; padding:8px 20px; text-transform:uppercase; }
+  .menu-item {
+    display:flex; align-items:center; gap:12px;
+    padding:11px 20px; cursor:pointer; transition:0.2s;
+    font-size:14px; color:var(--gray); border-right:3px solid transparent;
+  }
+  .menu-item:hover { background:rgba(255,255,255,0.03); color:var(--white); }
+  .menu-item.active { background:rgba(201,168,76,0.08); color:var(--gold); border-right-color:var(--gold); }
+  .menu-item .mi { font-size:18px; width:22px; text-align:center; }
+  .menu-badge { margin-right:auto; font-size:10px; font-weight:800; padding:2px 7px; border-radius:8px; }
+  .mb-red { background:var(--red); color:white; }
+  .mb-green { background:var(--green); color:white; }
+
+  .sidebar-bottom { padding:16px 20px; border-top:1px solid rgba(255,255,255,0.05); }
+  .loyalty-card {
+    background:linear-gradient(135deg,rgba(201,168,76,0.15),rgba(201,168,76,0.05));
+    border:1px solid rgba(201,168,76,0.2); border-radius:12px; padding:14px;
+  }
+  .loyalty-title { font-size:12px; color:var(--gold); font-weight:700; margin-bottom:8px; }
+  .loyalty-bar-wrap { background:rgba(255,255,255,0.08); border-radius:4px; height:6px; margin-bottom:6px; }
+  .loyalty-bar { height:100%; border-radius:4px; background:linear-gradient(90deg,var(--gold),var(--gold-light)); width:65%; }
+  .loyalty-info { display:flex; justify-content:space-between; font-size:11px; color:var(--gray); }
+
+  /* MAIN */
+  .main { margin-right:260px; flex:1; padding:28px; overflow-x:hidden; }
+
+  /* TOP BAR */
+  .top-bar { display:flex; justify-content:space-between; align-items:center; margin-bottom:28px; }
+  .page-title { font-size:22px; font-weight:900; }
+  .page-sub { font-size:13px; color:var(--gray); margin-top:3px; }
+  .top-actions { display:flex; gap:10px; }
+  .btn-gold { padding:10px 20px; background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--dark); border:none; border-radius:10px; cursor:pointer; font-family:'Tajawal',sans-serif; font-size:14px; font-weight:800; transition:0.3s; }
+  .btn-gold:hover { transform:translateY(-2px); }
+  .btn-outline { padding:10px 18px; background:transparent; color:var(--white); border:1px solid rgba(255,255,255,0.12); border-radius:10px; cursor:pointer; font-family:'Tajawal',sans-serif; font-size:14px; transition:0.2s; }
+  .btn-outline:hover { border-color:var(--gold); color:var(--gold); }
+
+  /* TABS */
+  .content-tabs { display:flex; gap:4px; background:var(--dark3); border-radius:12px; padding:4px; margin-bottom:24px; overflow-x:auto; }
+  .ctab { padding:10px 18px; border-radius:9px; cursor:pointer; font-size:14px; font-weight:700; transition:0.2s; color:var(--gray); border:none; font-family:'Tajawal',sans-serif; background:transparent; white-space:nowrap; }
+  .ctab.active { background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--dark); }
+
+  /* SECTION */
+  .tab-content { display:none; animation:fadeIn 0.3s ease; }
+  .tab-content.active { display:block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+  /* BOOKING CARD */
+  .booking-card {
+    background:var(--dark3); border:1px solid rgba(255,255,255,0.06);
+    border-radius:18px; overflow:hidden; margin-bottom:16px; transition:0.3s;
+  }
+  .booking-card:hover { border-color:rgba(201,168,76,0.2); box-shadow:0 8px 30px rgba(0,0,0,0.3); }
+
+  .booking-header {
+    padding:16px 20px; display:flex; justify-content:space-between;
+    align-items:center; border-bottom:1px solid rgba(255,255,255,0.05);
+    background:var(--dark4);
+  }
+  .booking-ref { font-size:12px; color:var(--gray); }
+  .booking-ref strong { color:var(--gold); font-size:14px; display:block; }
+  .booking-date-created { font-size:12px; color:var(--gray); text-align:left; }
+  .status-badge { padding:5px 12px; border-radius:7px; font-size:12px; font-weight:800; }
+  .status-confirmed { background:rgba(46,204,113,0.15); color:var(--green); }
+  .status-pending { background:rgba(230,126,34,0.15); color:var(--orange); }
+  .status-cancelled { background:rgba(231,76,60,0.15); color:var(--red); }
+  .status-completed { background:rgba(52,152,219,0.15); color:var(--blue); }
+  .status-checkin { background:rgba(155,89,182,0.15); color:var(--purple); }
+
+  .booking-body { padding:18px 20px; display:grid; grid-template-columns:80px 1fr auto; gap:16px; align-items:start; }
+  .booking-img { width:80px; height:80px; border-radius:12px; background:var(--dark2); display:flex; align-items:center; justify-content:center; font-size:36px; }
+  .booking-info { }
+  .booking-hotel { font-size:16px; font-weight:800; margin-bottom:5px; }
+  .booking-room { font-size:13px; color:var(--gray); margin-bottom:8px; }
+  .booking-dates { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:8px; }
+  .bdate { font-size:13px; }
+  .bdate label { color:var(--gray); font-size:11px; display:block; margin-bottom:2px; }
+  .bdate strong { color:var(--white); }
+  .booking-guests { font-size:13px; color:var(--gray); }
+  .booking-price-col { text-align:left; }
+  .booking-total-label { font-size:11px; color:var(--gray); margin-bottom:3px; }
+  .booking-total { font-size:22px; font-weight:900; color:var(--gold); }
+  .booking-per-night { font-size:11px; color:var(--gray); }
+  .booking-nights { font-size:12px; color:var(--gray); margin-top:3px; }
+
+  .booking-footer {
+    padding:12px 20px; border-top:1px solid rgba(255,255,255,0.05);
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
+  }
+  .booking-actions { display:flex; gap:8px; }
+  .action-btn { padding:7px 16px; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; transition:0.2s; font-family:'Tajawal',sans-serif; }
+  .action-view { background:transparent; border:1px solid rgba(201,168,76,0.3); color:var(--gold); }
+  .action-view:hover { background:rgba(201,168,76,0.1); }
+  .action-cancel { background:transparent; border:1px solid rgba(231,76,60,0.3); color:var(--red); }
+  .action-cancel:hover { background:rgba(231,76,60,0.1); }
+  .action-review { background:transparent; border:1px solid rgba(46,204,113,0.3); color:var(--green); }
+  .action-review:hover { background:rgba(46,204,113,0.1); }
+  .action-rebook { background:linear-gradient(135deg,var(--gold),var(--gold-light)); border:none; color:var(--dark); }
+  .booking-payment-info { font-size:12px; color:var(--gray); display:flex; align-items:center; gap:6px; }
+
+  /* STATS CARDS */
+  .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px; }
+  .stat-card { background:var(--dark3); border:1px solid rgba(255,255,255,0.05); border-radius:14px; padding:18px; }
+  .stat-icon-wrap { width:42px; height:42px; border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:20px; margin-bottom:12px; }
+  .si-gold { background:rgba(201,168,76,0.12); }
+  .si-green { background:rgba(46,204,113,0.12); }
+  .si-blue { background:rgba(52,152,219,0.12); }
+  .si-purple { background:rgba(155,89,182,0.12); }
+  .stat-val { font-size:26px; font-weight:900; margin-bottom:3px; }
+  .stat-lbl { font-size:13px; color:var(--gray); }
+
+  /* PROFILE FORM */
+  .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .form-card { background:var(--dark3); border:1px solid rgba(255,255,255,0.06); border-radius:16px; padding:22px; margin-bottom:18px; }
+  .form-card-title { font-size:16px; font-weight:800; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; gap:8px; }
+  .field { display:flex; flex-direction:column; gap:6px; }
+  .field label { font-size:12px; color:var(--gold); font-weight:700; }
+  .field input, .field select { background:var(--dark2); border:1.5px solid rgba(255,255,255,0.08); border-radius:10px; padding:11px 13px; color:var(--white); font-family:'Tajawal',sans-serif; font-size:14px; outline:none; transition:0.2s; }
+  .field input:focus { border-color:var(--gold); }
+
+  /* WISHLIST */
+  .wish-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .wish-card { background:var(--dark3); border:1px solid rgba(255,255,255,0.06); border-radius:16px; overflow:hidden; cursor:pointer; transition:0.3s; }
+  .wish-card:hover { border-color:rgba(201,168,76,0.3); transform:translateY(-4px); }
+  .wish-img { height:140px; background:var(--dark2); display:flex; align-items:center; justify-content:center; font-size:60px; position:relative; }
+  .wish-remove { position:absolute; top:8px; left:8px; width:28px; height:28px; border-radius:50%; background:rgba(231,76,60,0.8); display:flex; align-items:center; justify-content:center; color:white; font-size:14px; cursor:pointer; }
+  .wish-info { padding:14px; }
+  .wish-name { font-size:15px; font-weight:800; margin-bottom:4px; }
+  .wish-loc { font-size:12px; color:var(--gray); margin-bottom:8px; }
+  .wish-price { font-size:18px; font-weight:900; color:var(--gold); }
+
+  /* REVIEWS */
+  .review-card { background:var(--dark3); border:1px solid rgba(255,255,255,0.06); border-radius:16px; padding:20px; margin-bottom:14px; }
+  .review-header { display:flex; justify-content:space-between; margin-bottom:12px; }
+  .review-hotel { font-size:15px; font-weight:800; }
+  .review-date { font-size:12px; color:var(--gray); }
+  .review-stars { color:var(--gold); font-size:16px; margin-bottom:8px; }
+  .review-text { font-size:14px; color:var(--gray); line-height:1.7; margin-bottom:10px; }
+  .review-response { background:var(--dark2); border-radius:10px; padding:12px; font-size:13px; color:var(--gray); border-right:3px solid var(--gold); }
+  .review-response strong { color:var(--gold); display:block; font-size:12px; margin-bottom:4px; }
+
+  /* NOTIFICATIONS */
+  .notif-item { display:flex; gap:12px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.04); }
+  .notif-item:last-child { border-bottom:none; }
+  .notif-dot { width:8px; height:8px; border-radius:50%; background:var(--gold); flex-shrink:0; margin-top:6px; }
+  .notif-dot.read { background:rgba(255,255,255,0.15); }
+  .notif-icon { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+  .ni-gold { background:rgba(201,168,76,0.12); }
+  .ni-green { background:rgba(46,204,113,0.12); }
+  .ni-blue { background:rgba(52,152,219,0.12); }
+  .ni-red { background:rgba(231,76,60,0.12); }
+  .notif-body { flex:1; }
+  .notif-title { font-size:14px; font-weight:700; margin-bottom:3px; }
+  .notif-desc { font-size:13px; color:var(--gray); }
+  .notif-time { font-size:11px; color:var(--gray); white-space:nowrap; }
+
+  /* EMPTY STATE */
+  .empty-state { text-align:center; padding:60px 20px; }
+  .empty-icon { font-size:64px; margin-bottom:16px; }
+  .empty-title { font-size:20px; font-weight:800; margin-bottom:8px; }
+  .empty-desc { font-size:14px; color:var(--gray); margin-bottom:24px; }
+
+  /* MODAL */
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); backdrop-filter:blur(10px); z-index:1000; align-items:center; justify-content:center; }
+  .modal-overlay.show { display:flex; }
+  .modal { background:var(--dark3); border:1px solid rgba(201,168,76,0.2); border-radius:20px; padding:32px; max-width:460px; width:90%; animation:popIn 0.3s ease; }
+  @keyframes popIn { from{transform:scale(0.85);opacity:0} to{transform:scale(1);opacity:1} }
+  .modal-title { font-size:20px; font-weight:900; margin-bottom:16px; }
+  .stars-select { display:flex; gap:8px; font-size:36px; margin-bottom:16px; cursor:pointer; }
+  .modal-textarea { width:100%; background:var(--dark2); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:12px; color:var(--white); font-family:'Tajawal',sans-serif; font-size:14px; outline:none; resize:vertical; min-height:100px; margin-bottom:16px; }
+  .modal-btns { display:flex; gap:10px; }
+  .modal-btn-p { flex:1; background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--dark); border:none; padding:12px; border-radius:10px; font-family:'Tajawal',sans-serif; font-size:15px; font-weight:800; cursor:pointer; }
+  .modal-btn-s { flex:1; background:transparent; color:var(--white); border:1px solid rgba(255,255,255,0.12); padding:12px; border-radius:10px; font-family:'Tajawal',sans-serif; font-size:14px; cursor:pointer; }
+
+  @media(max-width:1000px) {
+    .sidebar { width:60px; }
+    .sidebar .profile-section, .sidebar .sidebar-stats, .sidebar-bottom { display:none; }
+    .sidebar .menu-item span:not(.mi), .menu-badge, .menu-section-lbl { display:none; }
+    .main { margin-right:60px; padding:16px; }
+    .stats-grid { grid-template-columns:1fr 1fr; }
+    .wish-grid { grid-template-columns:1fr 1fr; }
+    .booking-body { grid-template-columns:60px 1fr; }
+    .booking-price-col { display:none; }
+  }
+  @media(max-width:600px) {
+    .stats-grid { grid-template-columns:1fr 1fr; }
+    .wish-grid { grid-template-columns:1fr; }
+    .form-grid { grid-template-columns:1fr; }
+    .booking-body { grid-template-columns:1fr; }
+    .booking-img { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="profile-section">
+    <div class="avatar-wrap">
+      <div class="avatar">م</div>
+      <div class="avatar-edit">✏️</div>
+    </div>
+    <div class="profile-name">محمد العتيبي</div>
+    <div class="profile-email">m.otaibi@email.com</div>
+    <div class="profile-badges">
+      <span class="pbadge pbadge-gold">🥇 عضو ذهبي</span>
+      <span class="pbadge pbadge-green">✅ موثق</span>
+    </div>
+  </div>
+
+  <div class="sidebar-stats">
+    <div class="sstat"><div class="sstat-num">14</div><div class="sstat-lbl">حجز</div></div>
+    <div class="sstat"><div class="sstat-num">4.9</div><div class="sstat-lbl">تقييمي</div></div>
+    <div class="sstat"><div class="sstat-num">3,200</div><div class="sstat-lbl">نقطة</div></div>
+    <div class="sstat"><div class="sstat-num">5</div><div class="sstat-lbl">مفضلة</div></div>
+  </div>
+
+  <div class="sidebar-menu">
+    <div class="menu-section-lbl">الرئيسية</div>
+    <div class="menu-item active" onclick="switchTab('overview',this)"><span class="mi">📊</span><span>نظرة عامة</span></div>
+    <div class="menu-item" onclick="switchTab('bookings',this)"><span class="mi">📅</span><span>حجوزاتي</span><span class="menu-badge mb-red">2</span></div>
+    <div class="menu-item" onclick="switchTab('wishlist',this)"><span class="mi">❤️</span><span>المفضلة</span></div>
+    <div class="menu-item" onclick="switchTab('reviews',this)"><span class="mi">⭐</span><span>تقييماتي</span></div>
+    <div class="menu-section-lbl">الحساب</div>
+    <div class="menu-item" onclick="switchTab('profile',this)"><span class="mi">👤</span><span>معلوماتي</span></div>
+    <div class="menu-item" onclick="switchTab('notifications',this)"><span class="mi">🔔</span><span>الإشعارات</span><span class="menu-badge mb-green">3</span></div>
+    <div class="menu-item" onclick="switchTab('payment',this)"><span class="mi">💳</span><span>طرق الدفع</span></div>
+    <div class="menu-item" onclick="switchTab('loyalty',this)"><span class="mi">🏆</span><span>نقاط المكافآت</span></div>
+    <div class="menu-section-lbl">أخرى</div>
+    <div class="menu-item"><span class="mi">🔒</span><span>الأمان والخصوصية</span></div>
+    <div class="menu-item"><span class="mi">🌐</span><span>اللغة والعملة</span></div>
+    <div class="menu-item" style="color:var(--red);" onclick="location.href='login-page.html'"><span class="mi">🚪</span><span>تسجيل الخروج</span></div>
+  </div>
+
+  <div class="sidebar-bottom">
+    <div class="loyalty-card">
+      <div class="loyalty-title">🏆 العضوية الذهبية</div>
+      <div class="loyalty-bar-wrap"><div class="loyalty-bar"></div></div>
+      <div class="loyalty-info"><span>3,200 نقطة</span><span>5,000 للبلاتينية</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <div>
+      <div class="page-title" id="pageTitle">نظرة عامة 👋</div>
+      <div class="page-sub" id="pageSub">مرحباً محمد، إليك ملخص حسابك</div>
+    </div>
+    <div class="top-actions">
+      <button class="btn-outline" onclick="location.href='index.html'">🏠 الرئيسية</button>
+      <button class="btn-gold" onclick="location.href='index.html'">+ حجز جديد</button>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="content-tabs">
+    <button class="ctab active" onclick="switchTab('overview',this)">📊 نظرة عامة</button>
+    <button class="ctab" onclick="switchTab('bookings',this)">📅 حجوزاتي</button>
+    <button class="ctab" onclick="switchTab('wishlist',this)">❤️ المفضلة</button>
+    <button class="ctab" onclick="switchTab('reviews',this)">⭐ تقييماتي</button>
+    <button class="ctab" onclick="switchTab('profile',this)">👤 معلوماتي</button>
+    <button class="ctab" onclick="switchTab('notifications',this)">🔔 الإشعارات</button>
+    <button class="ctab" onclick="switchTab('loyalty',this)">🏆 المكافآت</button>
+  </div>
+
+  <!-- ======= OVERVIEW ======= -->
+  <div class="tab-content active" id="tab-overview">
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-icon-wrap si-gold">📅</div><div class="stat-val">14</div><div class="stat-lbl">إجمالي الحجوزات</div></div>
+      <div class="stat-card"><div class="stat-icon-wrap si-green">💰</div><div class="stat-val">38,450 ر.س</div><div class="stat-lbl">إجمالي ما أنفقته</div></div>
+      <div class="stat-card"><div class="stat-icon-wrap si-blue">🏆</div><div class="stat-val">3,200</div><div class="stat-lbl">نقاط المكافآت</div></div>
+      <div class="stat-card"><div class="stat-icon-wrap si-purple">⭐</div><div class="stat-val">4.9</div><div class="stat-lbl">متوسط تقييماتي</div></div>
+    </div>
+
+    <!-- UPCOMING -->
+    <div class="form-card">
+      <div class="form-card-title">📅 الحجز القادم</div>
+      <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+        <div style="width:70px;height:70px;background:var(--dark2);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:32px;">🏨</div>
+        <div style="flex:1;">
+          <div style="font-size:17px;font-weight:800;margin-bottom:4px;">فندق الريتز كارلتون الرياض</div>
+          <div style="font-size:13px;color:var(--gray);margin-bottom:8px;">غرفة ديلوكس · 2 بالغ</div>
+          <div style="display:flex;gap:20px;flex-wrap:wrap;">
+            <div><div style="font-size:11px;color:var(--gray);">تسجيل دخول</div><div style="font-weight:700;">السبت 15 يونيو</div></div>
+            <div><div style="font-size:11px;color:var(--gray);">تسجيل خروج</div><div style="font-weight:700;">الثلاثاء 18 يونيو</div></div>
+            <div><div style="font-size:11px;color:var(--gray);">المدة</div><div style="font-weight:700;color:var(--gold);">3 ليالي</div></div>
+          </div>
+        </div>
+        <div style="text-align:left;">
+          <div style="font-size:11px;color:var(--gray);">الإجمالي</div>
+          <div style="font-size:24px;font-weight:900;color:var(--gold);">2,932 ر.س</div>
+          <span class="status-badge status-confirmed" style="margin-top:6px;display:inline-block;">✅ مؤكد</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.05);">
+        <button class="action-btn action-view" onclick="switchTab('bookings')">عرض التفاصيل</button>
+        <button class="action-btn" style="background:rgba(52,152,219,0.1);border:1px solid rgba(52,152,219,0.3);color:var(--blue);" onclick="alert('🗺️ فتح الخريطة')">📍 الموقع</button>
+        <button class="action-btn" style="background:rgba(46,204,113,0.1);border:1px solid rgba(46,204,113,0.3);color:var(--green);" onclick="alert('📄 تحميل التأكيد')">📥 تأكيد الحجز</button>
+      </div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="form-card">
+      <div class="form-card-title">⚡ إجراءات سريعة</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+        <div onclick="switchTab('bookings')" style="background:var(--dark2);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'">
+          <div style="font-size:26px;margin-bottom:8px;">📅</div><div style="font-size:13px;font-weight:700;">حجوزاتي</div>
+        </div>
+        <div onclick="switchTab('wishlist')" style="background:var(--dark2);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'">
+          <div style="font-size:26px;margin-bottom:8px;">❤️</div><div style="font-size:13px;font-weight:700;">المفضلة</div>
+        </div>
+        <div onclick="switchTab('loyalty')" style="background:var(--dark2);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'">
+          <div style="font-size:26px;margin-bottom:8px;">🏆</div><div style="font-size:13px;font-weight:700;">نقاطي</div>
+        </div>
+        <div onclick="location.href='index.html'" style="background:linear-gradient(135deg,rgba(201,168,76,0.15),rgba(201,168,76,0.05));border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:16px;text-align:center;cursor:pointer;">
+          <div style="font-size:26px;margin-bottom:8px;">🔍</div><div style="font-size:13px;font-weight:700;color:var(--gold);">حجز جديد</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= BOOKINGS ======= -->
+  <div class="tab-content" id="tab-bookings">
+
+    <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
+      <button class="action-btn action-view" style="padding:8px 16px;" onclick="filterBookings('all',this)">الكل (14)</button>
+      <button class="action-btn" style="padding:8px 16px;background:rgba(155,89,182,0.1);border:1px solid rgba(155,89,182,0.3);color:var(--purple);" onclick="filterBookings('upcoming',this)">القادمة (2)</button>
+      <button class="action-btn" style="padding:8px 16px;background:rgba(52,152,219,0.1);border:1px solid rgba(52,152,219,0.3);color:var(--blue);" onclick="filterBookings('completed',this)">المكتملة (10)</button>
+      <button class="action-btn" style="padding:8px 16px;background:rgba(231,76,60,0.1);border:1px solid rgba(231,76,60,0.3);color:var(--red);" onclick="filterBookings('cancelled',this)">الملغاة (2)</button>
+    </div>
+
+    <!-- BOOKING 1 - CONFIRMED -->
+    <div class="booking-card">
+      <div class="booking-header">
+        <div class="booking-ref">رقم الحجز<strong>#BSA-7831</strong></div>
+        <span class="status-badge status-confirmed">✅ مؤكد</span>
+        <div class="booking-date-created">تاريخ الحجز<br><strong>10 يونيو 2024</strong></div>
+      </div>
+      <div class="booking-body">
+        <div class="booking-img">🏨</div>
+        <div class="booking-info">
+          <div class="booking-hotel">فندق الريتز كارلتون الرياض</div>
+          <div class="booking-room">غرفة ديلوكس · ⭐⭐⭐⭐⭐</div>
+          <div class="booking-dates">
+            <div class="bdate"><label>تسجيل دخول</label><strong>السبت 15 يونيو 2024</strong></div>
+            <div class="bdate"><label>تسجيل خروج</label><strong>الثلاثاء 18 يونيو 2024</strong></div>
+            <div class="bdate"><label>المدة</label><strong style="color:var(--gold);">3 ليالي</strong></div>
+          </div>
+          <div class="booking-guests">👥 2 بالغ · 💳 Apple Pay</div>
+        </div>
+        <div class="booking-price-col">
+          <div class="booking-total-label">الإجمالي المدفوع</div>
+          <div class="booking-total">2,932 ر.س</div>
+          <div class="booking-per-night">850 ر.س / ليلة</div>
+          <div class="booking-nights">شامل ضريبة 15%</div>
+        </div>
+      </div>
+      <div class="booking-footer">
+        <div class="booking-actions">
+          <button class="action-btn action-view" onclick="alert('عرض تفاصيل الحجز كاملة')">📄 التفاصيل</button>
+          <button class="action-btn action-view" onclick="alert('📥 تحميل تأكيد الحجز')">📥 تحميل التأكيد</button>
+          <button class="action-btn action-cancel" onclick="confirmCancel()">❌ إلغاء</button>
+        </div>
+        <div class="booking-payment-info">🔒 دفع آمن · تأكيد فوري</div>
+      </div>
+    </div>
+
+    <!-- BOOKING 2 - CHECK-IN TODAY -->
+    <div class="booking-card">
+      <div class="booking-header">
+        <div class="booking-ref">رقم الحجز<strong>#BSA-7829</strong></div>
+        <span class="status-badge status-checkin">🏨 تسجيل دخول اليوم!</span>
+        <div class="booking-date-created">تاريخ الحجز<br><strong>8 يونيو 2024</strong></div>
+      </div>
+      <div class="booking-body">
+        <div class="booking-img">🏡</div>
+        <div class="booking-info">
+          <div class="booking-hotel">فيلا الملكية - حي الياسمين</div>
+          <div class="booking-room">فيلا كاملة · ⭐⭐⭐⭐⭐</div>
+          <div class="booking-dates">
+            <div class="bdate"><label>تسجيل دخول</label><strong style="color:var(--purple);">اليوم 15 يونيو</strong></div>
+            <div class="bdate"><label>تسجيل خروج</label><strong>22 يونيو 2024</strong></div>
+            <div class="bdate"><label>المدة</label><strong style="color:var(--gold);">7 ليالي</strong></div>
+          </div>
+          <div class="booking-guests">👥 6 أشخاص · 💳 مدى</div>
+        </div>
+        <div class="booking-price-col">
+          <div class="booking-total-label">الإجمالي المدفوع</div>
+          <div class="booking-total">17,157 ر.س</div>
+          <div class="booking-per-night">2,125 ر.س / ليلة</div>
+        </div>
+      </div>
+      <div class="booking-footer">
+        <div class="booking-actions">
+          <button class="action-btn action-view">📄 التفاصيل</button>
+          <button class="action-btn" style="background:rgba(155,89,182,0.1);border:1px solid rgba(155,89,182,0.3);color:var(--purple);">📍 الموقع</button>
+          <button class="action-btn" style="background:rgba(52,152,219,0.1);border:1px solid rgba(52,152,219,0.3);color:var(--blue);">📞 تواصل مع الفندق</button>
+        </div>
+        <div class="booking-payment-info">⏰ موعد الدخول: 3:00 مساءً</div>
+      </div>
+    </div>
+
+    <!-- BOOKING 3 - COMPLETED -->
+    <div class="booking-card">
+      <div class="booking-header">
+        <div class="booking-ref">رقم الحجز<strong>#BSA-7801</strong></div>
+        <span class="status-badge status-completed">✔️ مكتمل</span>
+        <div class="booking-date-created">تاريخ الحجز<br><strong>1 مايو 2024</strong></div>
+      </div>
+      <div class="booking-body">
+        <div class="booking-img">🏖️</div>
+        <div class="booking-info">
+          <div class="booking-hotel">منتجع شرم البيضاء - تبوك</div>
+          <div class="booking-room">جناح بحري · ⭐⭐⭐⭐⭐</div>
+          <div class="booking-dates">
+            <div class="bdate"><label>تسجيل دخول</label><strong>1 يونيو 2024</strong></div>
+            <div class="bdate"><label>تسجيل خروج</label><strong>5 يونيو 2024</strong></div>
+            <div class="bdate"><label>المدة</label><strong style="color:var(--gold);">4 ليالي</strong></div>
+          </div>
+          <div class="booking-guests">👥 2 بالغ · 💳 STC Pay</div>
+        </div>
+        <div class="booking-price-col">
+          <div class="booking-total-label">الإجمالي المدفوع</div>
+          <div class="booking-total">5,520 ر.س</div>
+          <div class="booking-per-night">1,200 ر.س / ليلة</div>
+        </div>
+      </div>
+      <div class="booking-footer">
+        <div class="booking-actions">
+          <button class="action-btn action-view">📄 التفاصيل</button>
+          <button class="action-btn action-review" onclick="openReviewModal()">⭐ كتابة تقييم</button>
+          <button class="action-btn action-rebook">🔄 احجز مجدداً</button>
+        </div>
+        <div class="booking-payment-info" style="color:var(--green);">🎉 ربحت 120 نقطة من هذا الحجز</div>
+      </div>
+    </div>
+
+    <!-- BOOKING 4 - CANCELLED -->
+    <div class="booking-card">
+      <div class="booking-header">
+        <div class="booking-ref">رقم الحجز<strong>#BSA-7790</strong></div>
+        <span class="status-badge status-cancelled">❌ ملغي</span>
+        <div class="booking-date-created">تاريخ الحجز<br><strong>20 أبريل 2024</strong></div>
+      </div>
+      <div class="booking-body">
+        <div class="booking-img">🏙️</div>
+        <div class="booking-info">
+          <div class="booking-hotel">فندق فور سيزونز الرياض</div>
+          <div class="booking-room">غرفة سوبيريور · ⭐⭐⭐⭐⭐</div>
+          <div class="booking-dates">
+            <div class="bdate"><label>تسجيل دخول</label><strong>10 مايو 2024</strong></div>
+            <div class="bdate"><label>تسجيل خروج</label><strong>12 مايو 2024</strong></div>
+          </div>
+          <div class="booking-guests">👥 1 بالغ · 💳 مدى</div>
+        </div>
+        <div class="booking-price-col">
+          <div class="booking-total-label">تم الاسترداد</div>
+          <div class="booking-total" style="color:var(--green);">1,950 ر.س</div>
+          <div class="booking-per-night" style="color:var(--green);">استرداد كامل</div>
+        </div>
+      </div>
+      <div class="booking-footer">
+        <div class="booking-actions">
+          <button class="action-btn action-view">📄 التفاصيل</button>
+          <button class="action-btn action-rebook">🔄 احجز مجدداً</button>
+        </div>
+        <div class="booking-payment-info" style="color:var(--green);">✅ تم استرداد المبلغ كاملاً</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= WISHLIST ======= -->
+  <div class="tab-content" id="tab-wishlist">
+    <div class="wish-grid">
+      <div class="wish-card"><div class="wish-img">🏨<div class="wish-remove" onclick="removeWish(this)">×</div></div><div class="wish-info"><div class="wish-name">فندق الريتز كارلتون الرياض</div><div class="wish-loc">📍 حي العليا، الرياض</div><div style="display:flex;justify-content:space-between;align-items:center;"><div class="wish-price">850 ر.س <small style="font-size:11px;color:var(--gray);font-weight:400;">/ليلة</small></div><button class="action-btn action-rebook" onclick="location.href='hotel-page.html'" style="font-size:12px;padding:6px 12px;">احجز</button></div></div></div>
+      <div class="wish-card"><div class="wish-img">🌴<div class="wish-remove" onclick="removeWish(this)">×</div></div><div class="wish-info"><div class="wish-name">منتجع شرم البيضاء</div><div class="wish-loc">📍 تبوك، البحر الأحمر</div><div style="display:flex;justify-content:space-between;align-items:center;"><div class="wish-price">1,200 ر.س <small style="font-size:11px;color:var(--gray);font-weight:400;">/ليلة</small></div><button class="action-btn action-rebook" style="font-size:12px;padding:6px 12px;">احجز</button></div></div></div>
+      <div class="wish-card"><div class="wish-img">🏡<div class="wish-remove" onclick="removeWish(this)">×</div></div><div class="wish-info"><div class="wish-name">فيلا الملكية الخاصة</div><div class="wish-loc">📍 حي الياسمين، الرياض</div><div style="display:flex;justify-content:space-between;align-items:center;"><div class="wish-price">2,125 ر.س <small style="font-size:11px;color:var(--gray);font-weight:400;">/ليلة</small></div><button class="action-btn action-rebook" style="font-size:12px;padding:6px 12px;">احجز</button></div></div></div>
+      <div class="wish-card"><div class="wish-img">🏠<div class="wish-remove" onclick="removeWish(this)">×</div></div><div class="wish-info"><div class="wish-name">شقق ماريوت التنفيذية</div><div class="wish-loc">📍 حي النخيل، الرياض</div><div style="display:flex;justify-content:space-between;align-items:center;"><div class="wish-price">480 ر.س <small style="font-size:11px;color:var(--gray);font-weight:400;">/ليلة</small></div><button class="action-btn action-rebook" style="font-size:12px;padding:6px 12px;">احجز</button></div></div></div>
+    </div>
+  </div>
+
+  <!-- ======= REVIEWS ======= -->
+  <div class="tab-content" id="tab-reviews">
+    <div class="review-card">
+      <div class="review-header"><div class="review-hotel">🏖️ منتجع شرم البيضاء - تبوك</div><div class="review-date">5 يونيو 2024</div></div>
+      <div class="review-stars">⭐⭐⭐⭐⭐</div>
+      <div class="review-text">تجربة لا تُنسى! المنتجع رائع والخدمة استثنائية. الإطلالة على البحر الأحمر من الغرفة كانت خلابة. سأعود بالتأكيد.</div>
+      <div class="review-response"><strong>رد الإدارة:</strong>شكراً جزيلاً على تقييمك الرائع! يسعدنا أنك استمتعت بإقامتك. نتطلع لاستقبالك مجدداً.</div>
+    </div>
+    <div class="review-card">
+      <div class="review-header"><div class="review-hotel">🏨 فندق الريتز كارلتون الرياض</div><div class="review-date">20 أبريل 2024</div></div>
+      <div class="review-stars">⭐⭐⭐⭐⭐</div>
+      <div class="review-text">أفضل فندق في الرياض بلا منازع. الإفطار رائع، الغرفة فخمة، والموظفون في غاية الاحترافية.</div>
+    </div>
+  </div>
+
+  <!-- ======= PROFILE ======= -->
+  <div class="tab-content" id="tab-profile">
+    <div class="form-card">
+      <div class="form-card-title">👤 المعلومات الشخصية</div>
+      <div class="form-grid" style="margin-bottom:16px;">
+        <div class="field"><label>الاسم الأول</label><input type="text" value="محمد"></div>
+        <div class="field"><label>اسم العائلة</label><input type="text" value="العتيبي"></div>
+      </div>
+      <div class="form-grid" style="margin-bottom:16px;">
+        <div class="field"><label>البريد الإلكتروني</label><input type="email" value="m.otaibi@email.com"></div>
+        <div class="field"><label>رقم الجوال</label><input type="tel" value="+966 50 123 4567"></div>
+      </div>
+      <div class="form-grid">
+        <div class="field"><label>الجنسية</label><select><option selected>🇸🇦 سعودي</option></select></div>
+        <div class="field"><label>تاريخ الميلاد</label><input type="date" value="1990-05-15"></div>
+      </div>
+      <div style="margin-top:16px;"><button class="btn-gold" onclick="alert('✅ تم حفظ المعلومات!')">💾 حفظ التغييرات</button></div>
+    </div>
+    <div class="form-card">
+      <div class="form-card-title">🔒 تغيير كلمة المرور</div>
+      <div class="form-grid">
+        <div class="field"><label>كلمة المرور الحالية</label><input type="password" placeholder="••••••••"></div>
+        <div class="field"><label>كلمة المرور الجديدة</label><input type="password" placeholder="••••••••"></div>
+      </div>
+      <div style="margin-top:16px;"><button class="btn-gold" onclick="alert('✅ تم تغيير كلمة المرور!')">🔒 تغيير كلمة المرور</button></div>
+    </div>
+  </div>
+
+  <!-- ======= NOTIFICATIONS ======= -->
+  <div class="tab-content" id="tab-notifications">
+    <div class="form-card" style="padding:0;overflow:hidden;">
+      <div class="notif-item" style="padding:16px 20px;">
+        <div class="notif-dot"></div>
+        <div class="notif-icon ni-purple">🏨</div>
+        <div class="notif-body"><div class="notif-title">تذكير: تسجيل دخول اليوم!</div><div class="notif-desc">فيلا الملكية - حي الياسمين · الساعة 3:00 مساءً</div></div>
+        <div class="notif-time">منذ 2س</div>
+      </div>
+      <div class="notif-item" style="padding:16px 20px;">
+        <div class="notif-dot"></div>
+        <div class="notif-icon ni-gold">💰</div>
+        <div class="notif-body"><div class="notif-title">تم إضافة 120 نقطة مكافآت</div><div class="notif-desc">من حجز منتجع شرم البيضاء</div></div>
+        <div class="notif-time">أمس</div>
+      </div>
+      <div class="notif-item" style="padding:16px 20px;">
+        <div class="notif-dot"></div>
+        <div class="notif-icon ni-green">🎉</div>
+        <div class="notif-body"><div class="notif-title">عرض حصري لك!</div><div class="notif-desc">خصم 20% على حجوزات أبها هذا الأسبوع</div></div>
+        <div class="notif-time">منذ 3 أيام</div>
+      </div>
+      <div class="notif-item" style="padding:16px 20px;">
+        <div class="notif-dot read"></div>
+        <div class="notif-icon ni-blue">📅</div>
+        <div class="notif-body"><div class="notif-title">تأكيد الحجز #BSA-7831</div><div class="notif-desc">تم تأكيد حجزك في ريتز كارلتون</div></div>
+        <div class="notif-time">10 يونيو</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= LOYALTY ======= -->
+  <div class="tab-content" id="tab-loyalty">
+    <div class="form-card" style="background:linear-gradient(135deg,rgba(201,168,76,0.1),rgba(201,168,76,0.03));border-color:rgba(201,168,76,0.2);">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+        <div><div style="font-size:14px;color:var(--gold);font-weight:700;margin-bottom:4px;">🥇 العضوية الذهبية</div><div style="font-size:36px;font-weight:900;color:var(--gold);">3,200 نقطة</div><div style="font-size:13px;color:var(--gray);margin-top:4px;">1,800 نقطة للوصول للبلاتينية</div></div>
+        <div style="text-align:left;"><div style="font-size:12px;color:var(--gray);margin-bottom:8px;">تقدمك للمستوى التالي</div><div style="width:200px;height:8px;background:rgba(255,255,255,0.1);border-radius:4px;"><div style="width:65%;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:4px;"></div></div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--gray);margin-top:5px;"><span>0</span><span>5,000</span></div></div>
+      </div>
+    </div>
+    <div class="stats-grid" style="margin-bottom:20px;">
+      <div class="stat-card"><div class="stat-icon-wrap si-gold">🏆</div><div class="stat-val">3,200</div><div class="stat-lbl">نقاطي الحالية</div></div>
+      <div class="stat-card"><div class="stat-icon-wrap si-green">💰</div><div class="stat-val">160 ر.س</div><div class="stat-lbl">قيمة نقاطي</div></div>
+      <div class="stat-card"><div class="stat-icon-wrap si-blue">📅</div><div class="stat-val">14</div><div class="stat-lbl">حجز مكتمل</div></div>
+      <div class="stat-card"><div class="stat-icon-wrap si-purple">🎁</div><div class="stat-val">3</div><div class="stat-lbl">مكافآت متاحة</div></div>
+    </div>
+    <div class="form-card">
+      <div class="form-card-title">🎁 استبدل نقاطك</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+        <div style="background:var(--dark2);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'" onclick="alert('تم استبدال 500 نقطة بخصم 25 ر.س! ✅')"><div style="font-size:28px;margin-bottom:8px;">🏷️</div><div style="font-size:13px;font-weight:800;margin-bottom:4px;">خصم 25 ر.س</div><div style="font-size:11px;color:var(--gold);">500 نقطة</div></div>
+        <div style="background:var(--dark2);border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:16px;text-align:center;cursor:pointer;background:rgba(201,168,76,0.05);" onclick="alert('تم استبدال 1000 نقطة بليلة مجانية! 🎉')"><div style="font-size:28px;margin-bottom:8px;">🌙</div><div style="font-size:13px;font-weight:800;margin-bottom:4px;color:var(--gold);">ليلة مجانية</div><div style="font-size:11px;color:var(--gold);">1,000 نقطة ⭐</div></div>
+        <div style="background:var(--dark2);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'" onclick="alert('تم استبدال 2000 نقطة بترقية مجانية! 🚀')"><div style="font-size:28px;margin-bottom:8px;">⬆️</div><div style="font-size:13px;font-weight:800;margin-bottom:4px;">ترقية مجانية</div><div style="font-size:11px;color:var(--gold);">2,000 نقطة</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= PAYMENT ======= -->
+  <div class="tab-content" id="tab-payment">
+    <div class="form-card">
+      <div class="form-card-title">💳 طرق الدفع المحفوظة</div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;align-items:center;gap:14px;background:var(--dark2);padding:16px;border-radius:12px;border:1px solid rgba(201,168,76,0.2);">
+          <div style="font-size:28px;">🍎</div>
+          <div style="flex:1;"><div style="font-size:14px;font-weight:700;">Apple Pay</div><div style="font-size:12px;color:var(--gray);">الطريقة الافتراضية</div></div>
+          <span style="background:rgba(46,204,113,0.15);color:var(--green);padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;">افتراضية</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;background:var(--dark2);padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.06);">
+          <div style="font-size:28px;">🏦</div>
+          <div style="flex:1;"><div style="font-size:14px;font-weight:700;">مدى •••• 4521</div><div style="font-size:12px;color:var(--gray);">تنتهي 12/26</div></div>
+          <button class="action-btn action-cancel" style="font-size:12px;padding:5px 12px;">حذف</button>
+        </div>
+      </div>
+      <div style="margin-top:16px;"><button class="btn-outline" onclick="alert('إضافة طريقة دفع جديدة')">+ إضافة طريقة دفع</button></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- REVIEW MODAL -->
+<div class="modal-overlay" id="reviewModal">
+  <div class="modal">
+    <div class="modal-title">⭐ كيف كانت إقامتك؟</div>
+    <div style="font-size:13px;color:var(--gray);margin-bottom:14px;">منتجع شرم البيضاء - تبوك</div>
+    <div class="stars-select" id="starsSelect">⭐⭐⭐⭐⭐</div>
+    <textarea class="modal-textarea" placeholder="شاركنا تجربتك... ما الذي أعجبك أو لم يعجبك؟"></textarea>
+    <div class="modal-btns">
+      <button class="modal-btn-p" onclick="submitReview()">✅ إرسال التقييم</button>
+      <button class="modal-btn-s" onclick="closeReview()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- CANCEL MODAL -->
+<div class="modal-overlay" id="cancelModal">
+  <div class="modal">
+    <div style="font-size:48px;text-align:center;margin-bottom:14px;">⚠️</div>
+    <div class="modal-title" style="text-align:center;">تأكيد الإلغاء</div>
+    <div style="text-align:center;color:var(--gray);font-size:14px;margin-bottom:20px;line-height:1.7;">هل أنت متأكد من إلغاء حجز #BSA-7831؟<br>سيتم استرداد <strong style="color:var(--green);">2,932 ر.س</strong> كاملاً خلال 3-5 أيام.</div>
+    <div class="modal-btns">
+      <button class="modal-btn-p" style="background:var(--red);" onclick="doCancel()">❌ نعم، إلغاء الحجز</button>
+      <button class="modal-btn-s" onclick="document.getElementById('cancelModal').classList.remove('show')">← تراجع</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchTab(name, el) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.ctab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.menu-item').forEach(t => t.classList.remove('active'));
+  const tab = document.getElementById('tab-'+name);
+  if(tab) tab.classList.add('active');
+  if(el && el.classList) {
+    if(el.classList.contains('ctab')) el.classList.add('active');
+    else el.classList.add('active');
+  }
+  const titles = { overview:'نظرة عامة 👋', bookings:'حجوزاتي 📅', wishlist:'قائمة المفضلة ❤️', reviews:'تقييماتي ⭐', profile:'معلوماتي الشخصية 👤', notifications:'الإشعارات 🔔', loyalty:'نقاط المكافآت 🏆', payment:'طرق الدفع 💳' };
+  const subs = { overview:'مرحباً محمد، إليك ملخص حسابك', bookings:'14 حجز · 2 قادمة · 10 مكتملة', wishlist:'5 عقارات محفوظة', reviews:'2 تقييم مكتوب', profile:'تحديث بياناتك الشخصية', notifications:'3 إشعارات جديدة', loyalty:'3,200 نقطة · عضو ذهبي', payment:'طرق الدفع المحفوظة' };
+  document.getElementById('pageTitle').textContent = titles[name] || name;
+  document.getElementById('pageSub').textContent = subs[name] || '';
+}
+
+function filterBookings(type, btn) { }
+
+function removeWish(btn) {
+  if(confirm('حذف من المفضلة؟')) btn.closest('.wish-card').remove();
+}
+
+function openReviewModal() { document.getElementById('reviewModal').classList.add('show'); }
+function closeReview() { document.getElementById('reviewModal').classList.remove('show'); }
+function submitReview() {
+  alert('✅ شكراً! تم إرسال تقييمك وربحت 50 نقطة مكافآت!');
+  closeReview();
+}
+
+function confirmCancel() { document.getElementById('cancelModal').classList.add('show'); }
+function doCancel() {
+  document.getElementById('cancelModal').classList.remove('show');
+  alert('✅ تم إلغاء الحجز. سيتم استرداد المبلغ خلال 3-5 أيام.');
+}
+</script>
+</body>
+</html>

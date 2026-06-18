@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>التقييمات والمراجعات | بوكنق السعودية</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold:#C9A84C; --gold-light:#E8C97A;
+    --dark:#0A0A0F; --dark2:#13131A; --dark3:#1C1C26; --dark4:#22222E;
+    --white:#F8F4EE; --gray:#8A8A9A;
+    --green:#2ECC71; --red:#E74C3C; --blue:#3498DB; --purple:#9B59B6; --orange:#E67E22;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Tajawal',sans-serif;background:var(--dark);color:var(--white);}
+
+  nav{background:rgba(10,10,15,0.98);border-bottom:1px solid rgba(201,168,76,0.2);padding:0 5%;height:65px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+  .logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+  .logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--gold),var(--gold-light));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+  .logo-text{font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .nav-back{color:var(--gold);font-size:13px;text-decoration:none;}
+
+  .container{max-width:1000px;margin:0 auto;padding:32px 5% 80px;}
+
+  /* HOTEL HEADER */
+  .hotel-header{background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:20px;padding:28px;margin-bottom:28px;display:grid;grid-template-columns:80px 1fr auto;gap:20px;align-items:center;}
+  .hh-img{width:80px;height:80px;border-radius:14px;background:var(--dark2);display:flex;align-items:center;justify-content:center;font-size:36px;}
+  .hh-name{font-size:22px;font-weight:900;margin-bottom:4px;}
+  .hh-loc{font-size:14px;color:var(--gray);margin-bottom:8px;}
+  .hh-tags{display:flex;gap:6px;flex-wrap:wrap;}
+  .hh-tag{background:rgba(201,168,76,0.1);color:var(--gold);padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;}
+  .hh-score{text-align:center;}
+  .score-big{font-size:56px;font-weight:900;color:var(--gold);line-height:1;}
+  .score-label{font-size:13px;color:var(--gray);margin-top:4px;}
+  .score-count{font-size:12px;color:var(--gray);}
+
+  /* RATING OVERVIEW */
+  .rating-overview{background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:18px;padding:24px;margin-bottom:24px;display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+  .ro-left{}
+  .stars-dist{display:flex;flex-direction:column;gap:7px;}
+  .star-row{display:flex;align-items:center;gap:10px;}
+  .star-label{font-size:12px;color:var(--gold);width:18px;text-align:center;font-weight:700;}
+  .star-bar{flex:1;height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;}
+  .star-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gold),var(--gold-light));transition:width 1s ease;}
+  .star-count{font-size:11px;color:var(--gray);width:28px;text-align:left;}
+  .ro-right{}
+  .criteria-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .criteria-item{background:var(--dark2);border-radius:10px;padding:12px;}
+  .ci-label{font-size:11px;color:var(--gray);margin-bottom:6px;}
+  .ci-score{font-size:20px;font-weight:900;color:var(--gold);}
+  .ci-bar{height:4px;background:rgba(255,255,255,0.06);border-radius:2px;margin-top:6px;}
+  .ci-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--gold),var(--gold-light));}
+
+  /* WRITE REVIEW */
+  .write-review{background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(201,168,76,0.02));border:1px solid rgba(201,168,76,0.2);border-radius:18px;padding:24px;margin-bottom:24px;}
+  .wr-title{font-size:18px;font-weight:800;margin-bottom:6px;}
+  .wr-sub{font-size:13px;color:var(--gray);margin-bottom:20px;}
+  .booking-verify{background:var(--dark2);border-radius:12px;padding:14px 16px;margin-bottom:18px;display:flex;align-items:center;gap:12px;}
+  .bv-icon{font-size:22px;}
+  .bv-info{flex:1;}
+  .bv-title{font-size:13px;font-weight:700;}
+  .bv-sub{font-size:11px;color:var(--gray);}
+  .bv-badge{background:rgba(46,204,113,0.12);color:var(--green);font-size:11px;font-weight:700;padding:4px 12px;border-radius:6px;}
+
+  /* STAR SELECTOR */
+  .star-selector{margin-bottom:18px;}
+  .ss-title{font-size:13px;color:var(--gold);font-weight:700;margin-bottom:10px;}
+  .ss-stars{display:flex;gap:8px;flex-direction:row-reverse;justify-content:flex-end;}
+  .ss-stars input{display:none;}
+  .ss-stars label{font-size:36px;cursor:pointer;color:rgba(255,255,255,0.15);transition:0.2s;line-height:1;}
+  .ss-stars input:checked~label,.ss-stars label:hover,.ss-stars label:hover~label{color:var(--gold);}
+
+  /* CRITERIA RATING */
+  .criteria-rating{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px;}
+  .cr-item{background:var(--dark2);border-radius:10px;padding:12px;text-align:center;}
+  .cr-label{font-size:11px;color:var(--gray);margin-bottom:8px;}
+  .cr-stars{display:flex;justify-content:center;gap:3px;}
+  .cr-star{font-size:18px;cursor:pointer;color:rgba(255,255,255,0.15);transition:0.2s;}
+  .cr-star.active{color:var(--gold);}
+
+  /* PHOTO UPLOAD */
+  .photo-upload{border:2px dashed rgba(201,168,76,0.2);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:0.3s;margin-bottom:18px;}
+  .photo-upload:hover{border-color:var(--gold);background:rgba(201,168,76,0.04);}
+  .pu-icon{font-size:32px;margin-bottom:8px;}
+  .pu-title{font-size:14px;font-weight:700;margin-bottom:4px;}
+  .pu-sub{font-size:12px;color:var(--gray);}
+  .uploaded-photos{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+  .photo-preview{width:60px;height:60px;border-radius:8px;background:var(--dark3);display:flex;align-items:center;justify-content:center;font-size:24px;border:1px solid rgba(201,168,76,0.2);position:relative;cursor:pointer;}
+  .photo-remove{position:absolute;top:-5px;left:-5px;width:18px;height:18px;border-radius:50%;background:var(--red);color:white;font-size:10px;display:flex;align-items:center;justify-content:center;}
+
+  /* REVIEW FORM */
+  .review-form{}
+  .rf-field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+  .rf-field label{font-size:12px;color:var(--gold);font-weight:700;}
+  .rf-field input,.rf-field textarea{background:var(--dark2);border:1.5px solid rgba(255,255,255,0.08);border-radius:10px;padding:11px 14px;color:var(--white);font-family:'Tajawal',sans-serif;font-size:14px;outline:none;transition:0.2s;}
+  .rf-field input:focus,.rf-field textarea:focus{border-color:var(--gold);}
+  .rf-field textarea{resize:vertical;min-height:100px;}
+  .char-count{font-size:11px;color:var(--gray);text-align:left;margin-top:3px;}
+  .tips-wrap{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
+  .tip-btn{background:var(--dark3);border:1px solid rgba(255,255,255,0.08);color:var(--gray);padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;transition:0.2s;font-family:'Tajawal',sans-serif;}
+  .tip-btn:hover{border-color:rgba(201,168,76,0.3);color:var(--gold);}
+  .btn-submit{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--dark);border:none;padding:14px;border-radius:12px;font-family:'Tajawal',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:0.3s;}
+  .btn-submit:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(201,168,76,0.3);}
+
+  /* REVIEWS LIST */
+  .reviews-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+  .rh-title{font-size:18px;font-weight:800;}
+  .reviews-controls{display:flex;gap:8px;align-items:center;}
+  .sort-sel{background:var(--dark3);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:7px 12px;color:var(--white);font-family:'Tajawal',sans-serif;font-size:12px;outline:none;}
+  .filter-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+  .fchip{padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--gray);cursor:pointer;font-family:'Tajawal',sans-serif;font-size:12px;font-weight:700;transition:0.2s;}
+  .fchip.active,.fchip:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,0.08);}
+
+  /* REVIEW CARD */
+  .review-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:20px;margin-bottom:14px;transition:0.3s;animation:fadeIn 0.3s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .review-card:hover{border-color:rgba(201,168,76,0.15);}
+  .review-card.featured{border-color:rgba(201,168,76,0.3);background:rgba(201,168,76,0.03);}
+  .rc-header{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px;}
+  .rc-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:var(--dark);flex-shrink:0;}
+  .rc-info{flex:1;}
+  .rc-name{font-size:15px;font-weight:800;margin-bottom:2px;display:flex;align-items:center;gap:8px;}
+  .verified-badge{background:rgba(46,204,113,0.12);color:var(--green);font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;}
+  .rc-meta{font-size:12px;color:var(--gray);display:flex;gap:10px;flex-wrap:wrap;}
+  .rc-right{text-align:left;flex-shrink:0;}
+  .rc-stars{color:var(--gold);font-size:16px;margin-bottom:3px;}
+  .rc-score{font-size:22px;font-weight:900;color:var(--gold);}
+  .rc-title{font-size:15px;font-weight:800;margin-bottom:8px;}
+  .rc-body{font-size:14px;color:rgba(255,255,255,0.82);line-height:1.8;margin-bottom:12px;}
+  .rc-body.collapsed{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+  .read-more{font-size:12px;color:var(--gold);cursor:pointer;font-weight:700;}
+
+  /* REVIEW PHOTOS */
+  .review-photos{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+  .rp-img{width:72px;height:72px;border-radius:10px;background:var(--dark2);display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer;border:1px solid rgba(255,255,255,0.06);transition:0.2s;}
+  .rp-img:hover{border-color:rgba(201,168,76,0.3);transform:scale(1.05);}
+
+  /* CRITERIA SCORES */
+  .rc-criteria{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:12px;padding:10px 14px;background:var(--dark2);border-radius:10px;}
+  .rcc-item{font-size:12px;display:flex;gap:5px;align-items:center;}
+  .rcc-label{color:var(--gray);}
+  .rcc-score{font-weight:800;color:var(--gold);}
+
+  /* REVIEW FOOTER */
+  .rc-footer{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;border-top:1px solid rgba(255,255,255,0.05);padding-top:12px;}
+  .helpful-wrap{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--gray);}
+  .helpful-btn{padding:5px 12px;border-radius:7px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--gray);cursor:pointer;font-family:'Tajawal',sans-serif;font-size:12px;font-weight:700;transition:0.2s;}
+  .helpful-btn:hover,.helpful-btn.voted{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,0.08);}
+  .report-btn{font-size:11px;color:var(--gray);cursor:pointer;transition:0.2s;}
+  .report-btn:hover{color:var(--red);}
+
+  /* HOTEL REPLY */
+  .hotel-reply{background:var(--dark2);border-radius:10px;padding:14px;margin-top:10px;border-right:3px solid var(--gold);}
+  .hr-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+  .hr-avatar{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-size:14px;}
+  .hr-name{font-size:13px;font-weight:700;}
+  .hr-time{font-size:11px;color:var(--gray);}
+  .hr-body{font-size:13px;color:var(--gray);line-height:1.7;}
+
+  /* SUCCESS */
+  .success-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);z-index:1000;align-items:center;justify-content:center;}
+  .success-overlay.show{display:flex;}
+  .success-modal{background:var(--dark3);border:1px solid rgba(201,168,76,0.2);border-radius:20px;padding:36px;max-width:420px;width:90%;text-align:center;animation:popIn 0.3s ease;}
+  @keyframes popIn{from{transform:scale(0.85);opacity:0}to{transform:scale(1);opacity:1}}
+  .sm-icon{font-size:64px;margin-bottom:14px;}
+  .sm-title{font-size:22px;font-weight:900;margin-bottom:8px;}
+  .sm-title span{background:linear-gradient(135deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .sm-desc{color:var(--gray);font-size:14px;margin-bottom:20px;line-height:1.7;}
+  .sm-points{background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:14px;margin-bottom:20px;font-size:15px;font-weight:700;color:var(--gold);}
+  .sm-btn{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--dark);border:none;padding:13px;border-radius:11px;font-family:'Tajawal',sans-serif;font-size:15px;font-weight:800;cursor:pointer;}
+
+  @media(max-width:700px){
+    .hotel-header{grid-template-columns:60px 1fr;}
+    .hh-score{display:none;}
+    .rating-overview{grid-template-columns:1fr;}
+    .criteria-rating{grid-template-columns:1fr 1fr;}
+    .criteria-grid{grid-template-columns:1fr 1fr;}
+  }
+</style>
+</head>
+<body>
+
+<!-- SUCCESS MODAL -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-modal">
+    <div class="sm-icon">⭐</div>
+    <div class="sm-title">شكراً على <span>تقييمك!</span></div>
+    <div class="sm-desc">تقييمك يساعد الآلاف من المسافرين في اتخاذ قرار الحجز الصحيح. تم نشر تقييمك بعد مراجعة سريعة.</div>
+    <div class="sm-points">🎁 ربحت 50 نقطة مكافآت!</div>
+    <button class="sm-btn" onclick="document.getElementById('successOverlay').classList.remove('show')">✅ رائع!</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo"><div class="logo-icon">🏨</div><div class="logo-text">بوكنق السعودية</div></a>
+  <a href="hotel-page.html" class="nav-back">← صفحة الفندق</a>
+</nav>
+
+<div class="container">
+
+  <!-- HOTEL HEADER -->
+  <div class="hotel-header">
+    <div class="hh-img">🏨</div>
+    <div>
+      <div class="hh-name">فندق الريتز كارلتون الرياض</div>
+      <div class="hh-loc">📍 حي العليا، الرياض · ⭐⭐⭐⭐⭐</div>
+      <div class="hh-tags">
+        <span class="hh-tag">🏊 مسبح</span>
+        <span class="hh-tag">💆 سبا</span>
+        <span class="hh-tag">🍳 إفطار</span>
+        <span class="hh-tag">🚗 فاليه</span>
+      </div>
+    </div>
+    <div class="hh-score">
+      <div class="score-big">9.8</div>
+      <div class="score-label">ممتاز جداً</div>
+      <div class="score-count">من 324 تقييم</div>
+    </div>
+  </div>
+
+  <!-- RATING OVERVIEW -->
+  <div class="rating-overview">
+    <div class="ro-left">
+      <div style="font-size:14px;font-weight:700;margin-bottom:14px;">توزيع التقييمات</div>
+      <div class="stars-dist">
+        <div class="star-row"><span class="star-label">5⭐</span><div class="star-bar"><div class="star-fill" style="width:78%"></div></div><span class="star-count">253</span></div>
+        <div class="star-row"><span class="star-label">4⭐</span><div class="star-bar"><div class="star-fill" style="width:14%"></div></div><span class="star-count">46</span></div>
+        <div class="star-row"><span class="star-label">3⭐</span><div class="star-bar"><div class="star-fill" style="width:5%;background:var(--orange)"></div></div><span class="star-count">16</span></div>
+        <div class="star-row"><span class="star-label">2⭐</span><div class="star-bar"><div class="star-fill" style="width:2%;background:var(--red)"></div></div><span class="star-count">6</span></div>
+        <div class="star-row"><span class="star-label">1⭐</span><div class="star-bar"><div class="star-fill" style="width:1%;background:var(--red)"></div></div><span class="star-count">3</span></div>
+      </div>
+    </div>
+    <div class="ro-right">
+      <div style="font-size:14px;font-weight:700;margin-bottom:14px;">التقييم حسب الفئة</div>
+      <div class="criteria-grid">
+        <div class="criteria-item"><div class="ci-label">🛏️ الغرف</div><div class="ci-score">9.9</div><div class="ci-bar"><div class="ci-fill" style="width:99%"></div></div></div>
+        <div class="criteria-item"><div class="ci-label">🍽️ الطعام</div><div class="ci-score">9.7</div><div class="ci-bar"><div class="ci-fill" style="width:97%"></div></div></div>
+        <div class="criteria-item"><div class="ci-label">👨‍💼 الخدمة</div><div class="ci-score">9.8</div><div class="ci-bar"><div class="ci-fill" style="width:98%"></div></div></div>
+        <div class="criteria-item"><div class="ci-label">📍 الموقع</div><div class="ci-score">9.6</div><div class="ci-bar"><div class="ci-fill" style="width:96%"></div></div></div>
+        <div class="criteria-item"><div class="ci-label">🧹 النظافة</div><div class="ci-score">9.9</div><div class="ci-bar"><div class="ci-fill" style="width:99%"></div></div></div>
+        <div class="criteria-item"><div class="ci-label">💰 القيمة</div><div class="ci-score">9.4</div><div class="ci-bar"><div class="ci-fill" style="width:94%"></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WRITE REVIEW -->
+  <div class="write-review">
+    <div class="wr-title">⭐ اكتب تقييمك</div>
+    <div class="wr-sub">شارك تجربتك وساعد المسافرين الآخرين</div>
+
+    <!-- BOOKING VERIFICATION -->
+    <div class="booking-verify">
+      <div class="bv-icon">✅</div>
+      <div class="bv-info">
+        <div class="bv-title">حجز موثّق #BSA-7831 · 15-18 يونيو 2024</div>
+        <div class="bv-sub">يمكنك فقط تقييم الفنادق التي أقمت فيها فعلاً</div>
+      </div>
+      <div class="bv-badge">✓ إقامة مؤكدة</div>
+    </div>
+
+    <!-- OVERALL RATING -->
+    <div class="star-selector">
+      <div class="ss-title">التقييم العام</div>
+      <div class="ss-stars" id="mainStars">
+        <input type="radio" name="rating" id="s5" value="5"><label for="s5" onclick="setRating(5)">⭐</label>
+        <input type="radio" name="rating" id="s4" value="4"><label for="s4" onclick="setRating(4)">⭐</label>
+        <input type="radio" name="rating" id="s3" value="3"><label for="s3" onclick="setRating(3)">⭐</label>
+        <input type="radio" name="rating" id="s2" value="2"><label for="s2" onclick="setRating(2)">⭐</label>
+        <input type="radio" name="rating" id="s1" value="1"><label for="s1" onclick="setRating(1)">⭐</label>
+      </div>
+      <div style="font-size:13px;color:var(--gray);margin-top:6px;" id="ratingLabel">انقر لتقييم تجربتك</div>
+    </div>
+
+    <!-- CRITERIA RATING -->
+    <div style="font-size:13px;color:var(--gold);font-weight:700;margin-bottom:10px;">تقييم تفصيلي</div>
+    <div class="criteria-rating">
+      <div class="cr-item">
+        <div class="cr-label">🛏️ الغرف</div>
+        <div class="cr-stars" id="cr-rooms">
+          <span class="cr-star" onclick="setCriteria('rooms',1)">⭐</span>
+          <span class="cr-star" onclick="setCriteria('rooms',2)">⭐</span>
+          <span class="cr-star" onclick="setCriteria('rooms',3)">⭐</span>
+          <span class="cr-star" onclick="setCriteria('rooms',4)">⭐</span>
+          <span class="cr-star" onclick="setCriteria('rooms',5)">⭐</span>
+        </div>
+      </div>
+      <div class="cr-item">
+        <div class="cr-label">🍽️ الطعام</div>
+        <div class="cr-stars" id="cr-food">
+          <span class="cr-star" onclick="setCriteria('food',1)">⭐</span>
+          <span class="cr-star" onclick="setCriteria('food',2)">⭐</span>
+          <span class="cr-star" onclick="setCriteria('food',3)">⭐</span>
+          <span class="cr-star" onclick="setCriteria('food',4)">⭐</span>
+          <span class="cr-star" onclick="setCriteria('food',5)">⭐</span>
+        </div>
+      </div>
+      <div class="cr-item">
+        <div class="cr-label">👨‍💼 الخدمة</div>
+        <div class="cr-stars" id="cr-service">
+          <span class="cr-star" onclick="setCriteria('service',1)">⭐</span>
+          <span class="cr-star" onclick="setCriteria('service',2)">⭐</span>
+          <span class="cr-star" onclick="setCriteria('service',3)">⭐</span>
+          <span class="cr-star" onclick="setCriteria('service',4)">⭐</span>
+          <span class="cr-star" onclick="setCriteria('service',5)">⭐</span>
+        </div>
+      </div>
+      <div class="cr-item">
+        <div class="cr-label">📍 الموقع</div>
+        <div class="cr-stars" id="cr-location">
+          <span class="cr-star" onclick="setCriteria('location',1)">⭐</span>
+          <span class="cr-star" onclick="setCriteria('location',2)">⭐</span>
+          <span class="cr-star" onclick="setCriteria('location',3)">⭐</span>
+          <span class="cr-star" onclick="setCriteria('location',4)">⭐</span>
+          <span class="cr-star" onclick="setCriteria('location',5)">⭐</span>
+        </div>
+      </div>
+      <div class="cr-item">
+        <div class="cr-label">🧹 النظافة</div>
+        <div class="cr-stars" id="cr-clean">
+          <span class="cr-star" onclick="setCriteria('clean',1)">⭐</span>
+          <span class="cr-star" onclick="setCriteria('clean',2)">⭐</span>
+          <span class="cr-star" onclick="setCriteria('clean',3)">⭐</span>
+          <span class="cr-star" onclick="setCriteria('clean',4)">⭐</span>
+          <span class="cr-star" onclick="setCriteria('clean',5)">⭐</span>
+        </div>
+      </div>
+      <div class="cr-item">
+        <div class="cr-label">💰 القيمة</div>
+        <div class="cr-stars" id="cr-value">
+          <span class="cr-star" onclick="setCriteria('value',1)">⭐</span>
+          <span class="cr-star" onclick="setCriteria('value',2)">⭐</span>
+          <span class="cr-star" onclick="setCriteria('value',3)">⭐</span>
+          <span class="cr-star" onclick="setCriteria('value',4)">⭐</span>
+          <span class="cr-star" onclick="setCriteria('value',5)">⭐</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- REVIEW FORM -->
+    <div class="review-form">
+      <div class="rf-field">
+        <label>📝 عنوان التقييم</label>
+        <input type="text" placeholder="مثال: تجربة رائعة لا تُنسى!" id="reviewTitle" maxlength="80">
+      </div>
+      <div class="rf-field">
+        <label>💬 تفاصيل تجربتك (50 حرف على الأقل)</label>
+        <textarea placeholder="شارك تجربتك بالتفصيل: ما أعجبك؟ ما الذي يمكن تحسينه؟ هل ستعود مرة أخرى؟" id="reviewBody" maxlength="2000" oninput="updateCount()"></textarea>
+        <div class="char-count"><span id="charCount">0</span>/2000 حرف</div>
+        <div class="tips-wrap" style="margin-top:8px;">
+          <div style="font-size:11px;color:var(--gray);width:100%;margin-bottom:4px;">اقتراحات للكتابة:</div>
+          <button class="tip-btn" onclick="addTip('الإفطار كان رائعاً')">+ الإفطار</button>
+          <button class="tip-btn" onclick="addTip('الغرفة نظيفة ومريحة')">+ النظافة</button>
+          <button class="tip-btn" onclick="addTip('الخدمة ممتازة وسريعة')">+ الخدمة</button>
+          <button class="tip-btn" onclick="addTip('الموقع مميز وقريب من كل شيء')">+ الموقع</button>
+          <button class="tip-btn" onclick="addTip('سأعود بالتأكيد')">+ سأعود</button>
+        </div>
+      </div>
+
+      <!-- PHOTOS -->
+      <div style="font-size:12px;color:var(--gold);font-weight:700;margin-bottom:8px;">📸 أضف صور من إقامتك (اختياري)</div>
+      <div class="photo-upload" onclick="addPhoto()">
+        <div class="pu-icon">📷</div>
+        <div class="pu-title">أضف صوراً من إقامتك</div>
+        <div class="pu-sub">JPG, PNG · حتى 5MB · 10 صور كحد أقصى</div>
+      </div>
+      <div class="uploaded-photos" id="uploadedPhotos"></div>
+
+      <div class="rf-field" style="margin-top:14px;">
+        <label>🏷️ نوع الرحلة</label>
+        <select style="background:var(--dark2);border:1.5px solid rgba(255,255,255,0.08);border-radius:10px;padding:11px 14px;color:var(--white);font-family:'Tajawal',sans-serif;font-size:14px;outline:none;">
+          <option>👨‍👩‍👧 رحلة عائلية</option>
+          <option>💼 سفر أعمال</option>
+          <option>💍 شهر عسل</option>
+          <option>👤 سفر منفرد</option>
+          <option>👫 رحلة ثنائية</option>
+          <option>👥 مجموعة أصدقاء</option>
+        </select>
+      </div>
+
+      <button class="btn-submit" onclick="submitReview()">⭐ نشر التقييم والحصول على 50 نقطة</button>
+    </div>
+  </div>
+
+  <!-- REVIEWS LIST -->
+  <div class="reviews-header">
+    <div class="rh-title">📋 324 تقييم</div>
+    <div class="reviews-controls">
+      <select class="sort-sel" onchange="sortReviews()">
+        <option>الأحدث أولاً</option>
+        <option>الأعلى تقييماً</option>
+        <option>الأقل تقييماً</option>
+        <option>الأكثر فائدة</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="filter-chips">
+    <button class="fchip active" onclick="filterReviews('all',this)">الكل (324)</button>
+    <button class="fchip" onclick="filterReviews('5',this)">⭐⭐⭐⭐⭐ (253)</button>
+    <button class="fchip" onclick="filterReviews('4',this)">⭐⭐⭐⭐ (46)</button>
+    <button class="fchip" onclick="filterReviews('family',this)">👨‍👩‍👧 عائلات</button>
+    <button class="fchip" onclick="filterReviews('business',this)">💼 أعمال</button>
+    <button class="fchip" onclick="filterReviews('photos',this)">📸 مع صور</button>
+  </div>
+
+  <!-- REVIEW 1 - FEATURED -->
+  <div class="review-card featured" id="review-1">
+    <div class="rc-header">
+      <div class="rc-avatar">س</div>
+      <div class="rc-info">
+        <div class="rc-name">سارة الغامدي <span class="verified-badge">✓ إقامة موثّقة</span></div>
+        <div class="rc-meta">
+          <span>👨‍👩‍👧 رحلة عائلية</span>
+          <span>📅 يونيو 2024</span>
+          <span>🇸🇦 الرياض</span>
+        </div>
+      </div>
+      <div class="rc-right">
+        <div class="rc-stars">⭐⭐⭐⭐⭐</div>
+        <div class="rc-score">10</div>
+      </div>
+    </div>
+    <div class="rc-criteria">
+      <div class="rcc-item"><span class="rcc-label">🛏️</span><span class="rcc-score">10</span></div>
+      <div class="rcc-item"><span class="rcc-label">🍽️</span><span class="rcc-score">10</span></div>
+      <div class="rcc-item"><span class="rcc-label">👨‍💼</span><span class="rcc-score">10</span></div>
+      <div class="rcc-item"><span class="rcc-label">📍</span><span class="rcc-score">9</span></div>
+      <div class="rcc-item"><span class="rcc-label">🧹</span><span class="rcc-score">10</span></div>
+    </div>
+    <div class="rc-title">تجربة استثنائية من كل النواحي! 🌟</div>
+    <div class="rc-body">
+      أمضينا 3 ليالٍ رائعة في الريتز كارلتون وكانت تجربة لا تُنسى. الغرف فسيحة ونظيفة بشكل مذهل، الإفطار من أجود ما أكلت، والخدمة استثنائية - يتذكرون اسمك منذ اللحظة الأولى! الأطفال استمتعوا كثيراً بالمسبح ونادي الأطفال. سعيدة جداً بالاختيار وسنعود بالتأكيد.
+    </div>
+    <div class="review-photos">
+      <div class="rp-img" onclick="alert('عرض الصورة')">🏊</div>
+      <div class="rp-img" onclick="alert('عرض الصورة')">🍳</div>
+      <div class="rp-img" onclick="alert('عرض الصورة')">🛏️</div>
+      <div class="rp-img" onclick="alert('عرض الصورة')">🌆</div>
+    </div>
+    <div class="hotel-reply">
+      <div class="hr-header">
+        <div class="hr-avatar">🏨</div>
+        <div>
+          <div class="hr-name">الريتز كارلتون الرياض</div>
+          <div class="hr-time">رد قبل 2 يوم</div>
+        </div>
+      </div>
+      <div class="hr-body">شكراً جزيلاً سارة على كلماتك الرائعة! سعداء جداً أن عائلتك استمتعت بإقامتها. نتطلع دائماً لخلق ذكريات جميلة لضيوفنا. نأمل أن نراكم مجدداً قريباً! 🌟</div>
+    </div>
+    <div class="rc-footer">
+      <div class="helpful-wrap">
+        هل كان مفيداً؟
+        <button class="helpful-btn" onclick="vote(this,'up')">👍 مفيد (47)</button>
+        <button class="helpful-btn" onclick="vote(this,'down')">👎 (2)</button>
+      </div>
+      <div class="report-btn" onclick="alert('تم الإبلاغ. شكراً!')">🚩 إبلاغ</div>
+    </div>
+  </div>
+
+  <!-- REVIEW 2 -->
+  <div class="review-card" id="review-2">
+    <div class="rc-header">
+      <div class="rc-avatar">خ</div>
+      <div class="rc-info">
+        <div class="rc-name">خالد العمري <span class="verified-badge">✓ إقامة موثّقة</span></div>
+        <div class="rc-meta">
+          <span>💼 سفر أعمال</span>
+          <span>📅 مايو 2024</span>
+          <span>🇸🇦 جدة</span>
+        </div>
+      </div>
+      <div class="rc-right">
+        <div class="rc-stars">⭐⭐⭐⭐⭐</div>
+        <div class="rc-score">9</div>
+      </div>
+    </div>
+    <div class="rc-title">مثالي لرجال الأعمال</div>
+    <div class="rc-body collapsed" id="body-2">
+      الاونج التنفيذي رائع وخدمة الغرف سريعة جداً. الواي فاي ممتاز ومناسب للعمل. الموقع مثالي قريب من المراكز التجارية والمصرفية. الإفطار متنوع وشهي. النقطة الوحيدة السلبية كانت ضجيج خفيف من الغرفة المجاورة. بشكل عام تجربة ممتازة وسأختاره دائماً عند زياراتي للرياض.
+    </div>
+    <div class="read-more" onclick="expandReview('body-2',this)">اقرأ أكثر ↓</div>
+    <div class="rc-footer">
+      <div class="helpful-wrap">هل كان مفيداً?<button class="helpful-btn" onclick="vote(this,'up')">👍 (28)</button><button class="helpful-btn" onclick="vote(this,'down')">👎 (1)</button></div>
+      <div class="report-btn" onclick="alert('تم الإبلاغ!')">🚩 إبلاغ</div>
+    </div>
+  </div>
+
+  <!-- REVIEW 3 - NEGATIVE -->
+  <div class="review-card" id="review-3">
+    <div class="rc-header">
+      <div class="rc-avatar">م</div>
+      <div class="rc-info">
+        <div class="rc-name">محمد الشهري <span class="verified-badge">✓ إقامة موثّقة</span></div>
+        <div class="rc-meta">
+          <span>💍 شهر عسل</span>
+          <span>📅 أبريل 2024</span>
+          <span>🇸🇦 مكة</span>
+        </div>
+      </div>
+      <div class="rc-right">
+        <div class="rc-stars" style="color:var(--orange);">⭐⭐⭐</div>
+        <div class="rc-score" style="color:var(--orange);">6</div>
+      </div>
+    </div>
+    <div class="rc-title">جيد ولكن توقعاتي كانت أعلى</div>
+    <div class="rc-body">الغرفة جيدة والنظافة ممتازة، لكن الخدمة كانت أبطأ مما توقعت خاصة في وقت الذروة. طلبنا الغرفة تُزيَّن لشهر العسل مسبقاً لكن لم يُنفَّذ الطلب. السعر مرتفع قياساً بالخدمة المقدمة.</div>
+    <div class="hotel-reply">
+      <div class="hr-header">
+        <div class="hr-avatar">🏨</div>
+        <div><div class="hr-name">الريتز كارلتون الرياض</div><div class="hr-time">رد قبل أسبوع</div></div>
+      </div>
+      <div class="hr-body">نعتذر جداً محمد على عدم تلبية طلبك. هذا لا يعكس معاييرنا. تواصلنا مع الفريق لتحسين التنسيق. نود تعويضك بترقية مجانية في زيارتك القادمة. تواصل معنا مباشرة على guestrelations@ritz.com 🙏</div>
+    </div>
+    <div class="rc-footer">
+      <div class="helpful-wrap">هل كان مفيداً?<button class="helpful-btn" onclick="vote(this,'up')">👍 (14)</button><button class="helpful-btn" onclick="vote(this,'down')">👎 (3)</button></div>
+      <div class="report-btn">🚩 إبلاغ</div>
+    </div>
+  </div>
+
+  <!-- LOAD MORE -->
+  <div style="text-align:center;margin-top:20px;">
+    <button onclick="loadMore()" style="background:transparent;border:1.5px solid rgba(201,168,76,0.3);color:var(--gold);padding:12px 36px;border-radius:12px;font-family:'Tajawal',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:0.2s;" onmouseover="this.style.background='rgba(201,168,76,0.08)'" onmouseout="this.style.background='transparent'">
+      تحميل المزيد من التقييمات ↓
+    </button>
+  </div>
+
+</div>
+
+<script>
+let selectedRating = 0;
+const ratingLabels = ['','تجربة سيئة 😞','تجربة مقبولة 😐','تجربة جيدة 🙂','تجربة ممتازة 😊','تجربة رائعة جداً 🤩'];
+
+function setRating(r) {
+  selectedRating = r;
+  document.getElementById('ratingLabel').textContent = ratingLabels[r];
+  document.getElementById('ratingLabel').style.color = r >= 4 ? 'var(--gold)' : r >= 3 ? 'var(--orange)' : 'var(--red)';
+}
+
+const criteriaScores = {};
+function setCriteria(type, score) {
+  criteriaScores[type] = score;
+  const stars = document.querySelectorAll(`#cr-${type} .cr-star`);
+  stars.forEach((s,i) => s.classList.toggle('active', i < score));
+}
+
+function updateCount() {
+  const len = document.getElementById('reviewBody').value.length;
+  document.getElementById('charCount').textContent = len;
+}
+
+function addTip(text) {
+  const ta = document.getElementById('reviewBody');
+  ta.value += (ta.value ? ' ' : '') + text;
+  updateCount();
+}
+
+function addPhoto() {
+  const emojis = ['🏊','🛏️','🍳','🌆','💆','🏋️','🌴','🎭'];
+  const container = document.getElementById('uploadedPhotos');
+  if(container.children.length >= 10) { alert('حد أقصى 10 صور'); return; }
+  const div = document.createElement('div');
+  div.className = 'photo-preview';
+  div.innerHTML = emojis[Math.floor(Math.random()*emojis.length)] + '<div class="photo-remove" onclick="this.parentElement.remove()">×</div>';
+  container.appendChild(div);
+}
+
+function submitReview() {
+  if(!selectedRating) { alert('⚠️ يرجى اختيار تقييم عام أولاً'); return; }
+  const title = document.getElementById('reviewTitle').value.trim();
+  const body = document.getElementById('reviewBody').value.trim();
+  if(!title) { alert('⚠️ يرجى إضافة عنوان للتقييم'); return; }
+  if(body.length < 50) { alert('⚠️ يرجى كتابة 50 حرف على الأقل في تفاصيل التقييم'); return; }
+  document.getElementById('successOverlay').classList.add('show');
+}
+
+function expandReview(id, btn) {
+  const el = document.getElementById(id);
+  el.classList.toggle('collapsed');
+  btn.textContent = el.classList.contains('collapsed') ? 'اقرأ أكثر ↓' : 'اقرأ أقل ↑';
+}
+
+function vote(btn, type) {
+  if(btn.classList.contains('voted')) return;
+  btn.classList.add('voted');
+  const num = parseInt(btn.textContent.match(/\d+/)[0]);
+  btn.textContent = btn.textContent.replace(num, num+1);
+}
+
+function filterReviews(filter, btn) {
+  document.querySelectorAll('.fchip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.review-card').forEach((c,i) => {
+    c.style.animationDelay = i*0.05+'s';
+    c.style.opacity='0.7';
+    setTimeout(()=>c.style.opacity='1', i*50+100);
+  });
+}
+
+function sortReviews() {
+  const cards = document.querySelectorAll('.review-card');
+  cards.forEach((c,i) => { c.style.opacity='0'; setTimeout(()=>c.style.opacity='1', i*80); });
+}
+
+function loadMore() {
+  alert('⏳ جاري تحميل المزيد من التقييمات...');
+}
+</script>
+</body>
+</html>

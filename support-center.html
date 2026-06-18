@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مركز الدعم | بوكنق السعودية</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold:#C9A84C; --gold-light:#E8C97A;
+    --dark:#0A0A0F; --dark2:#13131A; --dark3:#1C1C26; --dark4:#22222E;
+    --white:#F8F4EE; --gray:#8A8A9A;
+    --green:#2ECC71; --red:#E74C3C; --blue:#3498DB; --purple:#9B59B6; --orange:#E67E22;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Tajawal',sans-serif;background:var(--dark);color:var(--white);}
+
+  nav{background:rgba(10,10,15,0.98);border-bottom:1px solid rgba(201,168,76,0.2);padding:0 5%;height:65px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+  .logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+  .logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--gold),var(--gold-light));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+  .logo-text{font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .nav-back{color:var(--gold);font-size:13px;text-decoration:none;}
+
+  /* HERO */
+  .hero{background:linear-gradient(135deg,rgba(52,152,219,0.08),rgba(201,168,76,0.06),transparent),var(--dark2);padding:60px 5% 48px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.05);}
+  .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(46,204,113,0.12);border:1px solid rgba(46,204,113,0.25);color:var(--green);padding:6px 16px;border-radius:50px;font-size:13px;font-weight:700;margin-bottom:18px;}
+  .live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+  .hero h1{font-size:clamp(28px,4vw,48px);font-weight:900;margin-bottom:12px;}
+  .hero h1 span{background:linear-gradient(135deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .hero p{font-size:16px;color:var(--gray);max-width:560px;margin:0 auto 32px;line-height:1.8;}
+
+  /* SEARCH */
+  .support-search{max-width:580px;margin:0 auto;position:relative;}
+  .support-search input{width:100%;background:var(--dark3);border:2px solid rgba(201,168,76,0.2);border-radius:14px;padding:16px 56px 16px 20px;color:var(--white);font-family:'Tajawal',sans-serif;font-size:15px;outline:none;transition:0.3s;}
+  .support-search input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,0.1);}
+  .support-search input::placeholder{color:var(--gray);}
+  .search-icon{position:absolute;left:18px;top:50%;transform:translateY(-50%);font-size:20px;}
+  .search-suggestions{position:absolute;top:calc(100%+8px);right:0;left:0;background:var(--dark3);border:1px solid rgba(201,168,76,0.2);border-radius:12px;overflow:hidden;display:none;z-index:50;box-shadow:0 12px 40px rgba(0,0,0,0.5);}
+  .search-suggestions.show{display:block;}
+  .suggestion-item{padding:12px 18px;font-size:14px;cursor:pointer;transition:0.2s;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.04);}
+  .suggestion-item:last-child{border-bottom:none;}
+  .suggestion-item:hover{background:rgba(201,168,76,0.08);color:var(--gold);}
+
+  /* STATS */
+  .support-stats{display:flex;justify-content:center;gap:48px;margin-top:32px;flex-wrap:wrap;}
+  .ss-item{text-align:center;}
+  .ss-num{font-size:24px;font-weight:900;color:var(--gold);}
+  .ss-lbl{font-size:12px;color:var(--gray);margin-top:3px;}
+
+  /* CONTAINER */
+  .container{max-width:1100px;margin:0 auto;padding:48px 5% 80px;}
+
+  /* QUICK CONTACT */
+  .quick-contact{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:48px;}
+  .qc-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:18px;padding:24px;text-align:center;cursor:pointer;transition:0.3s;}
+  .qc-card:hover{border-color:rgba(201,168,76,0.3);transform:translateY(-4px);}
+  .qc-icon{font-size:36px;margin-bottom:12px;}
+  .qc-title{font-size:15px;font-weight:800;margin-bottom:4px;}
+  .qc-desc{font-size:12px;color:var(--gray);margin-bottom:10px;line-height:1.5;}
+  .qc-status{font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;display:inline-block;}
+  .status-online{background:rgba(46,204,113,0.12);color:var(--green);}
+  .status-fast{background:rgba(201,168,76,0.12);color:var(--gold);}
+  .status-24{background:rgba(52,152,219,0.12);color:var(--blue);}
+
+  /* CATEGORIES */
+  .categories-title{font-size:20px;font-weight:800;margin-bottom:20px;}
+  .categories-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:48px;}
+  .cat-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:18px;cursor:pointer;transition:0.3s;display:flex;align-items:center;gap:14px;}
+  .cat-card:hover{border-color:rgba(201,168,76,0.25);background:rgba(201,168,76,0.04);}
+  .cat-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+  .ci-gold{background:rgba(201,168,76,0.12);}
+  .ci-blue{background:rgba(52,152,219,0.12);}
+  .ci-green{background:rgba(46,204,113,0.12);}
+  .ci-red{background:rgba(231,76,60,0.12);}
+  .ci-purple{background:rgba(155,89,182,0.12);}
+  .ci-orange{background:rgba(230,126,34,0.12);}
+  .cat-info{flex:1;}
+  .cat-title{font-size:14px;font-weight:800;margin-bottom:3px;}
+  .cat-count{font-size:12px;color:var(--gray);}
+  .cat-arrow{color:var(--gray);font-size:16px;}
+
+  /* LAYOUT */
+  .main-layout{display:grid;grid-template-columns:1fr 360px;gap:28px;}
+
+  /* FAQ */
+  .faq-section{margin-bottom:32px;}
+  .section-label{font-size:11px;color:var(--gold);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;}
+  .faq-item{background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:14px;margin-bottom:8px;overflow:hidden;transition:0.3s;}
+  .faq-item:hover{border-color:rgba(201,168,76,0.15);}
+  .faq-item.open{border-color:rgba(201,168,76,0.25);}
+  .faq-q{padding:16px 20px;font-size:14px;font-weight:700;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;}
+  .faq-icon{font-size:18px;color:var(--gold);transition:0.3s;flex-shrink:0;}
+  .faq-item.open .faq-icon{transform:rotate(45deg);}
+  .faq-a{font-size:13px;color:var(--gray);line-height:1.8;max-height:0;overflow:hidden;transition:0.4s;padding:0 20px;}
+  .faq-item.open .faq-a{max-height:300px;padding:0 20px 16px;}
+  .faq-helpful{display:flex;align-items:center;gap:10px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.05);}
+  .helpful-text{font-size:12px;color:var(--gray);}
+  .helpful-btn{padding:4px 12px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:'Tajawal',sans-serif;transition:0.2s;}
+  .hb-yes{background:rgba(46,204,113,0.1);color:var(--green);}
+  .hb-no{background:rgba(231,76,60,0.1);color:var(--red);}
+  .hb-yes:hover{background:var(--green);color:var(--dark);}
+  .hb-no:hover{background:var(--red);color:white;}
+
+  /* TICKET FORM */
+  .ticket-card{background:var(--dark3);border:1px solid rgba(201,168,76,0.15);border-radius:18px;overflow:hidden;position:sticky;top:80px;}
+  .ticket-header{background:linear-gradient(135deg,var(--gold),var(--gold-light));padding:20px;}
+  .ticket-header h3{font-size:17px;font-weight:800;color:var(--dark);margin-bottom:3px;}
+  .ticket-header p{font-size:12px;color:rgba(0,0,0,0.6);}
+  .ticket-body{padding:20px;}
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+  .field label{font-size:12px;color:var(--gold);font-weight:700;}
+  .field input,.field select,.field textarea{background:var(--dark2);border:1.5px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px 12px;color:var(--white);font-family:'Tajawal',sans-serif;font-size:13px;outline:none;transition:0.2s;}
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold);}
+  .field textarea{resize:vertical;min-height:90px;}
+  .btn-submit{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--dark);border:none;padding:13px;border-radius:11px;font-family:'Tajawal',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:0.3s;margin-bottom:10px;}
+  .btn-submit:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(201,168,76,0.3);}
+  .ticket-note{font-size:11px;color:var(--gray);text-align:center;line-height:1.6;}
+
+  /* LIVE CHAT */
+  .chat-widget{position:fixed;bottom:24px;left:24px;z-index:999;}
+  .chat-btn{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 6px 24px rgba(201,168,76,0.5);transition:0.3s;animation:chatBounce 3s infinite;}
+  @keyframes chatBounce{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+  .chat-btn:hover{transform:scale(1.15);}
+  .chat-badge{position:absolute;top:-2px;right:-2px;width:18px;height:18px;border-radius:50%;background:var(--red);color:white;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid var(--dark);}
+  .chat-window{position:absolute;bottom:68px;left:0;width:320px;background:var(--dark3);border:1px solid rgba(201,168,76,0.2);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.7);display:none;animation:chatOpen 0.3s ease;}
+  @keyframes chatOpen{from{opacity:0;transform:scale(0.9) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+  .chat-window.open{display:block;}
+  .cw-header{background:linear-gradient(135deg,var(--gold),var(--gold-light));padding:16px 18px;display:flex;align-items:center;gap:12px;}
+  .cw-avatar{width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;font-size:20px;}
+  .cw-info{flex:1;}
+  .cw-name{font-size:14px;font-weight:800;color:var(--dark);}
+  .cw-status{font-size:11px;color:rgba(0,0,0,0.6);}
+  .cw-close{font-size:20px;cursor:pointer;color:rgba(0,0,0,0.5);}
+  .cw-messages{height:220px;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
+  .cw-messages::-webkit-scrollbar{width:3px;}
+  .cw-messages::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px;}
+  .cw-msg{max-width:80%;padding:10px 13px;border-radius:14px;font-size:13px;line-height:1.5;}
+  .cw-msg.bot{background:var(--dark4);color:var(--white);border-radius:4px 14px 14px 14px;align-self:flex-start;}
+  .cw-msg.user{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--dark);border-radius:14px 14px 4px 14px;align-self:flex-end;font-weight:600;}
+  .cw-msg.typing{display:flex;gap:4px;align-items:center;padding:12px 14px;}
+  .typing-dot{width:6px;height:6px;border-radius:50%;background:var(--gray);animation:typingBounce 1.2s infinite;}
+  .typing-dot:nth-child(2){animation-delay:0.2s;}
+  .typing-dot:nth-child(3){animation-delay:0.4s;}
+  @keyframes typingBounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+  .cw-quick{padding:0 12px 10px;display:flex;gap:6px;flex-wrap:wrap;}
+  .cw-quick-btn{background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);color:var(--gold);padding:5px 10px;border-radius:14px;font-size:11px;font-weight:700;cursor:pointer;transition:0.2s;font-family:'Tajawal',sans-serif;}
+  .cw-quick-btn:hover{background:rgba(201,168,76,0.2);}
+  .cw-input{padding:12px;border-top:1px solid rgba(255,255,255,0.06);display:flex;gap:8px;}
+  .cw-input input{flex:1;background:var(--dark4);border:none;outline:none;border-radius:20px;padding:9px 14px;color:var(--white);font-family:'Tajawal',sans-serif;font-size:13px;}
+  .cw-send{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+
+  /* TICKETS TABLE */
+  .tickets-section{margin-bottom:32px;}
+  .ticket-row{background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:14px 18px;margin-bottom:8px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:0.2s;}
+  .ticket-row:hover{border-color:rgba(201,168,76,0.2);}
+  .ticket-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+  .ticket-info{flex:1;min-width:0;}
+  .ticket-title{font-size:14px;font-weight:700;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .ticket-meta{font-size:12px;color:var(--gray);}
+  .ticket-status{font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;flex-shrink:0;}
+  .ts-open{background:rgba(52,152,219,0.12);color:var(--blue);}
+  .ts-progress{background:rgba(230,126,34,0.12);color:var(--orange);}
+  .ts-resolved{background:rgba(46,204,113,0.12);color:var(--green);}
+  .ts-closed{background:rgba(255,255,255,0.06);color:var(--gray);}
+
+  /* AGENT CARDS */
+  .agents-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:32px;}
+  .agent-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:18px;text-align:center;transition:0.3s;}
+  .agent-card:hover{border-color:rgba(201,168,76,0.2);}
+  .agent-avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:var(--dark);margin:0 auto 10px;position:relative;}
+  .agent-online{position:absolute;bottom:2px;left:2px;width:14px;height:14px;border-radius:50%;background:var(--green);border:2px solid var(--dark3);}
+  .agent-name{font-size:14px;font-weight:800;margin-bottom:3px;}
+  .agent-role{font-size:11px;color:var(--gray);margin-bottom:8px;}
+  .agent-stats{font-size:11px;color:var(--gray);}
+  .agent-rating{color:var(--gold);}
+  .btn-agent{width:100%;background:transparent;border:1px solid rgba(201,168,76,0.25);color:var(--gold);padding:7px;border-radius:8px;font-family:'Tajawal',sans-serif;font-size:12px;font-weight:700;cursor:pointer;margin-top:10px;transition:0.2s;}
+  .btn-agent:hover{background:rgba(201,168,76,0.1);}
+
+  /* SUCCESS MODAL */
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);z-index:1000;align-items:center;justify-content:center;}
+  .modal-overlay.show{display:flex;}
+  .modal{background:var(--dark3);border:1px solid rgba(201,168,76,0.2);border-radius:20px;padding:36px;max-width:420px;width:90%;text-align:center;animation:popIn 0.3s ease;}
+  @keyframes popIn{from{transform:scale(0.85);opacity:0}to{transform:scale(1);opacity:1}}
+  .modal-icon{font-size:64px;margin-bottom:14px;}
+  .modal-title{font-size:22px;font-weight:900;margin-bottom:8px;}
+  .modal-title span{background:linear-gradient(135deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .modal-desc{color:var(--gray);font-size:14px;line-height:1.7;margin-bottom:20px;}
+  .ticket-ref{background:var(--dark2);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:14px;margin-bottom:20px;}
+  .ticket-ref label{font-size:11px;color:var(--gold);display:block;margin-bottom:5px;}
+  .ticket-ref .ref{font-size:22px;font-weight:900;letter-spacing:3px;}
+  .modal-btn{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--dark);border:none;padding:13px;border-radius:11px;font-family:'Tajawal',sans-serif;font-size:15px;font-weight:800;cursor:pointer;}
+
+  @media(max-width:900px){
+    .quick-contact{grid-template-columns:1fr 1fr;}
+    .categories-grid{grid-template-columns:1fr 1fr;}
+    .main-layout{grid-template-columns:1fr;}
+    .ticket-card{position:static;}
+    .agents-grid{grid-template-columns:1fr 1fr;}
+  }
+  @media(max-width:600px){
+    .quick-contact{grid-template-columns:1fr 1fr;}
+    .categories-grid{grid-template-columns:1fr;}
+    .agents-grid{grid-template-columns:1fr;}
+    .support-stats{gap:24px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- CHAT WIDGET -->
+<div class="chat-widget">
+  <div class="chat-window" id="chatWindow">
+    <div class="cw-header">
+      <div class="cw-avatar">🎧</div>
+      <div class="cw-info"><div class="cw-name">دعم بوكنق السعودية</div><div class="cw-status">● متصل الآن · يرد خلال دقائق</div></div>
+      <div class="cw-close" onclick="toggleChat()">×</div>
+    </div>
+    <div class="cw-messages" id="cwMessages">
+      <div class="cw-msg bot">مرحباً! 👋 أنا مساعد بوكنق السعودية. كيف يمكنني مساعدتك اليوم؟</div>
+      <div class="cw-msg bot">يمكنني مساعدتك في الحجوزات، الدفع، الإلغاء، وأي استفسار آخر 😊</div>
+    </div>
+    <div class="cw-quick">
+      <button class="cw-quick-btn" onclick="sendQuick('مشكلة في الحجز')">❓ مشكلة في حجز</button>
+      <button class="cw-quick-btn" onclick="sendQuick('استرداد المبلغ')">💰 استرداد</button>
+      <button class="cw-quick-btn" onclick="sendQuick('تغيير موعد')">📅 تغيير موعد</button>
+      <button class="cw-quick-btn" onclick="sendQuick('شكوى')">📝 شكوى</button>
+    </div>
+    <div class="cw-input">
+      <input type="text" id="chatInput" placeholder="اكتب رسالتك..." onkeydown="if(event.key==='Enter')sendChat()">
+      <button class="cw-send" onclick="sendChat()">➤</button>
+    </div>
+  </div>
+  <button class="chat-btn" onclick="toggleChat()">💬<div class="chat-badge">1</div></button>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo"><div class="logo-icon">🏨</div><div class="logo-text">بوكنق السعودية</div></a>
+  <a href="index.html" class="nav-back">← الرئيسية</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge"><div class="live-dot"></div>دعم مباشر متاح الآن</div>
+  <h1>مركز <span>الدعم والمساعدة</span></h1>
+  <p>نحن هنا لمساعدتك على مدار الساعة. ابحث عن إجابتك أو تواصل مع فريق الدعم مباشرة</p>
+  <div class="support-search">
+    <input type="text" placeholder="🔍 ابحث عن إجابة... مثال: كيف أُلغي حجزي؟" oninput="showSuggestions(this.value)" onblur="setTimeout(()=>hideSuggestions(),200)">
+    <div class="search-icon">🔍</div>
+    <div class="search-suggestions" id="suggestions">
+      <div class="suggestion-item" onclick="openFaq(0)">❓ كيف أُلغي حجزي واسترد المبلغ؟</div>
+      <div class="suggestion-item" onclick="openFaq(1)">💳 طرق الدفع المتاحة</div>
+      <div class="suggestion-item" onclick="openFaq(2)">📅 تعديل تاريخ الحجز</div>
+      <div class="suggestion-item" onclick="openFaq(3)">🏨 تسجيل دخول مبكر</div>
+      <div class="suggestion-item" onclick="openFaq(4)">⭐ كيف أكتب تقييماً؟</div>
+    </div>
+  </div>
+  <div class="support-stats">
+    <div class="ss-item"><div class="ss-num">98%</div><div class="ss-lbl">معدل رضا العملاء</div></div>
+    <div class="ss-item"><div class="ss-num">3 دقائق</div><div class="ss-lbl">متوسط وقت الرد</div></div>
+    <div class="ss-item"><div class="ss-num">24/7</div><div class="ss-lbl">دعم متواصل</div></div>
+    <div class="ss-item"><div class="ss-num">+50,000</div><div class="ss-lbl">مشكلة تم حلها</div></div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- QUICK CONTACT -->
+  <div class="quick-contact">
+    <div class="qc-card" onclick="toggleChat()">
+      <div class="qc-icon">💬</div>
+      <div class="qc-title">شات مباشر</div>
+      <div class="qc-desc">تحدث مع أحد ممثلينا الآن مباشرة</div>
+      <div class="qc-status status-online">● متصل الآن</div>
+    </div>
+    <div class="qc-card" onclick="alert('📞 جاري الاتصال بك...\nسيتصل بك أحد ممثلينا خلال 60 ثانية!')">
+      <div class="qc-icon">📞</div>
+      <div class="qc-title">مكالمة هاتفية</div>
+      <div class="qc-desc">اطلب مكالمة ونتصل بك فوراً</div>
+      <div class="qc-status status-fast">⚡ خلال 60 ثانية</div>
+    </div>
+    <div class="qc-card" onclick="document.getElementById('ticketForm').scrollIntoView({behavior:'smooth'})">
+      <div class="qc-icon">📧</div>
+      <div class="qc-title">البريد الإلكتروني</div>
+      <div class="qc-desc">أرسل تذكرة دعم وسنرد خلال ساعة</div>
+      <div class="qc-status status-fast">⚡ خلال ساعة</div>
+    </div>
+    <div class="qc-card" onclick="alert('💬 فتح واتساب: +966 50 123 4567')">
+      <div class="qc-icon">💬</div>
+      <div class="qc-title">واتساب</div>
+      <div class="qc-desc">تواصل معنا عبر واتساب في أي وقت</div>
+      <div class="qc-status status-24">🕐 24/7</div>
+    </div>
+  </div>
+
+  <!-- CATEGORIES -->
+  <div style="margin-bottom:48px;">
+    <div class="categories-title">📂 تصفح حسب الموضوع</div>
+    <div class="categories-grid">
+      <div class="cat-card" onclick="filterFaq('booking')"><div class="cat-icon ci-gold">📅</div><div class="cat-info"><div class="cat-title">الحجوزات والتعديلات</div><div class="cat-count">24 مقال</div></div><div class="cat-arrow">←</div></div>
+      <div class="cat-card" onclick="filterFaq('payment')"><div class="cat-icon ci-green">💳</div><div class="cat-info"><div class="cat-title">الدفع والاسترداد</div><div class="cat-count">18 مقال</div></div><div class="cat-arrow">←</div></div>
+      <div class="cat-card" onclick="filterFaq('cancel')"><div class="cat-icon ci-red">❌</div><div class="cat-info"><div class="cat-title">الإلغاء والاسترداد</div><div class="cat-count">12 مقال</div></div><div class="cat-arrow">←</div></div>
+      <div class="cat-card" onclick="filterFaq('account')"><div class="cat-icon ci-blue">👤</div><div class="cat-info"><div class="cat-title">الحساب والبيانات</div><div class="cat-count">15 مقال</div></div><div class="cat-arrow">←</div></div>
+      <div class="cat-card" onclick="filterFaq('property')"><div class="cat-icon ci-purple">🏨</div><div class="cat-info"><div class="cat-title">أصحاب العقارات</div><div class="cat-count">20 مقال</div></div><div class="cat-arrow">←</div></div>
+      <div class="cat-card" onclick="filterFaq('loyalty')"><div class="cat-icon ci-orange">🏆</div><div class="cat-info"><div class="cat-title">نقاط المكافآت</div><div class="cat-count">8 مقال</div></div><div class="cat-arrow">←</div></div>
+    </div>
+  </div>
+
+  <!-- MAIN LAYOUT -->
+  <div class="main-layout">
+    <div>
+
+      <!-- POPULAR FAQS -->
+      <div class="faq-section">
+        <div class="section-label">الأسئلة الأكثر شيوعاً</div>
+
+        <div class="faq-item" id="faq-0"><div class="faq-q" onclick="toggleFaq(this)"><span>كيف أُلغي حجزي واسترد المبلغ؟</span><span class="faq-icon">+</span></div><div class="faq-a">يمكنك إلغاء حجزك بسهولة من حسابك ← حجوزاتي ← اختر الحجز ← إلغاء الحجز.<br><br>سياسة الاسترداد:<br>• إلغاء قبل 48 ساعة: استرداد كامل 100%<br>• إلغاء قبل 24 ساعة: استرداد 50%<br>• إلغاء أقل من 24 ساعة: لا يوجد استرداد<br><br>يصل المبلغ لحسابك خلال 3-5 أيام عمل.<div class="faq-helpful"><span class="helpful-text">هل كانت مفيدة؟</span><button class="helpful-btn hb-yes" onclick="markHelpful(this,true)">👍 نعم</button><button class="helpful-btn hb-no" onclick="markHelpful(this,false)">👎 لا</button></div></div></div>
+
+        <div class="faq-item" id="faq-1"><div class="faq-q" onclick="toggleFaq(this)"><span>ما هي طرق الدفع المتاحة؟</span><span class="faq-icon">+</span></div><div class="faq-a">نقبل جميع طرق الدفع التالية:<br>• 💳 بطاقة مدى (Mada)<br>• 🍎 Apple Pay<br>• 📱 STC Pay<br>• 💳 Visa & Mastercard<br>• 🏦 التحويل البنكي (للحجوزات الكبيرة)<br><br>جميع المدفوعات مشفرة وآمنة 100%.<div class="faq-helpful"><span class="helpful-text">هل كانت مفيدة؟</span><button class="helpful-btn hb-yes" onclick="markHelpful(this,true)">👍 نعم</button><button class="helpful-btn hb-no" onclick="markHelpful(this,false)">👎 لا</button></div></div></div>
+
+        <div class="faq-item" id="faq-2"><div class="faq-q" onclick="toggleFaq(this)"><span>هل يمكنني تعديل تاريخ الحجز؟</span><span class="faq-icon">+</span></div><div class="faq-a">نعم، يمكنك تعديل تاريخ حجزك من خلال:<br>1. اذهب لـ حسابي ← حجوزاتي<br>2. اختر الحجز المراد تعديله<br>3. اضغط "تعديل التاريخ"<br>4. اختر التاريخ الجديد وادفع الفرق إن وجد<br><br>⚠️ التعديل مجاني قبل 48 ساعة من الوصول. بعد ذلك قد تطبق رسوم.<div class="faq-helpful"><span class="helpful-text">هل كانت مفيدة؟</span><button class="helpful-btn hb-yes" onclick="markHelpful(this,true)">👍 نعم</button><button class="helpful-btn hb-no" onclick="markHelpful(this,false)">👎 لا</button></div></div></div>
+
+        <div class="faq-item" id="faq-3"><div class="faq-q" onclick="toggleFaq(this)"><span>هل يمكن تسجيل الدخول مبكراً؟</span><span class="faq-icon">+</span></div><div class="faq-a">تسجيل الدخول المبكر يعتمد على توفر الغرفة وسياسة الفندق. للطلب:<br>1. تواصل مع الفندق مباشرة عبر شات الحجز<br>2. أو اتصل بنا وسنطلب نيابةً عنك<br><br>بعض الفنادق تقدم الدخول المبكر مجاناً، وبعضها برسوم إضافية (50-150 ر.س).<div class="faq-helpful"><span class="helpful-text">هل كانت مفيدة؟</span><button class="helpful-btn hb-yes" onclick="markHelpful(this,true)">👍 نعم</button><button class="helpful-btn hb-no" onclick="markHelpful(this,false)">👎 لا</button></div></div></div>
+
+        <div class="faq-item" id="faq-4"><div class="faq-q" onclick="toggleFaq(this)"><span>كيف أكتب تقييماً للفندق؟</span><span class="faq-icon">+</span></div><div class="faq-a">بعد تسجيل الخروج بساعتين ستصلك رسالة لكتابة تقييمك. يمكنك أيضاً:<br>1. اذهب لـ حسابي ← حجوزاتي<br>2. اختر الحجز المكتمل<br>3. اضغط "كتابة تقييم"<br><br>🎁 ستحصل على 50 نقطة مكافآت مقابل كل تقييم تكتبه!<div class="faq-helpful"><span class="helpful-text">هل كانت مفيدة؟</span><button class="helpful-btn hb-yes" onclick="markHelpful(this,true)">👍 نعم</button><button class="helpful-btn hb-no" onclick="markHelpful(this,false)">👎 لا</button></div></div></div>
+
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>ما هو ضمان أفضل سعر؟</span><span class="faq-icon">+</span></div><div class="faq-a">نضمن لك أفضل سعر متاح. إذا وجدت نفس الفندق في نفس التاريخ بسعر أقل في موقع آخر خلال 24 ساعة من حجزك، سنرد لك الفرق + 5% إضافية كتعويض.<br><br>للمطالبة: تواصل معنا وأرسل لينك السعر الأرخص.<div class="faq-helpful"><span class="helpful-text">هل كانت مفيدة؟</span><button class="helpful-btn hb-yes" onclick="markHelpful(this,true)">👍 نعم</button><button class="helpful-btn hb-no" onclick="markHelpful(this,false)">👎 لا</button></div></div></div>
+
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>كيف أستخدم نقاط المكافآت؟</span><span class="faq-icon">+</span></div><div class="faq-a">استخدام النقاط سهل جداً:<br>1. عند الحجز، ستجد خيار "استخدام نقاطي"<br>2. اختر عدد النقاط التي تريد استخدامها<br>3. كل 100 نقطة = 5 ريال خصم<br><br>يمكنك أيضاً استبدالها بليالٍ مجانية أو ترقيات من صفحة المكافآت.<div class="faq-helpful"><span class="helpful-text">هل كانت مفيدة؟</span><button class="helpful-btn hb-yes" onclick="markHelpful(this,true)">👍 نعم</button><button class="helpful-btn hb-no" onclick="markHelpful(this,false)">👎 لا</button></div></div></div>
+      </div>
+
+      <!-- MY TICKETS -->
+      <div class="tickets-section">
+        <div class="section-label">تذاكر الدعم السابقة</div>
+        <div class="ticket-row"><div class="ticket-icon" style="background:rgba(52,152,219,0.12);">❓</div><div class="ticket-info"><div class="ticket-title">مشكلة في الدفع - لم تكتمل العملية</div><div class="ticket-meta">#TKT-4521 · منذ ساعتين · الدفع والفواتير</div></div><span class="ticket-status ts-progress">⏳ قيد المعالجة</span></div>
+        <div class="ticket-row"><div class="ticket-icon" style="background:rgba(46,204,113,0.12);">✅</div><div class="ticket-info"><div class="ticket-title">طلب استرداد حجز #BSA-7790</div><div class="ticket-meta">#TKT-4488 · 10 يونيو · الإلغاء والاسترداد</div></div><span class="ticket-status ts-resolved">✅ تم الحل</span></div>
+        <div class="ticket-row"><div class="ticket-icon" style="background:rgba(255,255,255,0.06);">💬</div><div class="ticket-info"><div class="ticket-title">استفسار عن الحجز الشهري</div><div class="ticket-meta">#TKT-4420 · 5 يونيو · الحجوزات</div></div><span class="ticket-status ts-closed">مغلق</span></div>
+      </div>
+
+      <!-- AGENTS -->
+      <div>
+        <div class="section-label">فريق الدعم المتاح الآن</div>
+        <div class="agents-grid">
+          <div class="agent-card"><div class="agent-avatar">أ<div class="agent-online"></div></div><div class="agent-name">أحمد الشمري</div><div class="agent-role">متخصص الحجوزات</div><div class="agent-stats"><span class="agent-rating">⭐ 4.9</span> · 234 حالة محلولة</div><button class="btn-agent" onclick="toggleChat()">تحدث معه</button></div>
+          <div class="agent-card"><div class="agent-avatar">س<div class="agent-online"></div></div><div class="agent-name">سارة العتيبي</div><div class="agent-role">متخصصة المدفوعات</div><div class="agent-stats"><span class="agent-rating">⭐ 5.0</span> · 189 حالة محلولة</div><button class="btn-agent" onclick="toggleChat()">تحدث معها</button></div>
+          <div class="agent-card"><div class="agent-avatar">م</div><div class="agent-name">محمد الغامدي</div><div class="agent-role">دعم تقني</div><div class="agent-stats"><span class="agent-rating">⭐ 4.8</span> · 312 حالة محلولة</div><button class="btn-agent" onclick="alert('محمد غير متاح حالياً، جرب أحمد أو سارة')">غير متاح</button></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TICKET FORM -->
+    <div id="ticketForm">
+      <div class="ticket-card">
+        <div class="ticket-header"><h3>📝 أرسل تذكرة دعم</h3><p>سنرد عليك خلال ساعة واحدة</p></div>
+        <div class="ticket-body">
+          <div class="field"><label>الموضوع</label>
+            <select>
+              <option>📅 مشكلة في الحجز</option>
+              <option>💳 مشكلة في الدفع</option>
+              <option>❌ طلب إلغاء واسترداد</option>
+              <option>🏨 شكوى على الفندق</option>
+              <option>👤 مشكلة في الحساب</option>
+              <option>🏆 استفسار نقاط المكافآت</option>
+              <option>📱 مشكلة تقنية</option>
+              <option>💬 استفسار عام</option>
+            </select>
+          </div>
+          <div class="field"><label>رقم الحجز (اختياري)</label><input type="text" placeholder="#BSA-XXXX"></div>
+          <div class="field"><label>الأولوية</label>
+            <select>
+              <option>🔴 عاجل جداً</option>
+              <option>🟠 عاجل</option>
+              <option selected>🟡 متوسط</option>
+              <option>🟢 منخفض</option>
+            </select>
+          </div>
+          <div class="field"><label>تفاصيل المشكلة</label><textarea placeholder="اشرح مشكلتك بالتفصيل لنتمكن من مساعدتك بسرعة..."></textarea></div>
+          <div class="field"><label>المرفقات (اختياري)</label><div style="background:var(--dark2);border:1.5px dashed rgba(201,168,76,0.2);border-radius:10px;padding:14px;text-align:center;cursor:pointer;font-size:13px;color:var(--gray);" onclick="alert('📎 اختر ملف أو صورة')">📎 أضف صورة أو ملف</div></div>
+          <button class="btn-submit" onclick="submitTicket()">📨 إرسال التذكرة</button>
+          <div class="ticket-note">متوسط وقت الرد: أقل من ساعة<br>نعمل 24/7 بما فيها الإجازات</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal">
+    <div class="modal-icon">✅</div>
+    <div class="modal-title">تم إرسال <span>تذكرتك!</span></div>
+    <div class="modal-desc">استلمنا طلبك وسيتواصل معك أحد ممثلينا خلال ساعة واحدة على البريد الإلكتروني وواتساب.</div>
+    <div class="ticket-ref"><label>رقم التذكرة</label><div class="ref">#TKT-4522</div></div>
+    <button class="modal-btn" onclick="document.getElementById('successModal').classList.remove('show')">✓ حسناً، شكراً!</button>
+  </div>
+</div>
+
+<script>
+// CHAT
+let chatOpen = false;
+const botReplies = [
+  'شكراً على تواصلك! سأحيلك لأحد ممثلينا فوراً 🎧',
+  'فهمت مشكلتك، دعني أتحقق من ذلك...',
+  'يمكنني مساعدتك في ذلك! هل رقم حجزك معك؟',
+  'تم استلام طلبك وسيتم معالجته خلال دقائق ✅',
+  'هل هناك أي شيء آخر يمكنني مساعدتك به؟ 😊',
+];
+let replyIdx = 0;
+
+function toggleChat() {
+  chatOpen = !chatOpen;
+  document.getElementById('chatWindow').classList.toggle('open', chatOpen);
+  document.querySelector('.chat-badge').style.display = chatOpen ? 'none' : 'flex';
+}
+
+function sendChat() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if(!text) return;
+  const msgs = document.getElementById('cwMessages');
+  const userMsg = document.createElement('div');
+  userMsg.className = 'cw-msg user';
+  userMsg.textContent = text;
+  msgs.appendChild(userMsg);
+  input.value = '';
+  msgs.scrollTop = msgs.scrollHeight;
+  // Typing indicator
+  setTimeout(() => {
+    const typing = document.createElement('div');
+    typing.className = 'cw-msg bot typing';
+    typing.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+    msgs.appendChild(typing);
+    msgs.scrollTop = msgs.scrollHeight;
+    setTimeout(() => {
+      typing.remove();
+      const botMsg = document.createElement('div');
+      botMsg.className = 'cw-msg bot';
+      botMsg.textContent = botReplies[replyIdx++ % botReplies.length];
+      msgs.appendChild(botMsg);
+      msgs.scrollTop = msgs.scrollHeight;
+    }, 1500);
+  }, 500);
+}
+
+function sendQuick(text) {
+  document.getElementById('chatInput').value = text;
+  sendChat();
+}
+
+// FAQ
+function toggleFaq(btn) {
+  const item = btn.closest ? btn.closest('.faq-item') : btn.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+  if(!isOpen) item.classList.add('open');
+}
+
+function openFaq(idx) {
+  document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+  const item = document.getElementById('faq-'+idx);
+  if(item) { item.classList.add('open'); item.scrollIntoView({behavior:'smooth',block:'center'}); }
+}
+
+function markHelpful(btn, helpful) {
+  const wrap = btn.closest('.faq-helpful');
+  wrap.innerHTML = helpful ? '<span style="color:var(--green);font-size:13px;">✅ شكراً على رأيك!</span>' : '<span style="color:var(--gold);font-size:13px;">📝 سنحسّن هذه الإجابة قريباً</span>';
+}
+
+function showSuggestions(val) {
+  document.getElementById('suggestions').classList.toggle('show', val.length > 1);
+}
+function hideSuggestions() { document.getElementById('suggestions').classList.remove('show'); }
+
+function filterFaq(cat) {
+  document.querySelector('.faq-section').scrollIntoView({behavior:'smooth'});
+}
+
+function submitTicket() {
+  document.getElementById('successModal').classList.add('show');
+}
+
+// Open chat after 5s if not opened
+setTimeout(() => { if(!chatOpen) { toggleChat(); } }, 5000);
+</script>
+</body>
+</html>

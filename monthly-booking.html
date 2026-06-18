@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الحجز الشهري | بوكنق السعودية</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C; --gold-light: #E8C97A;
+    --dark: #0A0A0F; --dark2: #13131A; --dark3: #1C1C26; --dark4: #22222E;
+    --white: #F8F4EE; --gray: #8A8A9A;
+    --green: #2ECC71; --red: #E74C3C; --blue: #3498DB; --purple: #9B59B6;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Tajawal',sans-serif; background:var(--dark); color:var(--white); }
+
+  /* NAV */
+  nav {
+    position:sticky; top:0; z-index:100;
+    background:rgba(10,10,15,0.97); backdrop-filter:blur(20px);
+    border-bottom:1px solid rgba(201,168,76,0.2);
+    padding:0 5%; height:65px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .logo-icon { width:38px; height:38px; background:linear-gradient(135deg,var(--gold),var(--gold-light)); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; }
+  .logo-text { font-size:18px; font-weight:800; background:linear-gradient(135deg,var(--gold),var(--gold-light)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .nav-back { color:var(--gold); text-decoration:none; font-size:14px; display:flex; align-items:center; gap:6px; }
+
+  /* HERO BANNER */
+  .monthly-hero {
+    background:linear-gradient(135deg, rgba(201,168,76,0.12) 0%, rgba(10,10,15,0) 60%),
+               linear-gradient(180deg, var(--dark2) 0%, var(--dark) 100%);
+    border-bottom:1px solid rgba(201,168,76,0.15);
+    padding:48px 5% 36px;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .hero-left { max-width:580px; }
+  .hero-badge {
+    display:inline-flex; align-items:center; gap:8px;
+    background:rgba(201,168,76,0.15); border:1px solid rgba(201,168,76,0.3);
+    color:var(--gold); padding:6px 16px; border-radius:50px;
+    font-size:13px; font-weight:700; margin-bottom:18px;
+  }
+  .hero-title { font-size:clamp(28px,4vw,46px); font-weight:900; line-height:1.2; margin-bottom:12px; }
+  .hero-title span { background:linear-gradient(135deg,var(--gold),var(--gold-light)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .hero-desc { font-size:16px; color:var(--gray); line-height:1.8; margin-bottom:24px; }
+  .hero-stats { display:flex; gap:28px; }
+  .hero-stat { }
+  .hero-stat-num { font-size:22px; font-weight:900; color:var(--gold); }
+  .hero-stat-lbl { font-size:12px; color:var(--gray); }
+  .hero-right { }
+  .savings-card {
+    background:var(--dark3); border:1px solid rgba(201,168,76,0.25);
+    border-radius:20px; padding:28px; text-align:center; min-width:220px;
+    position:relative; overflow:hidden;
+  }
+  .savings-card::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(201,168,76,0.05),transparent); }
+  .savings-icon { font-size:48px; margin-bottom:12px; }
+  .savings-title { font-size:14px; color:var(--gray); margin-bottom:6px; }
+  .savings-amount { font-size:36px; font-weight:900; color:var(--gold); }
+  .savings-sub { font-size:12px; color:var(--gray); margin-top:4px; }
+
+  /* SEARCH BAR */
+  .search-section { background:var(--dark2); border-bottom:1px solid rgba(255,255,255,0.05); padding:20px 5%; }
+  .search-wrap {
+    max-width:960px; margin:0 auto;
+    background:var(--dark3); border:1px solid rgba(201,168,76,0.2);
+    border-radius:16px; padding:18px 20px;
+    display:grid; grid-template-columns:2fr 1fr 1fr 1fr auto; gap:14px; align-items:end;
+  }
+  .sf label { font-size:11px; color:var(--gold); font-weight:700; margin-bottom:6px; display:block; }
+  .sf input, .sf select {
+    width:100%; background:var(--dark2); border:1px solid rgba(255,255,255,0.1);
+    border-radius:9px; padding:10px 12px; color:var(--white);
+    font-family:'Tajawal',sans-serif; font-size:14px; outline:none; transition:0.2s;
+  }
+  .sf input:focus, .sf select:focus { border-color:var(--gold); }
+  .search-btn {
+    background:linear-gradient(135deg,var(--gold),var(--gold-light));
+    border:none; border-radius:10px; padding:11px 24px;
+    color:var(--dark); font-weight:800; font-family:'Tajawal',sans-serif;
+    font-size:14px; cursor:pointer; transition:0.3s; white-space:nowrap;
+  }
+  .search-btn:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(201,168,76,0.3); }
+
+  /* DURATION TABS */
+  .duration-tabs { display:flex; gap:8px; max-width:960px; margin:16px auto 0; }
+  .dtab {
+    padding:8px 20px; border-radius:8px; border:1px solid rgba(255,255,255,0.1);
+    background:transparent; color:var(--gray); cursor:pointer;
+    font-family:'Tajawal',sans-serif; font-size:13px; font-weight:700; transition:0.2s;
+  }
+  .dtab.active { background:var(--gold); border-color:var(--gold); color:var(--dark); }
+  .dtab:hover:not(.active) { border-color:rgba(201,168,76,0.3); color:var(--gold); }
+
+  /* MAIN LAYOUT */
+  .main { max-width:1200px; margin:0 auto; padding:32px 5% 80px; display:grid; grid-template-columns:1fr 340px; gap:28px; }
+
+  /* RESULTS */
+  .results-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+  .res-title { font-size:18px; font-weight:800; }
+  .res-count { font-size:13px; color:var(--gray); margin-top:3px; }
+  .sort-sel { background:var(--dark3); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:8px 14px; color:var(--white); font-family:'Tajawal',sans-serif; font-size:13px; outline:none; }
+
+  /* PROPERTY CARD */
+  .prop-card {
+    background:var(--dark3); border:1px solid rgba(255,255,255,0.06);
+    border-radius:18px; overflow:hidden; margin-bottom:18px;
+    display:grid; grid-template-columns:240px 1fr;
+    transition:0.3s; cursor:pointer;
+  }
+  .prop-card:hover { border-color:rgba(201,168,76,0.3); transform:translateX(-4px); box-shadow:0 12px 40px rgba(0,0,0,0.4); }
+  .prop-img { background:var(--dark2); display:flex; align-items:center; justify-content:center; font-size:80px; position:relative; min-height:200px; }
+
+  /* MONTHLY BADGE */
+  .monthly-badge {
+    position:absolute; top:10px; right:10px;
+    background:linear-gradient(135deg,var(--purple),#7D3C98);
+    color:white; padding:5px 12px; border-radius:8px;
+    font-size:11px; font-weight:800; display:flex; align-items:center; gap:4px;
+  }
+  .discount-badge {
+    position:absolute; top:10px; left:10px;
+    background:var(--red); color:white; padding:4px 10px;
+    border-radius:7px; font-size:12px; font-weight:800;
+  }
+  .save-btn { position:absolute; bottom:10px; left:10px; width:30px; height:30px; border-radius:50%; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; font-size:15px; cursor:pointer; transition:0.2s; }
+  .save-btn:hover { background:rgba(201,168,76,0.3); }
+
+  .prop-info { padding:20px; display:flex; flex-direction:column; justify-content:space-between; }
+  .prop-type { font-size:11px; color:var(--gold); font-weight:700; letter-spacing:1px; margin-bottom:5px; }
+  .prop-name { font-size:17px; font-weight:800; margin-bottom:7px; }
+  .prop-loc { font-size:13px; color:var(--gray); margin-bottom:10px; }
+  .prop-feats { display:flex; gap:7px; flex-wrap:wrap; margin-bottom:12px; }
+  .feat { background:rgba(255,255,255,0.05); padding:3px 9px; border-radius:5px; font-size:11px; color:var(--gray); }
+
+  /* PRICING SECTION IN CARD */
+  .pricing-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:14px; }
+  .price-option {
+    background:var(--dark2); border:1.5px solid rgba(255,255,255,0.06);
+    border-radius:10px; padding:10px; text-align:center; cursor:pointer; transition:0.2s;
+  }
+  .price-option:hover { border-color:rgba(201,168,76,0.3); }
+  .price-option.best { border-color:var(--gold); background:rgba(201,168,76,0.08); }
+  .price-option.best::after { content:'الأوفر'; display:block; font-size:9px; color:var(--gold); font-weight:800; margin-top:2px; }
+  .po-label { font-size:10px; color:var(--gray); margin-bottom:4px; }
+  .po-price { font-size:16px; font-weight:900; color:var(--white); }
+  .price-option.best .po-price { color:var(--gold); }
+  .po-per { font-size:10px; color:var(--gray); }
+  .po-save { font-size:10px; color:var(--green); font-weight:700; margin-top:2px; }
+
+  .prop-footer { display:flex; justify-content:space-between; align-items:center; }
+  .rating-wrap { display:flex; align-items:center; gap:8px; }
+  .rating-box { background:var(--gold); color:var(--dark); padding:3px 9px; border-radius:7px; font-size:13px; font-weight:900; }
+  .rating-info { font-size:12px; }
+  .rating-info strong { display:block; font-size:13px; }
+  .btn-book-now { background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--dark); border:none; padding:10px 22px; border-radius:10px; font-family:'Tajawal',sans-serif; font-size:14px; font-weight:800; cursor:pointer; transition:0.3s; }
+  .btn-book-now:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(201,168,76,0.3); }
+
+  /* RIGHT SIDEBAR */
+  .sidebar { }
+  .sidebar-card {
+    background:var(--dark3); border:1px solid rgba(201,168,76,0.2);
+    border-radius:18px; overflow:hidden; margin-bottom:20px; position:sticky; top:80px;
+  }
+  .sidebar-header { background:linear-gradient(135deg,var(--gold),var(--gold-light)); padding:18px 20px; }
+  .sidebar-header h3 { font-size:16px; font-weight:800; color:var(--dark); }
+  .sidebar-header p { font-size:12px; color:rgba(0,0,0,0.6); margin-top:2px; }
+  .sidebar-body { padding:18px; }
+
+  /* CALCULATOR */
+  .calc-field { margin-bottom:14px; }
+  .calc-field label { font-size:12px; color:var(--gold); font-weight:700; display:block; margin-bottom:6px; }
+  .calc-field input, .calc-field select {
+    width:100%; background:var(--dark2); border:1px solid rgba(255,255,255,0.1);
+    border-radius:9px; padding:10px 12px; color:var(--white);
+    font-family:'Tajawal',sans-serif; font-size:14px; outline:none; transition:0.2s;
+  }
+  .calc-field input:focus { border-color:var(--gold); }
+
+  .months-selector { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:16px; }
+  .month-btn {
+    padding:10px 6px; border-radius:9px; border:1.5px solid rgba(255,255,255,0.08);
+    background:var(--dark2); cursor:pointer; text-align:center; transition:0.2s;
+    font-family:'Tajawal',sans-serif;
+  }
+  .month-btn:hover { border-color:rgba(201,168,76,0.3); }
+  .month-btn.selected { border-color:var(--gold); background:rgba(201,168,76,0.1); }
+  .month-num { font-size:18px; font-weight:900; color:var(--gold); }
+  .month-lbl { font-size:10px; color:var(--gray); }
+  .month-btn.selected .month-lbl { color:var(--gold); }
+  .month-disc { font-size:10px; color:var(--green); font-weight:700; }
+
+  .calc-result { background:var(--dark2); border-radius:12px; padding:16px; margin-bottom:14px; }
+  .calc-row { display:flex; justify-content:space-between; font-size:13px; margin-bottom:8px; color:var(--gray); }
+  .calc-row .v { color:var(--white); }
+  .calc-row.strikethrough .v { text-decoration:line-through; color:var(--gray); }
+  .calc-row.discount .v { color:var(--green); }
+  .calc-row.total { font-size:17px; font-weight:900; color:var(--white); border-top:1px solid rgba(255,255,255,0.08); padding-top:10px; margin-top:4px; margin-bottom:0; }
+  .calc-row.total .v { color:var(--gold); }
+  .savings-highlight { background:rgba(46,204,113,0.1); border:1px solid rgba(46,204,113,0.2); border-radius:10px; padding:10px 12px; text-align:center; margin-bottom:14px; font-size:13px; color:var(--green); font-weight:700; }
+
+  .btn-reserve { width:100%; background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--dark); border:none; padding:14px; border-radius:12px; font-family:'Tajawal',sans-serif; font-size:16px; font-weight:800; cursor:pointer; transition:0.3s; margin-bottom:10px; }
+  .btn-reserve:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(201,168,76,0.4); }
+  .reserve-note { font-size:12px; color:var(--gray); text-align:center; line-height:1.6; }
+
+  /* INFO CARDS */
+  .info-card { background:var(--dark3); border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:18px; margin-bottom:16px; }
+  .info-card-title { font-size:14px; font-weight:800; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .info-list { display:flex; flex-direction:column; gap:8px; }
+  .info-item { display:flex; align-items:flex-start; gap:8px; font-size:13px; color:var(--gray); line-height:1.5; }
+  .info-item .dot { color:var(--gold); font-size:16px; flex-shrink:0; margin-top:-1px; }
+
+  /* DISCOUNT TABLE */
+  .disc-table { width:100%; border-collapse:collapse; }
+  .disc-table th { padding:10px 12px; text-align:right; font-size:12px; color:var(--gray); background:var(--dark4); }
+  .disc-table td { padding:11px 12px; font-size:13px; border-bottom:1px solid rgba(255,255,255,0.04); }
+  .disc-table tr:last-child td { border-bottom:none; }
+  .disc-table tr:hover td { background:rgba(255,255,255,0.02); }
+  .disc-pct { color:var(--green); font-weight:800; }
+
+  /* COMPARE BOX */
+  .compare-box { background:var(--dark3); border:1px solid rgba(255,255,255,0.06); border-radius:16px; padding:22px; margin-bottom:24px; }
+  .compare-title { font-size:16px; font-weight:800; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+  .compare-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+  .compare-item { background:var(--dark2); border-radius:12px; padding:14px; text-align:center; position:relative; }
+  .compare-item.highlight { border:1.5px solid var(--gold); background:rgba(201,168,76,0.06); }
+  .compare-item.highlight::before { content:'الأفضل'; position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:var(--gold); color:var(--dark); font-size:10px; font-weight:800; padding:2px 10px; border-radius:10px; white-space:nowrap; }
+  .compare-dur { font-size:13px; color:var(--gray); margin-bottom:6px; }
+  .compare-price { font-size:20px; font-weight:900; color:var(--white); margin-bottom:4px; }
+  .compare-item.highlight .compare-price { color:var(--gold); }
+  .compare-per { font-size:11px; color:var(--gray); margin-bottom:6px; }
+  .compare-save { font-size:12px; color:var(--green); font-weight:700; }
+
+  /* MODAL */
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); backdrop-filter:blur(10px); z-index:1000; align-items:center; justify-content:center; }
+  .modal-overlay.show { display:flex; }
+  .modal { background:var(--dark3); border:1px solid rgba(201,168,76,0.3); border-radius:22px; padding:36px; max-width:480px; width:90%; text-align:center; animation:popIn 0.3s ease; }
+  @keyframes popIn { from{transform:scale(0.85);opacity:0} to{transform:scale(1);opacity:1} }
+  .modal-icon { font-size:64px; margin-bottom:14px; }
+  .modal-title { font-size:24px; font-weight:900; margin-bottom:8px; }
+  .modal-title span { background:linear-gradient(135deg,var(--gold),var(--gold-light)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .modal-desc { color:var(--gray); font-size:14px; line-height:1.8; margin-bottom:20px; }
+  .modal-ref { background:var(--dark2); border:1px solid rgba(201,168,76,0.2); border-radius:10px; padding:14px; margin-bottom:22px; }
+  .modal-ref label { font-size:11px; color:var(--gold); display:block; margin-bottom:5px; }
+  .modal-ref .ref { font-size:22px; font-weight:900; letter-spacing:3px; }
+  .modal-btns { display:flex; gap:10px; }
+  .modal-btn-p { flex:1; background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--dark); border:none; padding:13px; border-radius:11px; font-family:'Tajawal',sans-serif; font-size:15px; font-weight:800; cursor:pointer; }
+  .modal-btn-s { flex:1; background:transparent; color:var(--white); border:1px solid rgba(255,255,255,0.15); padding:13px; border-radius:11px; font-family:'Tajawal',sans-serif; font-size:15px; cursor:pointer; transition:0.2s; }
+  .modal-btn-s:hover { border-color:var(--gold); }
+
+  @media(max-width:900px) {
+    .monthly-hero { flex-direction:column; gap:24px; }
+    .savings-card { display:none; }
+    .search-wrap { grid-template-columns:1fr 1fr; }
+    .main { grid-template-columns:1fr; }
+    .sidebar-card { position:static; }
+    .prop-card { grid-template-columns:1fr; }
+    .prop-img { min-height:160px; }
+    .pricing-grid { grid-template-columns:1fr 1fr 1fr; }
+    .compare-grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-icon">🏨</div>
+    <div class="logo-text">بوكنق السعودية</div>
+  </a>
+  <a href="index.html" class="nav-back">← العودة للرئيسية</a>
+</nav>
+
+<!-- HERO -->
+<div class="monthly-hero">
+  <div class="hero-left">
+    <div class="hero-badge">🗓️ ميزة جديدة · الحجز الشهري</div>
+    <h1 class="hero-title">وفّر أكثر مع<br><span>الحجز الشهري</span></h1>
+    <p class="hero-desc">احجز لشهر أو أكثر واستمتع بخصومات تصل إلى 40%.<br>مثالي للمقيمين المؤقتين، رجال الأعمال، والعائلات.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-num">40%</div><div class="hero-stat-lbl">أقصى خصم شهري</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">+800</div><div class="hero-stat-lbl">عقار يقبل الشهري</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">لا عمولة</div><div class="hero-stat-lbl">إضافية للحجز الشهري</div></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="savings-card">
+      <div class="savings-icon">💰</div>
+      <div class="savings-title">توفيرك لـ 3 أشهر</div>
+      <div class="savings-amount" id="heroSaving">2,295 ر.س</div>
+      <div class="savings-sub">مقارنة بالحجز اليومي</div>
+    </div>
+  </div>
+</div>
+
+<!-- SEARCH -->
+<div class="search-section">
+  <div class="search-wrap">
+    <div class="sf">
+      <label>📍 الوجهة</label>
+      <input type="text" placeholder="مدينة أو حي..." value="الرياض">
+    </div>
+    <div class="sf">
+      <label>📅 تاريخ البداية</label>
+      <input type="date" id="startDate" value="2024-07-01" onchange="updateCalc()">
+    </div>
+    <div class="sf">
+      <label>🗓️ عدد الأشهر</label>
+      <select id="monthsCount" onchange="updateCalc()">
+        <option value="1">شهر واحد</option>
+        <option value="2">شهران</option>
+        <option value="3" selected>3 أشهر</option>
+        <option value="6">6 أشهر</option>
+        <option value="12">سنة كاملة</option>
+      </select>
+    </div>
+    <div class="sf">
+      <label>👥 النزلاء</label>
+      <select>
+        <option>1 شخص</option>
+        <option selected>2 أشخاص</option>
+        <option>3-4 أشخاص</option>
+        <option>عائلة +5</option>
+      </select>
+    </div>
+    <button class="search-btn" onclick="filterResults()">🔍 بحث</button>
+  </div>
+  <div class="duration-tabs">
+    <button class="dtab" onclick="setDuration(this,1)">شهر</button>
+    <button class="dtab" onclick="setDuration(this,2)">شهران</button>
+    <button class="dtab active" onclick="setDuration(this,3)">3 أشهر</button>
+    <button class="dtab" onclick="setDuration(this,6)">6 أشهر</button>
+    <button class="dtab" onclick="setDuration(this,12)">سنة 🏆</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- RESULTS -->
+  <div>
+
+    <!-- COMPARE BOX -->
+    <div class="compare-box">
+      <div class="compare-title">📊 مقارنة الأسعار - فندق الريتز كارلتون</div>
+      <div class="compare-grid">
+        <div class="compare-item">
+          <div class="compare-dur">يومي</div>
+          <div class="compare-price">850</div>
+          <div class="compare-per">ر.س / ليلة</div>
+          <div class="compare-save">—</div>
+        </div>
+        <div class="compare-item highlight">
+          <div class="compare-dur">شهري (3 أشهر)</div>
+          <div class="compare-price">595</div>
+          <div class="compare-per">ر.س / ليلة</div>
+          <div class="compare-save">وفّر 30%</div>
+        </div>
+        <div class="compare-item">
+          <div class="compare-dur">6 أشهر</div>
+          <div class="compare-price">510</div>
+          <div class="compare-per">ر.س / ليلة</div>
+          <div class="compare-save">وفّر 40%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="results-header">
+      <div>
+        <div class="res-title">🏨 <span id="resCount">47</span> عقار للحجز الشهري في الرياض</div>
+        <div class="res-count">يوليو 2024 · 3 أشهر · 2 أشخاص</div>
+      </div>
+      <select class="sort-sel" onchange="sortCards()">
+        <option>الأكثر توفيراً</option>
+        <option>السعر: الأقل أولاً</option>
+        <option>الأعلى تقييماً</option>
+        <option>الأقرب للمركز</option>
+      </select>
+    </div>
+
+    <!-- CARD 1 -->
+    <div class="prop-card" onclick="openBooking(this)">
+      <div class="prop-img">🏨
+        <div class="monthly-badge">🗓️ يقبل الشهري</div>
+        <div class="discount-badge">-30%</div>
+        <div class="save-btn" onclick="event.stopPropagation();this.textContent=this.textContent==='🤍'?'❤️':'🤍'">🤍</div>
+      </div>
+      <div class="prop-info">
+        <div>
+          <div class="prop-type">فندق فاخر ⭐⭐⭐⭐⭐</div>
+          <div class="prop-name">فندق الريتز كارلتون الرياض</div>
+          <div class="prop-loc">📍 حي العليا · 2 كم من المركز</div>
+          <div class="prop-feats">
+            <span class="feat">📶 واي فاي</span><span class="feat">🍳 إفطار يومي</span>
+            <span class="feat">🏊 مسبح</span><span class="feat">💆 سبا</span>
+            <span class="feat">🧹 تنظيف أسبوعي</span>
+          </div>
+          <div class="pricing-grid">
+            <div class="price-option" onclick="event.stopPropagation();selectPrice(this)">
+              <div class="po-label">شهر واحد</div>
+              <div class="po-price">680</div>
+              <div class="po-per">ر.س / ليلة</div>
+              <div class="po-save">وفّر 20%</div>
+            </div>
+            <div class="price-option best" onclick="event.stopPropagation();selectPrice(this)">
+              <div class="po-label">3 أشهر</div>
+              <div class="po-price">595</div>
+              <div class="po-per">ر.س / ليلة</div>
+              <div class="po-save">وفّر 30%</div>
+            </div>
+            <div class="price-option" onclick="event.stopPropagation();selectPrice(this)">
+              <div class="po-label">6 أشهر+</div>
+              <div class="po-price">510</div>
+              <div class="po-per">ر.س / ليلة</div>
+              <div class="po-save">وفّر 40%</div>
+            </div>
+          </div>
+        </div>
+        <div class="prop-footer">
+          <div class="rating-wrap">
+            <div class="rating-box">9.8</div>
+            <div class="rating-info"><strong>ممتاز جداً</strong><span style="color:var(--gray)">324 تقييم</span></div>
+          </div>
+          <button class="btn-book-now">احجز شهرياً</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 2 -->
+    <div class="prop-card" onclick="openBooking(this)">
+      <div class="prop-img">🏠
+        <div class="monthly-badge">🗓️ يقبل الشهري</div>
+        <div class="discount-badge">-25%</div>
+        <div class="save-btn" onclick="event.stopPropagation();this.textContent=this.textContent==='🤍'?'❤️':'🤍'">🤍</div>
+      </div>
+      <div class="prop-info">
+        <div>
+          <div class="prop-type">شقة فندقية ⭐⭐⭐⭐</div>
+          <div class="prop-name">شقق ماريوت التنفيذية - الرياض</div>
+          <div class="prop-loc">📍 حي النخيل · 4 كم من المركز</div>
+          <div class="prop-feats">
+            <span class="feat">🍳 مطبخ كامل</span><span class="feat">🅿️ موقف</span>
+            <span class="feat">📶 واي فاي</span><span class="feat">🏋️ نادي رياضي</span>
+            <span class="feat">🧹 تنظيف أسبوعي</span>
+          </div>
+          <div class="pricing-grid">
+            <div class="price-option" onclick="event.stopPropagation();selectPrice(this)">
+              <div class="po-label">شهر واحد</div>
+              <div class="po-price">360</div>
+              <div class="po-per">ر.س / ليلة</div>
+              <div class="po-save">وفّر 25%</div>
+            </div>
+            <div class="price-option best" onclick="event.stopPropagation();selectPrice(this)">
+              <div class="po-label">3 أشهر</div>
+              <div class="po-price">312</div>
+              <div class="po-per">ر.س / ليلة</div>
+              <div class="po-save">وفّر 35%</div>
+            </div>
+            <div class="price-option" onclick="event.stopPropagation();selectPrice(this)">
+              <div class="po-label">6 أشهر+</div>
+              <div class="po-price">264</div>
+              <div class="po-per">ر.س / ليلة</div>
+              <div class="po-save">وفّر 45%</div>
+            </div>
+          </div>
+        </div>
+        <div class="prop-footer">
+          <div class="rating-wrap">
+            <div class="rating-box">9.2</div>
+            <div class="rating-info"><strong>ممتاز</strong><span style="color:var(--gray)">213 تقييم</span></div>
+          </div>
+          <button class="btn-book-now">احجز شهرياً</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 3 -->
+    <div class="prop-card" onclick="openBooking(this)">
+      <div class="prop-img">🏡
+        <div class="monthly-badge">🗓️ يقبل الشهري</div>
+        <div class="save-btn" onclick="event.stopPropagation();this.textContent=this.textContent==='🤍'?'❤️':'🤍'">🤍</div>
+      </div>
+      <div class="prop-info">
+        <div>
+          <div class="prop-type">فيلا فاخرة ⭐⭐⭐⭐⭐</div>
+          <div class="prop-name">فيلا الملكية - حي الياسمين</div>
+          <div class="prop-loc">📍 حي الياسمين · 6 كم من المركز</div>
+          <div class="prop-feats">
+            <span class="feat">👥 10 أشخاص</span><span class="feat">🏊 مسبح خاص</span>
+            <span class="feat">🌿 حديقة</span><span class="feat">🍳 مطبخ</span>
+          </div>
+          <div class="pricing-grid">
+            <div class="price-option" onclick="event.stopPropagation();selectPrice(this)">
+              <div class="po-label">شهر واحد</div>
+              <div class="po-price">1,700</div>
+              <div class="po-per">ر.س / ليلة</div>
+              <div class="po-save">وفّر 20%</div>
+            </div>
+            <div class="price-option best" onclick="event.stopPropagation();selectPrice(this)">
+              <div class="po-label">3 أشهر</div>
+              <div class="po-price">1,487</div>
+              <div class="po-per">ر.س / ليلة</div>
+              <div class="po-save">وفّر 30%</div>
+            </div>
+            <div class="price-option" onclick="event.stopPropagation();selectPrice(this)">
+              <div class="po-label">6 أشهر+</div>
+              <div class="po-price">1,275</div>
+              <div class="po-per">ر.س / ليلة</div>
+              <div class="po-save">وفّر 40%</div>
+            </div>
+          </div>
+        </div>
+        <div class="prop-footer">
+          <div class="rating-wrap">
+            <div class="rating-box">9.7</div>
+            <div class="rating-info"><strong>ممتاز جداً</strong><span style="color:var(--gray)">94 تقييم</span></div>
+          </div>
+          <button class="btn-book-now">احجز شهرياً</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DISCOUNT TABLE -->
+    <div class="info-card">
+      <div class="info-card-title">📊 جدول الخصومات الشهرية</div>
+      <table class="disc-table">
+        <thead><tr><th>مدة الإقامة</th><th>نسبة الخصم</th><th>مثال (850 ر.س/ليلة)</th><th>التوفير الشهري</th></tr></thead>
+        <tbody>
+          <tr><td>شهر واحد (30 ليلة)</td><td class="disc-pct">20%</td><td>680 ر.س/ليلة</td><td style="color:var(--green);font-weight:700;">5,100 ر.س</td></tr>
+          <tr><td>شهران (60 ليلة)</td><td class="disc-pct">25%</td><td>637 ر.س/ليلة</td><td style="color:var(--green);font-weight:700;">6,375 ر.س</td></tr>
+          <tr><td>3 أشهر (90 ليلة)</td><td class="disc-pct" style="color:var(--gold);">30% ⭐</td><td>595 ر.س/ليلة</td><td style="color:var(--green);font-weight:700;">7,650 ر.س</td></tr>
+          <tr><td>6 أشهر (180 ليلة)</td><td class="disc-pct">35%</td><td>552 ر.س/ليلة</td><td style="color:var(--green);font-weight:700;">8,925 ر.س</td></tr>
+          <tr><td>سنة كاملة (365 ليلة)</td><td class="disc-pct" style="color:var(--gold);">40% 🏆</td><td>510 ر.س/ليلة</td><td style="color:var(--green);font-weight:700;">10,200 ر.س</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <!-- CALCULATOR -->
+    <div class="sidebar-card">
+      <div class="sidebar-header">
+        <h3>🧮 احسب توفيرك</h3>
+        <p>اختر المدة واحسب الفرق</p>
+      </div>
+      <div class="sidebar-body">
+        <div class="calc-field">
+          <label>السعر اليومي (ر.س)</label>
+          <input type="number" id="dailyPrice" value="850" min="1" oninput="updateCalc()">
+        </div>
+        <div style="font-size:12px;color:var(--gold);font-weight:700;margin-bottom:10px;">اختر عدد الأشهر:</div>
+        <div class="months-selector">
+          <div class="month-btn" onclick="selectMonths(this,1)"><div class="month-num">1</div><div class="month-lbl">شهر</div><div class="month-disc">-20%</div></div>
+          <div class="month-btn" onclick="selectMonths(this,2)"><div class="month-num">2</div><div class="month-lbl">شهر</div><div class="month-disc">-25%</div></div>
+          <div class="month-btn selected" onclick="selectMonths(this,3)"><div class="month-num">3</div><div class="month-lbl">أشهر</div><div class="month-disc">-30%</div></div>
+          <div class="month-btn" onclick="selectMonths(this,6)"><div class="month-num">6</div><div class="month-lbl">أشهر</div><div class="month-disc">-35%</div></div>
+          <div class="month-btn" onclick="selectMonths(this,9)"><div class="month-num">9</div><div class="month-lbl">أشهر</div><div class="month-disc">-38%</div></div>
+          <div class="month-btn" onclick="selectMonths(this,12)"><div class="month-num">12</div><div class="month-lbl">شهر</div><div class="month-disc">-40%</div></div>
+        </div>
+
+        <div class="calc-result">
+          <div class="calc-row strikethrough"><span>السعر الأصلي</span><span class="v" id="origPrice">76,500 ر.س</span></div>
+          <div class="calc-row discount"><span>خصم 30%</span><span class="v" id="discAmount">-22,950 ر.س</span></div>
+          <div class="calc-row"><span>ضريبة 15%</span><span class="v" id="taxAmount">8,032 ر.س</span></div>
+          <div class="calc-row total"><span>الإجمالي</span><span class="v" id="totalPrice">61,582 ر.س</span></div>
+        </div>
+
+        <div class="savings-highlight" id="savingsHighlight">
+          🎉 توفيرك: 22,950 ر.س مقارنة بالحجز اليومي!
+        </div>
+
+        <button class="btn-reserve" onclick="showModal()">🗓️ احجز الآن بهذا السعر</button>
+        <div class="reserve-note">✅ تأكيد فوري · إلغاء مجاني خلال 48 ساعة<br>💳 مدى · Apple Pay · STC Pay</div>
+      </div>
+    </div>
+
+    <!-- WHY MONTHLY -->
+    <div class="info-card">
+      <div class="info-card-title">✨ لماذا الحجز الشهري؟</div>
+      <div class="info-list">
+        <div class="info-item"><span class="dot">💰</span>وفّر حتى 40% مقارنة بالحجز اليومي</div>
+        <div class="info-item"><span class="dot">🔒</span>سعر ثابت لا يتغير طوال فترة إقامتك</div>
+        <div class="info-item"><span class="dot">🧹</span>تنظيف أسبوعي مجاني مشمول</div>
+        <div class="info-item"><span class="dot">📦</span>تخزين أمتعة مجاني</div>
+        <div class="info-item"><span class="dot">⚡</span>أولوية في الترقية عند التوفر</div>
+        <div class="info-item"><span class="dot">📞</span>مدير حساب خاص بك</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-icon">🎉</div>
+    <div class="modal-title">تم الحجز <span>الشهري بنجاح!</span></div>
+    <div class="modal-desc">مبروك! تم تأكيد إقامتك الشهرية في فندق الريتز كارلتون الرياض لمدة 3 أشهر.</div>
+    <div class="modal-ref">
+      <label>رقم الحجز الشهري</label>
+      <div class="ref">BSA-M-2024-4521</div>
+    </div>
+    <div class="modal-btns">
+      <button class="modal-btn-p">📥 تحميل العقد</button>
+      <button class="modal-btn-s" onclick="closeModal()">🏠 الرئيسية</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let selectedMonths = 3;
+const discounts = {1:0.20, 2:0.25, 3:0.30, 6:0.35, 9:0.38, 12:0.40};
+
+function updateCalc() {
+  const daily = parseFloat(document.getElementById('dailyPrice').value) || 850;
+  const months = selectedMonths;
+  const nights = months * 30;
+  const disc = discounts[months] || 0.30;
+  const orig = daily * nights;
+  const discAmt = orig * disc;
+  const afterDisc = orig - discAmt;
+  const tax = afterDisc * 0.15;
+  const total = afterDisc + tax;
+
+  document.getElementById('origPrice').textContent = orig.toLocaleString('ar') + ' ر.س';
+  document.getElementById('discAmount').textContent = '-' + Math.round(discAmt).toLocaleString('ar') + ' ر.س';
+  document.getElementById('taxAmount').textContent = Math.round(tax).toLocaleString('ar') + ' ر.س';
+  document.getElementById('totalPrice').textContent = Math.round(total).toLocaleString('ar') + ' ر.س';
+  document.getElementById('savingsHighlight').textContent = `🎉 توفيرك: ${Math.round(discAmt).toLocaleString('ar')} ر.س مقارنة بالحجز اليومي!`;
+  document.getElementById('heroSaving').textContent = Math.round(discAmt).toLocaleString('ar') + ' ر.س';
+}
+
+function selectMonths(el, n) {
+  selectedMonths = n;
+  document.querySelectorAll('.month-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  // sync with select
+  const sel = document.getElementById('monthsCount');
+  if(sel) sel.value = n;
+  updateCalc();
+}
+
+function setDuration(el, n) {
+  selectedMonths = n;
+  document.querySelectorAll('.dtab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.month-btn').forEach(b => {
+    const num = parseInt(b.querySelector('.month-num').textContent);
+    b.classList.toggle('selected', num === n);
+  });
+  updateCalc();
+}
+
+function selectPrice(el) {
+  const parent = el.closest('.pricing-grid');
+  parent.querySelectorAll('.price-option').forEach(p => p.classList.remove('best'));
+  el.classList.add('best');
+}
+
+function filterResults() {
+  const count = Math.floor(Math.random()*30)+30;
+  document.getElementById('resCount').textContent = count;
+}
+
+function sortCards() {
+  const cards = document.querySelectorAll('.prop-card');
+  cards.forEach((c,i) => {
+    c.style.opacity='0';
+    setTimeout(()=>c.style.opacity='1', i*100);
+  });
+}
+
+function openBooking(card) {
+  showModal();
+}
+
+function showModal() { document.getElementById('modal').classList.add('show'); }
+function closeModal() { document.getElementById('modal').classList.remove('show'); }
+
+// Init
+updateCalc();
+</script>
+</body>
+</html>

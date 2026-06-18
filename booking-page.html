@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إتمام الحجز | بوكنق السعودية</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --dark: #0A0A0F;
+    --dark2: #13131A;
+    --dark3: #1C1C26;
+    --white: #F8F4EE;
+    --gray: #8A8A9A;
+    --green: #2ECC71;
+    --red: #E74C3C;
+    --blue: #3498DB;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Tajawal',sans-serif; background:var(--dark); color:var(--white); }
+
+  /* NAV */
+  nav {
+    background:rgba(10,10,15,0.95); backdrop-filter:blur(20px);
+    border-bottom:1px solid rgba(201,168,76,0.2);
+    padding:0 5%; height:65px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .logo-icon { width:38px; height:38px; background:linear-gradient(135deg,var(--gold),var(--gold-light)); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; }
+  .logo-text { font-size:18px; font-weight:800; background:linear-gradient(135deg,var(--gold),var(--gold-light)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .secure-badge { display:flex; align-items:center; gap:8px; color:var(--green); font-size:14px; font-weight:700; }
+
+  /* STEPS */
+  .steps-bar {
+    background:var(--dark2); border-bottom:1px solid rgba(255,255,255,0.06);
+    padding:16px 5%; display:flex; justify-content:center;
+  }
+  .steps { display:flex; align-items:center; gap:0; }
+  .step { display:flex; align-items:center; gap:10px; }
+  .step-num {
+    width:32px; height:32px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px; font-weight:800; transition:0.3s;
+  }
+  .step.done .step-num { background:var(--green); color:white; }
+  .step.active .step-num { background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--dark); }
+  .step.pending .step-num { background:var(--dark3); color:var(--gray); border:1px solid rgba(255,255,255,0.1); }
+  .step-label { font-size:13px; font-weight:600; }
+  .step.done .step-label { color:var(--green); }
+  .step.active .step-label { color:var(--gold); }
+  .step.pending .step-label { color:var(--gray); }
+  .step-line { width:60px; height:2px; background:rgba(255,255,255,0.1); margin:0 8px; }
+  .step-line.done { background:var(--green); }
+
+  /* MAIN */
+  .container { max-width:1100px; margin:0 auto; padding:32px 24px 80px; }
+  .layout { display:grid; grid-template-columns:1fr 380px; gap:32px; }
+
+  /* FORM SECTIONS */
+  .form-section {
+    background:var(--dark3); border:1px solid rgba(255,255,255,0.06);
+    border-radius:20px; padding:28px; margin-bottom:20px;
+  }
+  .form-section-title {
+    font-size:18px; font-weight:800; margin-bottom:20px;
+    padding-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.06);
+    display:flex; align-items:center; gap:10px;
+  }
+  .form-section-title .icon {
+    width:36px; height:36px; border-radius:10px;
+    background:rgba(201,168,76,0.15); border:1px solid rgba(201,168,76,0.2);
+    display:flex; align-items:center; justify-content:center; font-size:16px;
+  }
+
+  .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .form-grid.three { grid-template-columns:1fr 1fr 1fr; }
+  .form-grid.full { grid-template-columns:1fr; }
+
+  .field { display:flex; flex-direction:column; gap:6px; }
+  .field label { font-size:12px; color:var(--gold); font-weight:700; }
+  .field input, .field select, .field textarea {
+    background:var(--dark2); border:1px solid rgba(255,255,255,0.1);
+    border-radius:10px; padding:12px 14px; color:var(--white);
+    font-family:'Tajawal',sans-serif; font-size:14px; outline:none; transition:0.3s;
+  }
+  .field input:focus, .field select:focus { border-color:var(--gold); box-shadow:0 0 0 3px rgba(201,168,76,0.1); }
+  .field textarea { resize:vertical; min-height:80px; }
+  .field select option { background:var(--dark2); }
+
+  /* PAYMENT METHODS */
+  .payment-methods { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px; }
+  .pay-method {
+    background:var(--dark2); border:2px solid rgba(255,255,255,0.08);
+    border-radius:12px; padding:16px 12px;
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    cursor:pointer; transition:0.3s; font-size:12px; text-align:center;
+  }
+  .pay-method:hover { border-color:rgba(201,168,76,0.4); }
+  .pay-method.selected { border-color:var(--gold); background:rgba(201,168,76,0.08); }
+  .pay-method .pay-icon { font-size:28px; }
+  .pay-method .pay-name { color:var(--gray); font-weight:600; }
+  .pay-method.selected .pay-name { color:var(--gold); }
+
+  /* CARD FORM */
+  .card-form { display:none; }
+  .card-form.show { display:block; }
+
+  .card-number-wrap { position:relative; }
+  .card-number-wrap input { padding-left:50px; letter-spacing:2px; }
+  .card-type-icon { position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:22px; }
+
+  .card-preview {
+    background:linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+    border-radius:16px; padding:24px; margin-bottom:20px;
+    border:1px solid rgba(201,168,76,0.2);
+    position:relative; overflow:hidden;
+  }
+  .card-preview::before {
+    content:''; position:absolute; top:-30px; right:-30px;
+    width:150px; height:150px; border-radius:50%;
+    background:rgba(201,168,76,0.1);
+  }
+  .card-chip { font-size:28px; margin-bottom:16px; }
+  .card-num-display { font-size:20px; letter-spacing:4px; font-weight:700; margin-bottom:16px; color:rgba(255,255,255,0.9); }
+  .card-meta { display:flex; justify-content:space-between; }
+  .card-meta-item label { font-size:10px; color:rgba(255,255,255,0.5); display:block; }
+  .card-meta-item span { font-size:14px; font-weight:700; }
+
+  /* MADA / APPLE PAY */
+  .alt-pay-form { text-align:center; padding:20px; }
+  .alt-pay-btn {
+    display:inline-flex; align-items:center; gap:12px;
+    background:var(--dark2); border:1px solid rgba(255,255,255,0.1);
+    padding:16px 32px; border-radius:14px; cursor:pointer;
+    font-size:16px; font-weight:700; transition:0.3s; color:var(--white);
+  }
+  .alt-pay-btn:hover { border-color:var(--gold); background:rgba(201,168,76,0.1); }
+
+  /* REQUESTS */
+  .requests-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .request-item {
+    background:var(--dark2); border:1px solid rgba(255,255,255,0.08);
+    border-radius:10px; padding:12px; display:flex; align-items:center;
+    gap:10px; cursor:pointer; transition:0.3s; font-size:13px;
+  }
+  .request-item:hover { border-color:rgba(201,168,76,0.3); }
+  .request-item.selected { border-color:var(--gold); background:rgba(201,168,76,0.08); color:var(--gold); }
+  .request-item input[type=checkbox] { display:none; }
+
+  /* SUMMARY CARD */
+  .summary-card {
+    background:var(--dark3); border:1px solid rgba(201,168,76,0.2);
+    border-radius:20px; overflow:hidden; position:sticky; top:20px;
+  }
+  .summary-header {
+    background:linear-gradient(135deg,var(--gold),var(--gold-light));
+    padding:20px;
+  }
+  .summary-header h3 { font-size:16px; font-weight:800; color:var(--dark); margin-bottom:4px; }
+  .summary-hotel { font-size:13px; color:rgba(0,0,0,0.6); }
+
+  .summary-body { padding:20px; }
+
+  .summary-img {
+    background:var(--dark2); border-radius:12px; height:120px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:60px; margin-bottom:16px;
+  }
+
+  .summary-info { margin-bottom:16px; }
+  .summary-row {
+    display:flex; justify-content:space-between;
+    font-size:13px; padding:8px 0;
+    border-bottom:1px solid rgba(255,255,255,0.05);
+  }
+  .summary-row:last-child { border-bottom:none; }
+  .summary-row .label { color:var(--gray); }
+  .summary-row .val { font-weight:700; }
+  .summary-row .val.gold { color:var(--gold); }
+  .summary-row .val.green { color:var(--green); }
+
+  .price-box {
+    background:var(--dark2); border-radius:12px; padding:16px; margin-bottom:16px;
+  }
+  .price-line { display:flex; justify-content:space-between; font-size:13px; margin-bottom:8px; color:var(--gray); }
+  .price-line .amt { color:var(--white); }
+  .price-total { display:flex; justify-content:space-between; font-size:20px; font-weight:900; border-top:1px solid rgba(255,255,255,0.1); padding-top:12px; margin-top:4px; }
+  .price-total .tot { color:var(--gold); }
+
+  .btn-confirm {
+    width:100%; background:linear-gradient(135deg,var(--gold),var(--gold-light));
+    color:var(--dark); border:none; padding:16px; border-radius:12px;
+    font-family:'Tajawal',sans-serif; font-size:17px; font-weight:800;
+    cursor:pointer; transition:0.3s; margin-bottom:12px;
+  }
+  .btn-confirm:hover { transform:translateY(-2px); box-shadow:0 10px 30px rgba(201,168,76,0.4); }
+
+  .trust-badges { display:flex; justify-content:center; gap:16px; }
+  .trust-item { display:flex; align-items:center; gap:4px; font-size:11px; color:var(--gray); }
+
+  /* SUCCESS MODAL */
+  .modal-overlay {
+    display:none; position:fixed; inset:0;
+    background:rgba(0,0,0,0.8); backdrop-filter:blur(10px);
+    z-index:1000; align-items:center; justify-content:center;
+  }
+  .modal-overlay.show { display:flex; }
+  .modal {
+    background:var(--dark3); border:1px solid rgba(201,168,76,0.3);
+    border-radius:24px; padding:48px; text-align:center; max-width:460px; width:90%;
+    animation:popIn 0.4s ease;
+  }
+  @keyframes popIn { from{transform:scale(0.8);opacity:0} to{transform:scale(1);opacity:1} }
+  .success-icon { font-size:80px; margin-bottom:16px; animation:bounce 0.6s ease 0.3s both; }
+  @keyframes bounce { 0%{transform:scale(0)} 60%{transform:scale(1.2)} 100%{transform:scale(1)} }
+  .modal h2 { font-size:28px; font-weight:900; margin-bottom:8px; }
+  .modal h2 span { background:linear-gradient(135deg,var(--gold),var(--gold-light)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .modal p { color:var(--gray); margin-bottom:24px; line-height:1.7; }
+  .booking-ref {
+    background:var(--dark2); border:1px solid rgba(201,168,76,0.2);
+    border-radius:12px; padding:16px; margin-bottom:24px;
+  }
+  .booking-ref label { font-size:12px; color:var(--gold); display:block; margin-bottom:6px; }
+  .booking-ref .ref-num { font-size:24px; font-weight:900; letter-spacing:4px; }
+  .modal-btns { display:flex; gap:12px; }
+  .btn-modal-primary { flex:1; background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--dark); border:none; padding:14px; border-radius:12px; font-family:'Tajawal',sans-serif; font-size:15px; font-weight:800; cursor:pointer; }
+  .btn-modal-secondary { flex:1; background:transparent; color:var(--white); border:1px solid rgba(255,255,255,0.15); padding:14px; border-radius:12px; font-family:'Tajawal',sans-serif; font-size:15px; cursor:pointer; transition:0.3s; }
+  .btn-modal-secondary:hover { border-color:var(--gold); }
+
+  @media(max-width:900px) {
+    .layout { grid-template-columns:1fr; }
+    .summary-card { position:static; }
+    .payment-methods { grid-template-columns:repeat(2,1fr); }
+    .requests-grid { grid-template-columns:1fr 1fr; }
+    .form-grid.three { grid-template-columns:1fr 1fr; }
+  }
+  @media(max-width:500px) {
+    .form-grid { grid-template-columns:1fr; }
+    .steps { gap:0; }
+    .step-label { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="booking-saudi.html" class="logo">
+    <div class="logo-icon">🏨</div>
+    <div class="logo-text">بوكنق السعودية</div>
+  </a>
+  <div class="secure-badge">🔒 صفحة دفع آمنة ومشفرة</div>
+</nav>
+
+<!-- STEPS -->
+<div class="steps-bar">
+  <div class="steps">
+    <div class="step done">
+      <div class="step-num">✓</div>
+      <div class="step-label">اختيار الغرفة</div>
+    </div>
+    <div class="step-line done"></div>
+    <div class="step active">
+      <div class="step-num">2</div>
+      <div class="step-label">بيانات الحجز</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step pending">
+      <div class="step-num">3</div>
+      <div class="step-label">الدفع</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step pending">
+      <div class="step-num">4</div>
+      <div class="step-label">تأكيد الحجز</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+<div class="layout">
+
+  <!-- LEFT FORMS -->
+  <div>
+
+    <!-- GUEST INFO -->
+    <div class="form-section">
+      <div class="form-section-title">
+        <div class="icon">👤</div>
+        بيانات النزيل الرئيسي
+      </div>
+      <div class="form-grid" style="margin-bottom:16px;">
+        <div class="field">
+          <label>الاسم الأول</label>
+          <input type="text" placeholder="محمد" id="fname">
+        </div>
+        <div class="field">
+          <label>اسم العائلة</label>
+          <input type="text" placeholder="العتيبي" id="lname">
+        </div>
+      </div>
+      <div class="form-grid" style="margin-bottom:16px;">
+        <div class="field">
+          <label>البريد الإلكتروني</label>
+          <input type="email" placeholder="example@email.com" id="email">
+        </div>
+        <div class="field">
+          <label>رقم الجوال</label>
+          <input type="tel" placeholder="05xxxxxxxx" id="phone">
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>الجنسية</label>
+          <select>
+            <option>🇸🇦 سعودي</option>
+            <option>🇦🇪 إماراتي</option>
+            <option>🇰🇼 كويتي</option>
+            <option>🇶🇦 قطري</option>
+            <option>🇧🇭 بحريني</option>
+            <option>🌍 أخرى</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>رقم الهوية / الجواز</label>
+          <input type="text" placeholder="1xxxxxxxxx">
+        </div>
+      </div>
+    </div>
+
+    <!-- STAY DETAILS -->
+    <div class="form-section">
+      <div class="form-section-title">
+        <div class="icon">📅</div>
+        تفاصيل الإقامة
+      </div>
+      <div class="form-grid" style="margin-bottom:16px;">
+        <div class="field">
+          <label>تاريخ الوصول</label>
+          <input type="date" id="checkin" value="2024-06-15" onchange="calcTotal()">
+        </div>
+        <div class="field">
+          <label>تاريخ المغادرة</label>
+          <input type="date" id="checkout" value="2024-06-18" onchange="calcTotal()">
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>وقت الوصول المتوقع</label>
+          <select>
+            <option>أي وقت</option>
+            <option>12:00 - 14:00</option>
+            <option>14:00 - 16:00</option>
+            <option>16:00 - 18:00</option>
+            <option>18:00 - 20:00</option>
+            <option>بعد 20:00</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>عدد النزلاء</label>
+          <select>
+            <option>2 بالغ · 0 أطفال</option>
+            <option>1 بالغ · 0 أطفال</option>
+            <option>2 بالغ · 2 أطفال</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- SPECIAL REQUESTS -->
+    <div class="form-section">
+      <div class="form-section-title">
+        <div class="icon">⭐</div>
+        طلبات خاصة (اختياري)
+      </div>
+      <div class="requests-grid" style="margin-bottom:16px;">
+        <div class="request-item" onclick="toggleRequest(this)">
+          <span>🌙</span> طابق مرتفع
+        </div>
+        <div class="request-item" onclick="toggleRequest(this)">
+          <span>🌅</span> إطلالة على المدينة
+        </div>
+        <div class="request-item" onclick="toggleRequest(this)">
+          <span>🛏️</span> سرير إضافي
+        </div>
+        <div class="request-item" onclick="toggleRequest(this)">
+          <span>🍼</span> سرير أطفال
+        </div>
+        <div class="request-item" onclick="toggleRequest(this)">
+          <span>🚭</span> غرفة غير مدخنة
+        </div>
+        <div class="request-item" onclick="toggleRequest(this)">
+          <span>♿</span> غرفة ذوي احتياجات
+        </div>
+      </div>
+      <div class="field form-grid full">
+        <label>ملاحظات إضافية</label>
+        <textarea placeholder="أي طلبات أو ملاحظات خاصة..."></textarea>
+      </div>
+    </div>
+
+    <!-- PAYMENT -->
+    <div class="form-section">
+      <div class="form-section-title">
+        <div class="icon">💳</div>
+        طريقة الدفع
+      </div>
+
+      <div class="payment-methods">
+        <div class="pay-method selected" onclick="selectPay(this,'card')">
+          <div class="pay-icon">💳</div>
+          <div class="pay-name">بطاقة ائتمان</div>
+        </div>
+        <div class="pay-method" onclick="selectPay(this,'mada')">
+          <div class="pay-icon">🏦</div>
+          <div class="pay-name">مدى</div>
+        </div>
+        <div class="pay-method" onclick="selectPay(this,'apple')">
+          <div class="pay-icon">🍎</div>
+          <div class="pay-name">Apple Pay</div>
+        </div>
+        <div class="pay-method" onclick="selectPay(this,'stc')">
+          <div class="pay-icon">📱</div>
+          <div class="pay-name">STC Pay</div>
+        </div>
+      </div>
+
+      <!-- CARD PREVIEW -->
+      <div class="card-preview" id="cardPreview">
+        <div class="card-chip">💳</div>
+        <div class="card-num-display" id="cardNumDisplay">•••• •••• •••• ••••</div>
+        <div class="card-meta">
+          <div class="card-meta-item">
+            <label>اسم حامل البطاقة</label>
+            <span id="cardNameDisplay">الاسم الكامل</span>
+          </div>
+          <div class="card-meta-item">
+            <label>تاريخ الانتهاء</label>
+            <span id="cardExpDisplay">MM/YY</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD FORM -->
+      <div class="card-form show" id="cardForm">
+        <div class="field form-grid full" style="margin-bottom:16px;">
+          <label>رقم البطاقة</label>
+          <div class="card-number-wrap">
+            <span class="card-type-icon">💳</span>
+            <input type="text" placeholder="0000 0000 0000 0000" maxlength="19" id="cardNum" oninput="formatCard(this)" style="padding-right:14px;">
+          </div>
+        </div>
+        <div class="form-grid three">
+          <div class="field" style="grid-column:span 2;">
+            <label>اسم حامل البطاقة</label>
+            <input type="text" placeholder="الاسم كما في البطاقة" id="cardName" oninput="updatePreview()">
+          </div>
+          <div class="field">
+            <label>CVV</label>
+            <input type="text" placeholder="•••" maxlength="4">
+          </div>
+        </div>
+        <div class="form-grid" style="margin-top:16px;">
+          <div class="field">
+            <label>شهر الانتهاء</label>
+            <select id="cardMonth" onchange="updatePreview()">
+              <option value="">الشهر</option>
+              <option>01</option><option>02</option><option>03</option>
+              <option>04</option><option>05</option><option>06</option>
+              <option>07</option><option>08</option><option>09</option>
+              <option>10</option><option>11</option><option>12</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>سنة الانتهاء</label>
+            <select id="cardYear" onchange="updatePreview()">
+              <option value="">السنة</option>
+              <option>2024</option><option>2025</option><option>2026</option>
+              <option>2027</option><option>2028</option><option>2029</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- ALT PAY -->
+      <div class="alt-pay-form" id="madaForm" style="display:none;">
+        <p style="color:var(--gray);margin-bottom:16px;">أدخل رقم بطاقة مدى للدفع الآمن</p>
+        <div class="field"><label>رقم بطاقة مدى</label><input type="text" placeholder="0000 0000 0000 0000"></div>
+      </div>
+      <div class="alt-pay-form" id="appleForm" style="display:none;">
+        <div class="alt-pay-btn"><span>🍎</span> ادفع بـ Apple Pay</div>
+      </div>
+      <div class="alt-pay-form" id="stcForm" style="display:none;">
+        <p style="color:var(--gray);margin-bottom:16px;">أدخل رقم جوالك المسجل في STC Pay</p>
+        <div class="field"><label>رقم الجوال</label><input type="tel" placeholder="05xxxxxxxx"></div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- RIGHT SUMMARY -->
+  <div>
+    <div class="summary-card">
+      <div class="summary-header">
+        <h3>ملخص الحجز</h3>
+        <div class="summary-hotel">فندق الريتز كارلتون الرياض</div>
+      </div>
+      <div class="summary-body">
+        <div class="summary-img">🏨</div>
+        <div class="summary-info">
+          <div class="summary-row">
+            <span class="label">نوع الغرفة</span>
+            <span class="val">غرفة ديلوكس</span>
+          </div>
+          <div class="summary-row">
+            <span class="label">تسجيل الدخول</span>
+            <span class="val" id="sum-checkin">الجمعة، 15 يونيو</span>
+          </div>
+          <div class="summary-row">
+            <span class="label">تسجيل الخروج</span>
+            <span class="val" id="sum-checkout">الاثنين، 18 يونيو</span>
+          </div>
+          <div class="summary-row">
+            <span class="label">عدد الليالي</span>
+            <span class="val gold" id="sum-nights">3 ليالي</span>
+          </div>
+          <div class="summary-row">
+            <span class="label">النزلاء</span>
+            <span class="val">2 بالغ</span>
+          </div>
+          <div class="summary-row">
+            <span class="label">الإلغاء</span>
+            <span class="val green">✅ مجاني</span>
+          </div>
+        </div>
+
+        <div class="price-box">
+          <div class="price-line"><span>850 ر.س × <span id="pb-nights">3</span> ليالي</span><span class="amt" id="pb-base">2,550 ر.س</span></div>
+          <div class="price-line"><span>ضريبة القيمة المضافة 15%</span><span class="amt" id="pb-tax">382 ر.س</span></div>
+          <div class="price-line"><span>رسوم الخدمة</span><span class="amt" style="color:var(--green);">مجاناً</span></div>
+          <div class="price-total">
+            <span>الإجمالي</span>
+            <span class="tot" id="pb-total">2,932 ر.س</span>
+          </div>
+        </div>
+
+        <button class="btn-confirm" onclick="confirmBooking()">
+          🔒 تأكيد الحجز والدفع
+        </button>
+
+        <div class="trust-badges">
+          <div class="trust-item">🔒 SSL آمن</div>
+          <div class="trust-item">✅ تأكيد فوري</div>
+          <div class="trust-item">💰 ضمان السعر</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal">
+    <div class="success-icon">🎉</div>
+    <h2>تم الحجز <span>بنجاح!</span></h2>
+    <p>مبروك! تم تأكيد حجزك في فندق الريتز كارلتون الرياض.<br>سيصلك تأكيد على بريدك الإلكتروني خلال دقائق.</p>
+    <div class="booking-ref">
+      <label>رقم الحجز</label>
+      <div class="ref-num">BSA-2024-7831</div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-modal-primary">📥 تحميل التأكيد</button>
+      <button class="btn-modal-secondary" onclick="closeModal()">🏠 الرئيسية</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Calculate total
+function calcTotal() {
+  const ci = document.getElementById('checkin').value;
+  const co = document.getElementById('checkout').value;
+  if (!ci || !co) return;
+  const nights = Math.max(1, Math.round((new Date(co)-new Date(ci))/(86400000)));
+  const base = nights * 850;
+  const tax = Math.round(base * 0.15);
+  const total = base + tax;
+
+  document.getElementById('sum-nights').textContent = nights + ' ليالي';
+  document.getElementById('pb-nights').textContent = nights;
+  document.getElementById('pb-base').textContent = base.toLocaleString('ar') + ' ر.س';
+  document.getElementById('pb-tax').textContent = tax.toLocaleString('ar') + ' ر.س';
+  document.getElementById('pb-total').textContent = total.toLocaleString('ar') + ' ر.س';
+}
+
+// Format card number
+function formatCard(el) {
+  let v = el.value.replace(/\D/g,'').substring(0,16);
+  el.value = v.replace(/(.{4})/g,'$1 ').trim();
+  const disp = v.padEnd(16,'•').replace(/(.{4})/g,'$1 ').trim();
+  document.getElementById('cardNumDisplay').textContent = disp;
+}
+
+// Update card preview
+function updatePreview() {
+  const name = document.getElementById('cardName').value || 'الاسم الكامل';
+  const month = document.getElementById('cardMonth').value || 'MM';
+  const year = document.getElementById('cardYear').value ? document.getElementById('cardYear').value.slice(2) : 'YY';
+  document.getElementById('cardNameDisplay').textContent = name;
+  document.getElementById('cardExpDisplay').textContent = month + '/' + year;
+}
+
+// Select payment method
+function selectPay(el, type) {
+  document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('selected'));
+  el.classList.add('selected');
+  ['cardForm','madaForm','appleForm','stcForm'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+    document.getElementById(id).classList.remove('show');
+  });
+  document.getElementById('cardPreview').style.display = type === 'card' ? 'block' : 'none';
+  if (type === 'card') { document.getElementById('cardForm').style.display = 'block'; }
+  else if (type === 'mada') { document.getElementById('madaForm').style.display = 'block'; }
+  else if (type === 'apple') { document.getElementById('appleForm').style.display = 'block'; }
+  else if (type === 'stc') { document.getElementById('stcForm').style.display = 'block'; }
+}
+
+// Toggle request
+function toggleRequest(el) {
+  el.classList.toggle('selected');
+}
+
+// Confirm booking
+function confirmBooking() {
+  const btn = document.querySelector('.btn-confirm');
+  btn.textContent = '⏳ جاري معالجة الدفع...';
+  btn.style.opacity = '0.8';
+  setTimeout(() => {
+    document.getElementById('successModal').classList.add('show');
+    btn.textContent = '🔒 تأكيد الحجز والدفع';
+    btn.style.opacity = '1';
+  }, 2000);
+}
+
+function closeModal() {
+  document.getElementById('successModal').classList.remove('show');
+}
+
+// Init
+calcTotal();
+</script>
+</body>
+</html>

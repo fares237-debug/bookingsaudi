@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>خريطة العقارات | بوكنق السعودية</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C; --gold-light: #E8C97A;
+    --dark: #0A0A0F; --dark2: #13131A; --dark3: #1C1C26; --dark4: #22222E;
+    --white: #F8F4EE; --gray: #8A8A9A;
+    --green: #2ECC71; --red: #E74C3C; --blue: #3498DB; --purple: #9B59B6;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Tajawal',sans-serif; background:var(--dark); color:var(--white); height:100vh; display:flex; flex-direction:column; overflow:hidden; }
+
+  /* NAV */
+  nav {
+    background:rgba(10,10,15,0.98); backdrop-filter:blur(20px);
+    border-bottom:1px solid rgba(201,168,76,0.2);
+    padding:0 4%; height:60px;
+    display:flex; align-items:center; gap:14px; flex-shrink:0; z-index:200;
+  }
+  .logo { display:flex; align-items:center; gap:8px; text-decoration:none; flex-shrink:0; }
+  .logo-icon { width:34px; height:34px; background:linear-gradient(135deg,var(--gold),var(--gold-light)); border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:16px; }
+  .logo-text { font-size:16px; font-weight:800; background:linear-gradient(135deg,var(--gold),var(--gold-light)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+
+  /* SEARCH BAR IN NAV */
+  .nav-search { flex:1; display:flex; align-items:center; background:var(--dark3); border:1px solid rgba(201,168,76,0.2); border-radius:10px; padding:0 4px; gap:4px; height:40px; max-width:700px; }
+  .nav-search input { background:none; border:none; outline:none; color:var(--white); font-family:'Tajawal',sans-serif; font-size:13px; padding:0 10px; flex:1; min-width:0; }
+  .ns-divider { width:1px; height:22px; background:rgba(255,255,255,0.08); }
+  .nav-search input[type=date] { width:120px; font-size:12px; }
+  .ns-btn { background:linear-gradient(135deg,var(--gold),var(--gold-light)); border:none; border-radius:7px; padding:7px 16px; color:var(--dark); font-weight:800; font-family:'Tajawal',sans-serif; font-size:13px; cursor:pointer; white-space:nowrap; }
+
+  .nav-back { color:var(--gold); text-decoration:none; font-size:13px; white-space:nowrap; }
+
+  /* LAYOUT */
+  .map-layout { flex:1; display:flex; overflow:hidden; }
+
+  /* LEFT PANEL */
+  .left-panel {
+    width:380px; flex-shrink:0; background:var(--dark2);
+    border-left:1px solid rgba(255,255,255,0.05);
+    display:flex; flex-direction:column; overflow:hidden;
+    z-index:10;
+  }
+
+  .panel-header { padding:14px 16px; border-bottom:1px solid rgba(255,255,255,0.06); display:flex; justify-content:space-between; align-items:center; }
+  .panel-title { font-size:14px; font-weight:800; }
+  .panel-count { font-size:13px; color:var(--gold); font-weight:700; }
+
+  /* FILTERS */
+  .filter-bar { padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05); display:flex; gap:6px; overflow-x:auto; }
+  .filter-bar::-webkit-scrollbar { display:none; }
+  .fchip { padding:6px 12px; border-radius:20px; border:1px solid rgba(255,255,255,0.1); background:transparent; color:var(--gray); cursor:pointer; font-family:'Tajawal',sans-serif; font-size:12px; font-weight:700; white-space:nowrap; transition:0.2s; }
+  .fchip.active { background:var(--gold); border-color:var(--gold); color:var(--dark); }
+  .fchip:hover:not(.active) { border-color:rgba(201,168,76,0.3); color:var(--gold); }
+
+  /* SORT */
+  .sort-bar { padding:8px 14px; border-bottom:1px solid rgba(255,255,255,0.05); display:flex; justify-content:space-between; align-items:center; }
+  .sort-label { font-size:12px; color:var(--gray); }
+  .sort-sel { background:var(--dark3); border:1px solid rgba(255,255,255,0.08); border-radius:7px; padding:5px 10px; color:var(--white); font-family:'Tajawal',sans-serif; font-size:12px; outline:none; }
+
+  /* PROPERTY LIST */
+  .prop-list { flex:1; overflow-y:auto; padding:8px; }
+  .prop-list::-webkit-scrollbar { width:3px; }
+  .prop-list::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.1); border-radius:2px; }
+
+  .prop-item {
+    display:flex; gap:12px; padding:12px; border-radius:12px;
+    cursor:pointer; transition:0.2s; margin-bottom:6px;
+    border:1px solid transparent;
+  }
+  .prop-item:hover { background:rgba(255,255,255,0.03); border-color:rgba(201,168,76,0.15); }
+  .prop-item.active { background:rgba(201,168,76,0.08); border-color:rgba(201,168,76,0.3); }
+  .prop-thumb { width:72px; height:72px; border-radius:10px; background:var(--dark3); display:flex; align-items:center; justify-content:center; font-size:30px; flex-shrink:0; position:relative; }
+  .prop-thumb-badge { position:absolute; top:4px; right:4px; background:var(--red); color:white; font-size:9px; font-weight:800; padding:1px 5px; border-radius:4px; }
+  .prop-details { flex:1; min-width:0; }
+  .prop-name { font-size:13px; font-weight:800; margin-bottom:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .prop-loc { font-size:11px; color:var(--gray); margin-bottom:5px; display:flex; align-items:center; gap:3px; }
+  .prop-feats-sm { display:flex; gap:4px; flex-wrap:wrap; margin-bottom:5px; }
+  .feat-sm { background:rgba(255,255,255,0.05); padding:2px 7px; border-radius:4px; font-size:10px; color:var(--gray); }
+  .prop-footer-sm { display:flex; justify-content:space-between; align-items:center; }
+  .prop-price-sm { font-size:15px; font-weight:900; color:var(--gold); }
+  .prop-price-sm small { font-size:10px; color:var(--gray); font-weight:400; }
+  .prop-rating-sm { display:flex; align-items:center; gap:4px; font-size:11px; color:var(--gray); }
+  .rating-dot { background:var(--gold); color:var(--dark); padding:2px 6px; border-radius:5px; font-size:11px; font-weight:900; }
+
+  /* MAP AREA */
+  .map-area { flex:1; position:relative; overflow:hidden; }
+
+  /* FAKE MAP */
+  .map-canvas {
+    width:100%; height:100%;
+    background:
+      linear-gradient(rgba(19,19,26,0.7),rgba(19,19,26,0.7)),
+      repeating-linear-gradient(0deg, transparent, transparent 49px, rgba(255,255,255,0.03) 50px),
+      repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(255,255,255,0.03) 50px);
+    position:relative; overflow:hidden; cursor:grab;
+  }
+  .map-canvas:active { cursor:grabbing; }
+
+  /* MAP ROADS */
+  .road { position:absolute; background:rgba(255,255,255,0.06); border-radius:3px; }
+  .road.h { height:6px; }
+  .road.v { width:6px; }
+  .road.main { background:rgba(201,168,76,0.12); }
+  .road.main.h { height:10px; }
+  .road.main.v { width:10px; }
+
+  /* MAP PINS */
+  .map-pin {
+    position:absolute; transform:translate(-50%,-100%);
+    cursor:pointer; transition:all 0.3s; z-index:10;
+  }
+  .map-pin:hover { z-index:20; transform:translate(-50%,-100%) scale(1.15); }
+  .map-pin.active { z-index:30; transform:translate(-50%,-100%) scale(1.2); }
+
+  .pin-bubble {
+    background:var(--dark3); border:2px solid rgba(201,168,76,0.4);
+    border-radius:20px; padding:6px 12px; white-space:nowrap;
+    font-size:12px; font-weight:800; box-shadow:0 4px 16px rgba(0,0,0,0.5);
+    display:flex; align-items:center; gap:6px; transition:0.2s;
+    position:relative;
+  }
+  .map-pin.active .pin-bubble { background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--dark); border-color:var(--gold); }
+  .pin-bubble::after { content:''; position:absolute; bottom:-8px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:7px solid transparent; border-right:7px solid transparent; border-top:8px solid rgba(201,168,76,0.4); }
+  .map-pin.active .pin-bubble::after { border-top-color:var(--gold-light); }
+  .pin-icon { font-size:14px; }
+  .pin-price { color:var(--gold); }
+  .map-pin.active .pin-price { color:var(--dark); }
+
+  /* MAP POPUP */
+  .map-popup {
+    position:absolute; z-index:100;
+    background:var(--dark2); border:1px solid rgba(201,168,76,0.25);
+    border-radius:16px; padding:0; width:260px;
+    box-shadow:0 20px 50px rgba(0,0,0,0.7);
+    animation:popupIn 0.2s ease; overflow:hidden;
+    display:none;
+  }
+  .map-popup.show { display:block; }
+  @keyframes popupIn { from{opacity:0;transform:scale(0.9) translateY(10px)} to{opacity:1;transform:scale(1) translateY(0)} }
+  .popup-img { height:120px; background:var(--dark3); display:flex; align-items:center; justify-content:center; font-size:56px; position:relative; }
+  .popup-close { position:absolute; top:8px; left:8px; width:26px; height:26px; border-radius:50%; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:14px; color:white; }
+  .popup-badge { position:absolute; top:8px; right:8px; background:var(--red); color:white; font-size:10px; font-weight:800; padding:3px 8px; border-radius:6px; }
+  .popup-body { padding:14px; }
+  .popup-type { font-size:10px; color:var(--gold); font-weight:700; margin-bottom:4px; }
+  .popup-name { font-size:15px; font-weight:800; margin-bottom:4px; }
+  .popup-loc { font-size:12px; color:var(--gray); margin-bottom:8px; }
+  .popup-feats { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:10px; }
+  .popup-feat { background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:5px; font-size:10px; color:var(--gray); }
+  .popup-footer { display:flex; justify-content:space-between; align-items:center; }
+  .popup-price { font-size:20px; font-weight:900; color:var(--gold); }
+  .popup-price small { font-size:11px; color:var(--gray); font-weight:400; }
+  .popup-btn { background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--dark); border:none; padding:8px 16px; border-radius:9px; font-family:'Tajawal',sans-serif; font-size:13px; font-weight:800; cursor:pointer; transition:0.2s; }
+  .popup-btn:hover { transform:scale(1.05); }
+
+  /* MAP CONTROLS */
+  .map-controls { position:absolute; bottom:24px; left:20px; display:flex; flex-direction:column; gap:8px; z-index:50; }
+  .map-ctrl { width:40px; height:40px; background:var(--dark2); border:1px solid rgba(255,255,255,0.1); border-radius:10px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:18px; transition:0.2s; box-shadow:0 4px 12px rgba(0,0,0,0.4); }
+  .map-ctrl:hover { border-color:var(--gold); background:rgba(201,168,76,0.1); }
+
+  /* MAP LEGEND */
+  .map-legend { position:absolute; bottom:24px; right:24px; background:var(--dark2); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:12px 16px; z-index:50; }
+  .legend-title { font-size:11px; color:var(--gray); font-weight:700; margin-bottom:8px; }
+  .legend-item { display:flex; align-items:center; gap:8px; font-size:11px; margin-bottom:5px; }
+  .legend-dot { width:10px; height:10px; border-radius:50%; }
+
+  /* CITY LABELS */
+  .city-label { position:absolute; color:rgba(255,255,255,0.15); font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; pointer-events:none; }
+
+  /* STATS BAR */
+  .stats-bar { position:absolute; top:16px; right:50%; transform:translateX(50%); background:rgba(10,10,15,0.9); backdrop-filter:blur(10px); border:1px solid rgba(201,168,76,0.2); border-radius:30px; padding:8px 20px; display:flex; gap:20px; z-index:50; }
+  .stats-bar-item { text-align:center; }
+  .stats-bar-num { font-size:16px; font-weight:900; color:var(--gold); }
+  .stats-bar-lbl { font-size:10px; color:var(--gray); }
+
+  /* LAYER TOGGLE */
+  .layer-toggle { position:absolute; top:16px; left:16px; background:var(--dark2); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:4px; display:flex; gap:2px; z-index:50; }
+  .layer-btn { padding:6px 12px; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; border:none; font-family:'Tajawal',sans-serif; transition:0.2s; background:transparent; color:var(--gray); }
+  .layer-btn.active { background:var(--gold); color:var(--dark); }
+
+  /* MOBILE */
+  @media(max-width:768px) {
+    .left-panel { position:absolute; bottom:0; right:0; left:0; width:100%; height:45%; border-radius:20px 20px 0 0; z-index:50; transition:0.3s; }
+    .left-panel.collapsed { height:60px; }
+    .nav-search input[type=date] { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-icon">🏨</div>
+    <div class="logo-text">بوكنق</div>
+  </a>
+  <div class="nav-search">
+    <input type="text" placeholder="🔍 ابحث عن فندق أو مدينة..." value="الرياض">
+    <div class="ns-divider"></div>
+    <input type="date" value="2024-06-15">
+    <div class="ns-divider"></div>
+    <input type="date" value="2024-06-18">
+    <button class="ns-btn" onclick="searchMap()">بحث</button>
+  </div>
+  <a href="index.html" class="nav-back">← الرئيسية</a>
+</nav>
+
+<div class="map-layout">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel" id="leftPanel">
+    <div class="panel-header">
+      <div class="panel-title">🏨 العقارات المتاحة</div>
+      <div class="panel-count" id="propCount">12 عقار</div>
+    </div>
+
+    <div class="filter-bar">
+      <button class="fchip active" onclick="filterType('all',this)">الكل</button>
+      <button class="fchip" onclick="filterType('hotel',this)">🏨 فنادق</button>
+      <button class="fchip" onclick="filterType('apt',this)">🏠 شقق</button>
+      <button class="fchip" onclick="filterType('resort',this)">🏖️ منتجعات</button>
+      <button class="fchip" onclick="filterType('villa',this)">🏡 فلل</button>
+      <button class="fchip" onclick="filterType('monthly',this)">🗓️ شهري</button>
+    </div>
+
+    <div class="sort-bar">
+      <span class="sort-label">ترتيب حسب:</span>
+      <select class="sort-sel" onchange="sortProps()">
+        <option>الأقرب للمركز</option>
+        <option>الأقل سعراً</option>
+        <option>الأعلى تقييماً</option>
+        <option>الأكثر توفيراً</option>
+      </select>
+    </div>
+
+    <div class="prop-list" id="propList">
+
+      <div class="prop-item active" onclick="selectProp(this,0)" data-id="0">
+        <div class="prop-thumb">🏨<div class="prop-thumb-badge">-30%</div></div>
+        <div class="prop-details">
+          <div class="prop-name">فندق الريتز كارلتون الرياض</div>
+          <div class="prop-loc">📍 حي العليا · 0.5 كم</div>
+          <div class="prop-feats-sm">
+            <span class="feat-sm">🏊 مسبح</span>
+            <span class="feat-sm">💆 سبا</span>
+            <span class="feat-sm">✅ إلغاء مجاني</span>
+          </div>
+          <div class="prop-footer-sm">
+            <div class="prop-price-sm">850 ر.س<small>/ليلة</small></div>
+            <div class="prop-rating-sm"><span class="rating-dot">9.8</span> ممتاز جداً</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="prop-item" onclick="selectProp(this,1)" data-id="1">
+        <div class="prop-thumb">🏙️</div>
+        <div class="prop-details">
+          <div class="prop-name">فندق فور سيزونز الرياض</div>
+          <div class="prop-loc">📍 برج المملكة · 1.2 كم</div>
+          <div class="prop-feats-sm">
+            <span class="feat-sm">🌆 إطلالة</span>
+            <span class="feat-sm">🚗 فاليه</span>
+          </div>
+          <div class="prop-footer-sm">
+            <div class="prop-price-sm">975 ر.س<small>/ليلة</small></div>
+            <div class="prop-rating-sm"><span class="rating-dot">9.6</span> ممتاز</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="prop-item" onclick="selectProp(this,2)" data-id="2">
+        <div class="prop-thumb">🏠</div>
+        <div class="prop-details">
+          <div class="prop-name">شقق ماريوت التنفيذية</div>
+          <div class="prop-loc">📍 حي النخيل · 2.1 كم</div>
+          <div class="prop-feats-sm">
+            <span class="feat-sm">🍳 مطبخ</span>
+            <span class="feat-sm">🅿️ موقف</span>
+          </div>
+          <div class="prop-footer-sm">
+            <div class="prop-price-sm">480 ر.س<small>/ليلة</small></div>
+            <div class="prop-rating-sm"><span class="rating-dot">9.2</span> ممتاز</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="prop-item" onclick="selectProp(this,3)" data-id="3">
+        <div class="prop-thumb">🌴</div>
+        <div class="prop-details">
+          <div class="prop-name">منتجع درة العروس الرياض</div>
+          <div class="prop-loc">📍 حي الدرعية · 4.5 كم</div>
+          <div class="prop-feats-sm">
+            <span class="feat-sm">🏊 3 مسابح</span>
+            <span class="feat-sm">🌿 حدائق</span>
+          </div>
+          <div class="prop-footer-sm">
+            <div class="prop-price-sm">1,200 ر.س<small>/ليلة</small></div>
+            <div class="prop-rating-sm"><span class="rating-dot">9.5</span> ممتاز جداً</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="prop-item" onclick="selectProp(this,4)" data-id="4">
+        <div class="prop-thumb">🏡</div>
+        <div class="prop-details">
+          <div class="prop-name">فيلا الملكية - الياسمين</div>
+          <div class="prop-loc">📍 حي الياسمين · 3.2 كم</div>
+          <div class="prop-feats-sm">
+            <span class="feat-sm">🏊 مسبح خاص</span>
+            <span class="feat-sm">👥 10 أشخاص</span>
+          </div>
+          <div class="prop-footer-sm">
+            <div class="prop-price-sm">2,125 ر.س<small>/ليلة</small></div>
+            <div class="prop-rating-sm"><span class="rating-dot">9.7</span> ممتاز جداً</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="prop-item" onclick="selectProp(this,5)" data-id="5">
+        <div class="prop-thumb">🏢</div>
+        <div class="prop-details">
+          <div class="prop-name">فندق هيلتون الرياض</div>
+          <div class="prop-loc">📍 حي الملز · 2.8 كم</div>
+          <div class="prop-feats-sm">
+            <span class="feat-sm">📶 واي فاي</span>
+            <span class="feat-sm">🍳 إفطار</span>
+          </div>
+          <div class="prop-footer-sm">
+            <div class="prop-price-sm">650 ر.س<small>/ليلة</small></div>
+            <div class="prop-rating-sm"><span class="rating-dot">8.9</span> ممتاز</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="prop-item" onclick="selectProp(this,6)" data-id="6">
+        <div class="prop-thumb">🌟</div>
+        <div class="prop-details">
+          <div class="prop-name">فندق بولمان الرياض</div>
+          <div class="prop-loc">📍 شارع العروبة · 1.8 كم</div>
+          <div class="prop-feats-sm">
+            <span class="feat-sm">🏋️ نادي</span>
+            <span class="feat-sm">🎰 كازينو</span>
+          </div>
+          <div class="prop-footer-sm">
+            <div class="prop-price-sm">720 ر.س<small>/ليلة</small></div>
+            <div class="prop-rating-sm"><span class="rating-dot">9.1</span> ممتاز</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MAP -->
+  <div class="map-area">
+    <div class="map-canvas" id="mapCanvas" onclick="handleMapClick(event)">
+
+      <!-- CITY LABELS -->
+      <div class="city-label" style="top:20%;right:45%">حي العليا</div>
+      <div class="city-label" style="top:35%;right:25%">حي النخيل</div>
+      <div class="city-label" style="top:60%;right:55%">حي الدرعية</div>
+      <div class="city-label" style="top:45%;right:70%">حي الياسمين</div>
+      <div class="city-label" style="top:55%;right:30%">حي الملز</div>
+
+      <!-- ROADS -->
+      <div class="road h main" style="top:30%;right:0;left:0;"></div>
+      <div class="road h main" style="top:55%;right:0;left:0;"></div>
+      <div class="road v main" style="right:40%;top:0;bottom:0;"></div>
+      <div class="road v main" style="right:65%;top:0;bottom:0;"></div>
+      <div class="road h" style="top:20%;right:0;left:0;"></div>
+      <div class="road h" style="top:42%;right:0;left:0;"></div>
+      <div class="road h" style="top:68%;right:0;left:0;"></div>
+      <div class="road v" style="right:20%;top:0;bottom:0;"></div>
+      <div class="road v" style="right:50%;top:0;bottom:0;"></div>
+      <div class="road v" style="right:75%;top:0;bottom:0;"></div>
+      <div class="road h" style="top:80%;right:0;left:0;"></div>
+
+      <!-- MAP PINS -->
+      <div class="map-pin active" id="pin-0" style="top:28%;right:42%;" onclick="pinClick(event,0)">
+        <div class="pin-bubble"><span class="pin-icon">🏨</span><span class="pin-price">850 ر.س</span></div>
+      </div>
+      <div class="map-pin" id="pin-1" style="top:32%;right:62%;" onclick="pinClick(event,1)">
+        <div class="pin-bubble"><span class="pin-icon">🏙️</span><span class="pin-price">975 ر.س</span></div>
+      </div>
+      <div class="map-pin" id="pin-2" style="top:22%;right:28%;" onclick="pinClick(event,2)">
+        <div class="pin-bubble"><span class="pin-icon">🏠</span><span class="pin-price">480 ر.س</span></div>
+      </div>
+      <div class="map-pin" id="pin-3" style="top:58%;right:48%;" onclick="pinClick(event,3)">
+        <div class="pin-bubble"><span class="pin-icon">🌴</span><span class="pin-price">1,200 ر.س</span></div>
+      </div>
+      <div class="map-pin" id="pin-4" style="top:44%;right:72%;" onclick="pinClick(event,4)">
+        <div class="pin-bubble"><span class="pin-icon">🏡</span><span class="pin-price">2,125 ر.س</span></div>
+      </div>
+      <div class="map-pin" id="pin-5" style="top:52%;right:33%;" onclick="pinClick(event,5)">
+        <div class="pin-bubble"><span class="pin-icon">🏢</span><span class="pin-price">650 ر.س</span></div>
+      </div>
+      <div class="map-pin" id="pin-6" style="top:38%;right:52%;" onclick="pinClick(event,6)">
+        <div class="pin-bubble"><span class="pin-icon">🌟</span><span class="pin-price">720 ر.س</span></div>
+      </div>
+
+    </div>
+
+    <!-- STATS BAR -->
+    <div class="stats-bar">
+      <div class="stats-bar-item"><div class="stats-bar-num">12</div><div class="stats-bar-lbl">عقار</div></div>
+      <div class="stats-bar-item"><div class="stats-bar-num">480</div><div class="stats-bar-lbl">أقل سعر</div></div>
+      <div class="stats-bar-item"><div class="stats-bar-num">9.8</div><div class="stats-bar-lbl">أعلى تقييم</div></div>
+    </div>
+
+    <!-- LAYER TOGGLE -->
+    <div class="layer-toggle">
+      <button class="layer-btn active" onclick="setLayer(this,'map')">🗺️ خريطة</button>
+      <button class="layer-btn" onclick="setLayer(this,'satellite')">🛰️ أقمار</button>
+      <button class="layer-btn" onclick="setLayer(this,'heat')">🔥 كثافة</button>
+    </div>
+
+    <!-- MAP CONTROLS -->
+    <div class="map-controls">
+      <div class="map-ctrl" onclick="zoomIn()" title="تكبير">＋</div>
+      <div class="map-ctrl" onclick="zoomOut()" title="تصغير">－</div>
+      <div class="map-ctrl" onclick="locateMe()" title="موقعي">📍</div>
+      <div class="map-ctrl" onclick="toggleList()" title="القائمة">☰</div>
+    </div>
+
+    <!-- MAP LEGEND -->
+    <div class="map-legend">
+      <div class="legend-title">أنواع العقارات</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div>فنادق</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>شقق</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>منتجعات</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div>فلل</div>
+    </div>
+
+    <!-- POPUP -->
+    <div class="map-popup" id="mapPopup">
+      <div class="popup-img" id="popupImg">🏨
+        <div class="popup-close" onclick="closePopup()">×</div>
+        <div class="popup-badge" id="popupBadge">-30%</div>
+      </div>
+      <div class="popup-body">
+        <div class="popup-type" id="popupType">فندق فاخر ⭐⭐⭐⭐⭐</div>
+        <div class="popup-name" id="popupName">فندق الريتز كارلتون الرياض</div>
+        <div class="popup-loc" id="popupLoc">📍 حي العليا · 0.5 كم من المركز</div>
+        <div class="popup-feats" id="popupFeats">
+          <span class="popup-feat">🏊 مسبح</span>
+          <span class="popup-feat">💆 سبا</span>
+          <span class="popup-feat">✅ إلغاء مجاني</span>
+        </div>
+        <div class="popup-footer">
+          <div class="popup-price" id="popupPrice">850 ر.س<small>/ليلة</small></div>
+          <button class="popup-btn" onclick="location.href='hotel-page.html'">احجز الآن</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const props = [
+  { icon:'🏨', name:'فندق الريتز كارلتون الرياض', type:'فندق فاخر ⭐⭐⭐⭐⭐', loc:'📍 حي العليا · 0.5 كم', price:'850 ر.س', badge:'-30%', feats:['🏊 مسبح','💆 سبا','✅ إلغاء مجاني'] },
+  { icon:'🏙️', name:'فندق فور سيزونز الرياض', type:'فندق ⭐⭐⭐⭐⭐', loc:'📍 برج المملكة · 1.2 كم', price:'975 ر.س', badge:'-25%', feats:['🌆 إطلالة','🚗 فاليه','📶 واي فاي'] },
+  { icon:'🏠', name:'شقق ماريوت التنفيذية', type:'شقة فندقية ⭐⭐⭐⭐', loc:'📍 حي النخيل · 2.1 كم', price:'480 ر.س', badge:'جديد', feats:['🍳 مطبخ','🅿️ موقف','📶 واي فاي'] },
+  { icon:'🌴', name:'منتجع درة العروس الرياض', type:'منتجع ⭐⭐⭐⭐⭐', loc:'📍 حي الدرعية · 4.5 كم', price:'1,200 ر.س', badge:'', feats:['🏊 3 مسابح','🌿 حدائق','💆 سبا'] },
+  { icon:'🏡', name:'فيلا الملكية - الياسمين', type:'فيلا ⭐⭐⭐⭐⭐', loc:'📍 حي الياسمين · 3.2 كم', price:'2,125 ر.س', badge:'', feats:['🏊 مسبح خاص','👥 10 أشخاص','🌿 حديقة'] },
+  { icon:'🏢', name:'فندق هيلتون الرياض', type:'فندق ⭐⭐⭐⭐', loc:'📍 حي الملز · 2.8 كم', price:'650 ر.س', badge:'', feats:['📶 واي فاي','🍳 إفطار','🏋️ نادي'] },
+  { icon:'🌟', name:'فندق بولمان الرياض', type:'فندق ⭐⭐⭐⭐⭐', loc:'📍 شارع العروبة · 1.8 كم', price:'720 ر.س', badge:'', feats:['🏋️ نادي رياضي','🎭 ترفيه','🚗 فاليه'] },
+];
+
+let currentPin = 0;
+
+function selectProp(el, id) {
+  document.querySelectorAll('.prop-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active'));
+  document.getElementById('pin-'+id)?.classList.add('active');
+  showPopupForProp(id);
+  el.scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+function pinClick(e, id) {
+  e.stopPropagation();
+  document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active'));
+  document.getElementById('pin-'+id)?.classList.add('active');
+  document.querySelectorAll('.prop-item').forEach(i => i.classList.remove('active'));
+  document.querySelector(`[data-id="${id}"]`)?.classList.add('active');
+  document.querySelector(`[data-id="${id}"]`)?.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  showPopupForProp(id);
+  positionPopup(id);
+}
+
+function showPopupForProp(id) {
+  const p = props[id];
+  if(!p) return;
+  document.getElementById('popupImg').childNodes[0].textContent = p.icon;
+  document.getElementById('popupName').textContent = p.name;
+  document.getElementById('popupType').textContent = p.type;
+  document.getElementById('popupLoc').textContent = p.loc;
+  document.getElementById('popupPrice').innerHTML = p.price + '<small>/ليلة</small>';
+  document.getElementById('popupBadge').textContent = p.badge;
+  document.getElementById('popupBadge').style.display = p.badge ? 'block' : 'none';
+  document.getElementById('popupFeats').innerHTML = p.feats.map(f=>`<span class="popup-feat">${f}</span>`).join('');
+  document.getElementById('mapPopup').classList.add('show');
+}
+
+function positionPopup(id) {
+  const pin = document.getElementById('pin-'+id);
+  const popup = document.getElementById('mapPopup');
+  if(!pin) return;
+  const pinRect = pin.getBoundingClientRect();
+  const mapRect = document.getElementById('mapCanvas').getBoundingClientRect();
+  let top = pinRect.top - mapRect.top - 280;
+  let right = mapRect.right - pinRect.right + 20;
+  if(top < 10) top = pinRect.bottom - mapRect.top + 10;
+  if(right + 260 > mapRect.width) right = mapRect.width - 270;
+  if(right < 10) right = 10;
+  popup.style.top = Math.max(10, top) + 'px';
+  popup.style.right = Math.max(10, right) + 'px';
+}
+
+function closePopup() {
+  document.getElementById('mapPopup').classList.remove('show');
+  document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.prop-item').forEach(i => i.classList.remove('active'));
+}
+
+function handleMapClick(e) {
+  if(e.target === document.getElementById('mapCanvas') || e.target.classList.contains('road') || e.target.classList.contains('city-label')) {
+    closePopup();
+  }
+}
+
+function filterType(type, btn) {
+  document.querySelectorAll('.fchip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  const count = type === 'all' ? 12 : Math.floor(Math.random()*8)+2;
+  document.getElementById('propCount').textContent = count + ' عقار';
+}
+
+function sortProps() {
+  const items = document.querySelectorAll('.prop-item');
+  items.forEach(i => { i.style.opacity='0'; setTimeout(()=>i.style.opacity='1', 300); });
+}
+
+function searchMap() {
+  filterType('all', document.querySelector('.fchip.active'));
+}
+
+function setLayer(btn, type) {
+  document.querySelectorAll('.layer-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const canvas = document.getElementById('mapCanvas');
+  if(type==='satellite') { canvas.style.filter='sepia(0.3) hue-rotate(180deg) brightness(0.7)'; }
+  else if(type==='heat') { canvas.style.filter='sepia(0.5) hue-rotate(320deg) saturate(2)'; }
+  else { canvas.style.filter='none'; }
+}
+
+function zoomIn() {
+  const canvas = document.getElementById('mapCanvas');
+  const current = parseFloat(canvas.style.transform?.match(/scale\(([\d.]+)\)/)?.[1] || 1);
+  canvas.style.transform = `scale(${Math.min(current+0.2, 2)})`;
+  canvas.style.transformOrigin = 'center';
+}
+
+function zoomOut() {
+  const canvas = document.getElementById('mapCanvas');
+  const current = parseFloat(canvas.style.transform?.match(/scale\(([\d.]+)\)/)?.[1] || 1);
+  canvas.style.transform = `scale(${Math.max(current-0.2, 0.5)})`;
+}
+
+function locateMe() {
+  alert('📍 تم تحديد موقعك على الخريطة!');
+}
+
+function toggleList() {
+  const panel = document.getElementById('leftPanel');
+  panel.classList.toggle('collapsed');
+}
+
+// Show first popup on load
+window.onload = () => {
+  setTimeout(() => { showPopupForProp(0); positionPopup(0); }, 500);
+};
+</script>
+</body>
+</html>

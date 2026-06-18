@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نظام الإشعارات | بوكنق السعودية</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold:#C9A84C; --gold-light:#E8C97A;
+    --dark:#0A0A0F; --dark2:#13131A; --dark3:#1C1C26; --dark4:#22222E;
+    --white:#F8F4EE; --gray:#8A8A9A;
+    --green:#2ECC71; --red:#E74C3C; --blue:#3498DB;
+    --purple:#9B59B6; --orange:#E67E22;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Tajawal',sans-serif;background:var(--dark);color:var(--white);}
+
+  nav{background:rgba(10,10,15,0.98);border-bottom:1px solid rgba(201,168,76,0.2);padding:0 5%;height:65px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+  .logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+  .logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--gold),var(--gold-light));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+  .logo-text{font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .nav-back{color:var(--gold);font-size:13px;text-decoration:none;}
+  .nav-center{display:flex;align-items:center;gap:8px;}
+  .live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:livePulse 1.5s infinite;}
+  @keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.3)}}
+  .live-text{font-size:13px;color:var(--green);font-weight:700;}
+
+  .container{max-width:1100px;margin:0 auto;padding:28px 5% 80px;}
+
+  /* HEADER */
+  .page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:14px;}
+  .page-title{font-size:24px;font-weight:900;}
+  .page-sub{font-size:13px;color:var(--gray);margin-top:3px;}
+  .header-actions{display:flex;gap:10px;}
+  .btn-gold{padding:10px 20px;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--dark);border:none;border-radius:10px;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:14px;font-weight:800;transition:0.3s;}
+  .btn-outline{padding:10px 18px;background:transparent;color:var(--white);border:1px solid rgba(255,255,255,0.12);border-radius:10px;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:13px;transition:0.2s;}
+  .btn-outline:hover{border-color:var(--gold);color:var(--gold);}
+
+  /* LAYOUT */
+  .layout{display:grid;grid-template-columns:1fr 340px;gap:24px;}
+
+  /* TABS */
+  .tabs{display:flex;gap:4px;background:var(--dark3);border-radius:12px;padding:4px;margin-bottom:20px;overflow-x:auto;}
+  .tab{flex:1;padding:9px 14px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:700;transition:0.2s;color:var(--gray);border:none;font-family:'Tajawal',sans-serif;background:transparent;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:6px;}
+  .tab.active{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--dark);}
+  .tab-badge{background:var(--red);color:white;font-size:10px;font-weight:800;padding:1px 6px;border-radius:8px;}
+  .tab.active .tab-badge{background:rgba(0,0,0,0.2);}
+
+  .tab-content{display:none;animation:fadeIn 0.3s ease;}
+  .tab-content.active{display:block;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+  /* NOTIF ITEM */
+  .notif-group-label{font-size:11px;color:var(--gray);font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:8px 0 6px;margin-top:4px;}
+  .notif-item{display:flex;gap:14px;padding:14px 16px;border-radius:14px;transition:0.2s;cursor:pointer;margin-bottom:6px;border:1px solid transparent;animation:notifSlide 0.4s ease;}
+  @keyframes notifSlide{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+  .notif-item:hover{background:rgba(255,255,255,0.03);border-color:rgba(255,255,255,0.05);}
+  .notif-item.unread{background:rgba(201,168,76,0.05);border-color:rgba(201,168,76,0.12);}
+  .notif-item.unread:hover{background:rgba(201,168,76,0.08);}
+
+  .notif-icon-wrap{position:relative;flex-shrink:0;}
+  .notif-icon{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;}
+  .ni-gold{background:rgba(201,168,76,0.12);}
+  .ni-green{background:rgba(46,204,113,0.12);}
+  .ni-blue{background:rgba(52,152,219,0.12);}
+  .ni-red{background:rgba(231,76,60,0.12);}
+  .ni-purple{background:rgba(155,89,182,0.12);}
+  .ni-orange{background:rgba(230,126,34,0.12);}
+  .unread-dot{position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;background:var(--gold);border:2px solid var(--dark);}
+
+  .notif-body{flex:1;min-width:0;}
+  .notif-title{font-size:14px;font-weight:700;margin-bottom:3px;display:flex;align-items:center;gap:8px;}
+  .notif-desc{font-size:13px;color:var(--gray);line-height:1.5;margin-bottom:6px;}
+  .notif-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .notif-time{font-size:11px;color:var(--gray);}
+  .notif-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;}
+  .tag-booking{background:rgba(46,204,113,0.12);color:var(--green);}
+  .tag-payment{background:rgba(201,168,76,0.12);color:var(--gold);}
+  .tag-cancel{background:rgba(231,76,60,0.12);color:var(--red);}
+  .tag-review{background:rgba(52,152,219,0.12);color:var(--blue);}
+  .tag-system{background:rgba(155,89,182,0.12);color:var(--purple);}
+  .tag-promo{background:rgba(230,126,34,0.12);color:var(--orange);}
+
+  .notif-actions{display:flex;gap:6px;margin-top:8px;}
+  .na-btn{padding:5px 12px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;transition:0.2s;font-family:'Tajawal',sans-serif;border:none;}
+  .na-primary{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--dark);}
+  .na-secondary{background:rgba(255,255,255,0.06);color:var(--gray);}
+  .na-secondary:hover{background:rgba(255,255,255,0.1);color:var(--white);}
+
+  .notif-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;}
+  .notif-amount{font-size:15px;font-weight:900;color:var(--gold);}
+  .notif-dismiss{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,0.05);border:none;cursor:pointer;font-size:14px;color:var(--gray);display:flex;align-items:center;justify-content:center;transition:0.2s;}
+  .notif-dismiss:hover{background:rgba(231,76,60,0.15);color:var(--red);}
+
+  /* SETTINGS CARD */
+  .settings-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:20px;margin-bottom:16px;}
+  .sc-title{font-size:15px;font-weight:800;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:8px;}
+
+  /* TOGGLE */
+  .toggle-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+  .toggle-row:last-child{border-bottom:none;}
+  .toggle-info{flex:1;}
+  .toggle-label{font-size:14px;font-weight:700;margin-bottom:2px;}
+  .toggle-sub{font-size:11px;color:var(--gray);}
+  .toggle{position:relative;width:44px;height:24px;flex-shrink:0;}
+  .toggle input{display:none;}
+  .toggle-slider{position:absolute;inset:0;border-radius:12px;background:rgba(255,255,255,0.1);cursor:pointer;transition:0.3s;}
+  .toggle input:checked~.toggle-slider{background:linear-gradient(135deg,var(--gold),var(--gold-light));}
+  .toggle-slider::after{content:'';position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:white;transition:0.3s;}
+  .toggle input:checked~.toggle-slider::after{transform:translateX(20px);}
+
+  /* CHANNELS */
+  .channels-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .channel-card{background:var(--dark4);border:1.5px solid rgba(255,255,255,0.06);border-radius:12px;padding:14px;cursor:pointer;transition:0.2s;}
+  .channel-card.active{border-color:rgba(201,168,76,0.3);background:rgba(201,168,76,0.06);}
+  .channel-card:hover{border-color:rgba(201,168,76,0.2);}
+  .ch-icon{font-size:24px;margin-bottom:8px;}
+  .ch-name{font-size:13px;font-weight:800;margin-bottom:2px;}
+  .ch-status{font-size:11px;}
+  .ch-active{color:var(--green);}
+  .ch-inactive{color:var(--gray);}
+
+  /* STATS */
+  .stats-mini{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+  .stat-mini{background:var(--dark4);border-radius:10px;padding:12px;text-align:center;}
+  .sm-val{font-size:20px;font-weight:900;color:var(--gold);}
+  .sm-lbl{font-size:11px;color:var(--gray);margin-top:2px;}
+
+  /* TOAST NOTIFICATION */
+  .toast-container{position:fixed;top:80px;left:24px;z-index:9999;display:flex;flex-direction:column;gap:10px;max-width:340px;}
+  .toast{background:var(--dark3);border:1px solid rgba(201,168,76,0.25);border-radius:14px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;box-shadow:0 8px 30px rgba(0,0,0,0.5);animation:toastSlide 0.4s ease;cursor:pointer;}
+  .toast:hover{border-color:rgba(201,168,76,0.4);}
+  @keyframes toastSlide{from{opacity:0;transform:translateX(-60px)}to{opacity:1;transform:translateX(0)}}
+  .toast-icon{font-size:22px;flex-shrink:0;}
+  .toast-body{flex:1;}
+  .toast-title{font-size:13px;font-weight:800;margin-bottom:2px;}
+  .toast-desc{font-size:12px;color:var(--gray);}
+  .toast-time{font-size:10px;color:var(--gray);margin-top:4px;}
+  .toast-close{font-size:16px;color:var(--gray);cursor:pointer;flex-shrink:0;}
+  .toast-close:hover{color:var(--white);}
+  .toast.green{border-color:rgba(46,204,113,0.3);}
+  .toast.red{border-color:rgba(231,76,60,0.3);}
+  .toast.blue{border-color:rgba(52,152,219,0.3);}
+
+  /* PUSH DEMO */
+  .push-demo{background:var(--dark2);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;margin-bottom:16px;}
+  .push-phone{background:#1C1C1E;border-radius:16px;padding:16px;max-width:280px;margin:0 auto;}
+  .push-phone-header{font-size:11px;color:rgba(255,255,255,0.4);text-align:center;margin-bottom:12px;}
+  .push-notif{background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);border-radius:12px;padding:12px;display:flex;gap:10px;align-items:center;}
+  .push-app-icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .push-content{flex:1;}
+  .push-app-name{font-size:10px;color:rgba(255,255,255,0.5);margin-bottom:2px;}
+  .push-title{font-size:13px;font-weight:700;}
+  .push-body{font-size:11px;color:rgba(255,255,255,0.7);margin-top:2px;}
+  .push-time{font-size:10px;color:rgba(255,255,255,0.4);}
+
+  /* EMPTY STATE */
+  .empty{text-align:center;padding:48px 20px;color:var(--gray);}
+  .empty-icon{font-size:56px;margin-bottom:14px;}
+  .empty-title{font-size:17px;font-weight:800;color:var(--white);margin-bottom:6px;}
+
+  @media(max-width:900px){
+    .layout{grid-template-columns:1fr;}
+    .channels-grid{grid-template-columns:repeat(2,1fr);}
+  }
+</style>
+</head>
+<body>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo"><div class="logo-icon">🏨</div><div class="logo-text">بوكنق السعودية</div></a>
+  <div class="nav-center"><div class="live-dot"></div><div class="live-text">إشعارات مباشرة</div></div>
+  <a href="dashboard.html" class="nav-back">← لوحة التحكم</a>
+</nav>
+
+<div class="container">
+  <div class="page-header">
+    <div>
+      <div class="page-title">🔔 مركز الإشعارات</div>
+      <div class="page-sub" id="unreadCount">14 إشعار غير مقروء</div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-outline" onclick="markAllRead()">✓ تعليم الكل كمقروء</button>
+      <button class="btn-outline" onclick="clearAll()">🗑️ مسح الكل</button>
+      <button class="btn-gold" onclick="testNotif()">🧪 اختبار إشعار</button>
+    </div>
+  </div>
+
+  <div class="layout">
+
+    <!-- LEFT: NOTIFICATIONS -->
+    <div>
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('all',this)">الكل <span class="tab-badge">14</span></button>
+        <button class="tab" onclick="switchTab('booking',this)">حجوزات <span class="tab-badge">5</span></button>
+        <button class="tab" onclick="switchTab('payment',this)">مدفوعات <span class="tab-badge">3</span></button>
+        <button class="tab" onclick="switchTab('review',this)">تقييمات <span class="tab-badge">2</span></button>
+        <button class="tab" onclick="switchTab('system',this)">النظام <span class="tab-badge">4</span></button>
+      </div>
+
+      <!-- ALL NOTIFICATIONS -->
+      <div class="tab-content active" id="tab-all">
+
+        <div class="notif-group-label">الآن</div>
+
+        <div class="notif-item unread" id="notif-1">
+          <div class="notif-icon-wrap">
+            <div class="notif-icon ni-green">✅</div>
+            <div class="unread-dot"></div>
+          </div>
+          <div class="notif-body">
+            <div class="notif-title">حجز جديد! <span class="notif-tag tag-booking">حجز</span></div>
+            <div class="notif-desc">محمد العتيبي حجز غرفة ديلوكس في فندق الريتز كارلتون لمدة 3 ليالي</div>
+            <div class="notif-meta">
+              <span class="notif-time">منذ دقيقتين</span>
+            </div>
+            <div class="notif-actions">
+              <button class="na-btn na-primary" onclick="location.href='hotel-page.html'">عرض الحجز</button>
+              <button class="na-btn na-secondary" onclick="dismissNotif('notif-1')">تجاهل</button>
+            </div>
+          </div>
+          <div class="notif-right">
+            <div class="notif-amount">2,932 ر.س</div>
+            <button class="notif-dismiss" onclick="dismissNotif('notif-1')">×</button>
+          </div>
+        </div>
+
+        <div class="notif-item unread" id="notif-2">
+          <div class="notif-icon-wrap">
+            <div class="notif-icon ni-gold">💰</div>
+            <div class="unread-dot"></div>
+          </div>
+          <div class="notif-body">
+            <div class="notif-title">تم استلام دفعة <span class="notif-tag tag-payment">دفع</span></div>
+            <div class="notif-desc">تم خصم 2,932 ر.س من محمد العتيبي عبر Apple Pay بنجاح</div>
+            <div class="notif-meta">
+              <span class="notif-time">منذ دقيقتين</span>
+            </div>
+          </div>
+          <div class="notif-right">
+            <div class="notif-amount" style="color:var(--green);">+2,932 ر.س</div>
+            <button class="notif-dismiss" onclick="dismissNotif('notif-2')">×</button>
+          </div>
+        </div>
+
+        <div class="notif-group-label">اليوم</div>
+
+        <div class="notif-item unread" id="notif-3">
+          <div class="notif-icon-wrap">
+            <div class="notif-icon ni-purple">🏨</div>
+            <div class="unread-dot"></div>
+          </div>
+          <div class="notif-body">
+            <div class="notif-title">تسجيل دخول اليوم <span class="notif-tag tag-booking">دخول</span></div>
+            <div class="notif-desc">5 نزلاء سيصلون اليوم · الأول: خالد المطيري في فيلا الياسمين الساعة 3 مساءً</div>
+            <div class="notif-meta"><span class="notif-time">منذ ساعة</span></div>
+            <div class="notif-actions">
+              <button class="na-btn na-primary">عرض القائمة</button>
+            </div>
+          </div>
+          <div class="notif-right">
+            <div style="font-size:12px;color:var(--purple);font-weight:700;">5 نزلاء</div>
+            <button class="notif-dismiss" onclick="dismissNotif('notif-3')">×</button>
+          </div>
+        </div>
+
+        <div class="notif-item unread" id="notif-4">
+          <div class="notif-icon-wrap">
+            <div class="notif-icon ni-blue">⭐</div>
+            <div class="unread-dot"></div>
+          </div>
+          <div class="notif-body">
+            <div class="notif-title">تقييم جديد 5 نجوم ⭐⭐⭐⭐⭐ <span class="notif-tag tag-review">تقييم</span></div>
+            <div class="notif-desc">سارة الغامدي: "تجربة استثنائية من كل النواحي! الخدمة راقية جداً"</div>
+            <div class="notif-meta"><span class="notif-time">منذ 2 ساعة</span></div>
+            <div class="notif-actions">
+              <button class="na-btn na-primary">رد على التقييم</button>
+            </div>
+          </div>
+          <div class="notif-right">
+            <div style="font-size:12px;color:var(--gold);font-weight:700;">⭐ 5/5</div>
+            <button class="notif-dismiss" onclick="dismissNotif('notif-4')">×</button>
+          </div>
+        </div>
+
+        <div class="notif-item unread" id="notif-5">
+          <div class="notif-icon-wrap">
+            <div class="notif-icon ni-red">❌</div>
+            <div class="unread-dot"></div>
+          </div>
+          <div class="notif-body">
+            <div class="notif-title">إلغاء حجز <span class="notif-tag tag-cancel">إلغاء</span></div>
+            <div class="notif-desc">فهد الدوسري ألغى حجزه في منتجع درة العروس · سيتم استرداد 3,600 ر.س</div>
+            <div class="notif-meta"><span class="notif-time">منذ 3 ساعات</span></div>
+            <div class="notif-actions">
+              <button class="na-btn na-primary">عرض التفاصيل</button>
+              <button class="na-btn na-secondary">تأكيد الاسترداد</button>
+            </div>
+          </div>
+          <div class="notif-right">
+            <div class="notif-amount" style="color:var(--red);">-3,600 ر.س</div>
+            <button class="notif-dismiss" onclick="dismissNotif('notif-5')">×</button>
+          </div>
+        </div>
+
+        <div class="notif-item unread" id="notif-6">
+          <div class="notif-icon-wrap">
+            <div class="notif-icon ni-orange">🔥</div>
+            <div class="unread-dot"></div>
+          </div>
+          <div class="notif-body">
+            <div class="notif-title">تنبيه: إشغال عالٍ! <span class="notif-tag tag-system">نظام</span></div>
+            <div class="notif-desc">فندق الريتز كارلتون وصل لـ 98% إشغال الأسبوع القادم · فكر في رفع الأسعار</div>
+            <div class="notif-meta"><span class="notif-time">منذ 4 ساعات</span></div>
+            <div class="notif-actions">
+              <button class="na-btn na-primary" onclick="location.href='revenue-reports.html'">عرض التقرير</button>
+            </div>
+          </div>
+          <div class="notif-right">
+            <div style="font-size:12px;color:var(--orange);font-weight:700;">98% 🔥</div>
+            <button class="notif-dismiss" onclick="dismissNotif('notif-6')">×</button>
+          </div>
+        </div>
+
+        <div class="notif-group-label">أمس</div>
+
+        <div class="notif-item" id="notif-7">
+          <div class="notif-icon-wrap"><div class="notif-icon ni-green">✅</div></div>
+          <div class="notif-body">
+            <div class="notif-title">حجز جديد <span class="notif-tag tag-booking">حجز</span></div>
+            <div class="notif-desc">نورة الشمري حجزت جناح كلوب في الريتز كارلتون لليلة واحدة</div>
+            <div class="notif-meta"><span class="notif-time">أمس 10:15 ص</span></div>
+          </div>
+          <div class="notif-right">
+            <div class="notif-amount">1,400 ر.س</div>
+            <button class="notif-dismiss" onclick="dismissNotif('notif-7')">×</button>
+          </div>
+        </div>
+
+        <div class="notif-item" id="notif-8">
+          <div class="notif-icon-wrap"><div class="notif-icon ni-purple">🎯</div></div>
+          <div class="notif-body">
+            <div class="notif-title">تجاوزت هدف الشهر! <span class="notif-tag tag-system">إنجاز</span></div>
+            <div class="notif-desc">🎉 وصلت إيرادات يونيو لـ 48,750 ر.س متجاوزةً الهدف المحدد 45,000 ر.س</div>
+            <div class="notif-meta"><span class="notif-time">أمس 8:00 ص</span></div>
+          </div>
+          <div class="notif-right">
+            <div style="font-size:12px;color:var(--green);font-weight:700;">+8.3%</div>
+            <button class="notif-dismiss" onclick="dismissNotif('notif-8')">×</button>
+          </div>
+        </div>
+
+        <div class="notif-item" id="notif-9">
+          <div class="notif-icon-wrap"><div class="notif-icon ni-blue">💬</div></div>
+          <div class="notif-body">
+            <div class="notif-title">رسالة جديدة من نزيل <span class="notif-tag tag-review">شات</span></div>
+            <div class="notif-desc">خالد الزهراني: "هل يمكن تجهيز الغرفة مبكراً؟ سأصل الساعة 11 صباحاً"</div>
+            <div class="notif-meta"><span class="notif-time">أمس 7:42 ص</span></div>
+            <div class="notif-actions">
+              <button class="na-btn na-primary" onclick="location.href='chat-system.html'">رد الآن</button>
+            </div>
+          </div>
+          <div class="notif-right">
+            <button class="notif-dismiss" onclick="dismissNotif('notif-9')">×</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- BOOKING TAB -->
+      <div class="tab-content" id="tab-booking">
+        <div class="notif-item unread" id="nb-1">
+          <div class="notif-icon-wrap"><div class="notif-icon ni-green">✅</div><div class="unread-dot"></div></div>
+          <div class="notif-body">
+            <div class="notif-title">حجز جديد #BSA-7831</div>
+            <div class="notif-desc">محمد العتيبي · ريتز كارلتون · 3 ليالي · 15-18 يونيو</div>
+            <div class="notif-meta"><span class="notif-time">منذ دقيقتين</span></div>
+            <div class="notif-actions"><button class="na-btn na-primary">عرض الحجز</button></div>
+          </div>
+          <div class="notif-right"><div class="notif-amount">2,932 ر.س</div></div>
+        </div>
+        <div class="notif-item unread">
+          <div class="notif-icon-wrap"><div class="notif-icon ni-purple">🏨</div><div class="unread-dot"></div></div>
+          <div class="notif-body">
+            <div class="notif-title">تسجيل دخول اليوم - 5 نزلاء</div>
+            <div class="notif-desc">خالد المطيري · فيلا الياسمين · 3 مساءً</div>
+            <div class="notif-meta"><span class="notif-time">منذ ساعة</span></div>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-icon-wrap"><div class="notif-icon ni-red">❌</div></div>
+          <div class="notif-body">
+            <div class="notif-title">إلغاء حجز #BSA-7827</div>
+            <div class="notif-desc">فهد الدوسري · منتجع درة العروس · استرداد كامل</div>
+            <div class="notif-meta"><span class="notif-time">منذ 3 ساعات</span></div>
+          </div>
+          <div class="notif-right"><div class="notif-amount" style="color:var(--red);">-3,600 ر.س</div></div>
+        </div>
+      </div>
+
+      <!-- PAYMENT TAB -->
+      <div class="tab-content" id="tab-payment">
+        <div class="notif-item unread">
+          <div class="notif-icon-wrap"><div class="notif-icon ni-gold">💰</div><div class="unread-dot"></div></div>
+          <div class="notif-body">
+            <div class="notif-title">دفعة Apple Pay - 2,932 ر.س</div>
+            <div class="notif-desc">محمد العتيبي · حجز #BSA-7831 · تم الخصم بنجاح</div>
+            <div class="notif-meta"><span class="notif-time">منذ دقيقتين</span></div>
+          </div>
+          <div class="notif-right"><div class="notif-amount" style="color:var(--green);">+2,932 ر.س</div></div>
+        </div>
+        <div class="notif-item unread">
+          <div class="notif-icon-wrap"><div class="notif-icon ni-gold">💰</div><div class="unread-dot"></div></div>
+          <div class="notif-body">
+            <div class="notif-title">دفعة مدى - 1,400 ر.س</div>
+            <div class="notif-desc">نورة الشمري · حجز #BSA-7828 · تم بنجاح</div>
+            <div class="notif-meta"><span class="notif-time">أمس 10:15 ص</span></div>
+          </div>
+          <div class="notif-right"><div class="notif-amount" style="color:var(--green);">+1,400 ر.س</div></div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-icon-wrap"><div class="notif-icon ni-red">↩️</div></div>
+          <div class="notif-body">
+            <div class="notif-title">استرداد - 3,600 ر.س</div>
+            <div class="notif-desc">فهد الدوسري · إلغاء #BSA-7827 · سيصل خلال 3-5 أيام</div>
+            <div class="notif-meta"><span class="notif-time">منذ 3 ساعات</span></div>
+          </div>
+          <div class="notif-right"><div class="notif-amount" style="color:var(--red);">-3,600 ر.س</div></div>
+        </div>
+      </div>
+
+      <!-- REVIEW TAB -->
+      <div class="tab-content" id="tab-review">
+        <div class="notif-item unread">
+          <div class="notif-icon-wrap"><div class="notif-icon ni-blue">⭐</div><div class="unread-dot"></div></div>
+          <div class="notif-body">
+            <div class="notif-title">تقييم 5 نجوم ⭐⭐⭐⭐⭐</div>
+            <div class="notif-desc">سارة الغامدي: "تجربة استثنائية من كل النواحي! سأعود بالتأكيد"</div>
+            <div class="notif-meta"><span class="notif-time">منذ 2 ساعة</span></div>
+            <div class="notif-actions"><button class="na-btn na-primary">رد على التقييم</button></div>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-icon-wrap"><div class="notif-icon ni-blue">⭐</div></div>
+          <div class="notif-body">
+            <div class="notif-title">تقييم 4 نجوم ⭐⭐⭐⭐</div>
+            <div class="notif-desc">خالد الزهراني: "الإفطار رائع والغرفة نظيفة، لكن الواي فاي كان بطيئاً"</div>
+            <div class="notif-meta"><span class="notif-time">أمس</span></div>
+            <div class="notif-actions"><button class="na-btn na-primary">رد على التقييم</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SYSTEM TAB -->
+      <div class="tab-content" id="tab-system">
+        <div class="notif-item unread">
+          <div class="notif-icon-wrap"><div class="notif-icon ni-orange">🔥</div><div class="unread-dot"></div></div>
+          <div class="notif-body">
+            <div class="notif-title">تنبيه إشغال عالٍ 98%</div>
+            <div class="notif-desc">ريتز كارلتون الأسبوع القادم · يُنصح برفع الأسعار 15-20%</div>
+            <div class="notif-meta"><span class="notif-time">منذ 4 ساعات</span></div>
+            <div class="notif-actions"><button class="na-btn na-primary" onclick="location.href='revenue-reports.html'">عرض التقرير</button></div>
+          </div>
+        </div>
+        <div class="notif-item unread">
+          <div class="notif-icon-wrap"><div class="notif-icon ni-purple">🎯</div><div class="unread-dot"></div></div>
+          <div class="notif-body">
+            <div class="notif-title">🎉 تجاوزت هدف الشهر!</div>
+            <div class="notif-desc">إيرادات يونيو 48,750 ر.س · الهدف كان 45,000 ر.س · تجاوزت بـ 8.3%</div>
+            <div class="notif-meta"><span class="notif-time">أمس 8:00 ص</span></div>
+          </div>
+          <div class="notif-right"><div style="color:var(--green);font-size:12px;font-weight:700;">+8.3%</div></div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-icon-wrap"><div class="notif-icon ni-blue">📱</div></div>
+          <div class="notif-body">
+            <div class="notif-title">تحديث النظام v2.4.1</div>
+            <div class="notif-desc">تم تحديث منصة بوكنق السعودية بميزات جديدة: الخريطة التفاعلية والحجز الشهري</div>
+            <div class="notif-meta"><span class="notif-time">14 يونيو</span></div>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-icon-wrap"><div class="notif-icon ni-green">✅</div></div>
+          <div class="notif-body">
+            <div class="notif-title">تم التحقق من عقارك</div>
+            <div class="notif-desc">فندق الريتز كارلتون حصل على شارة "عقار موثق" · ستزيد ظهوره في البحث</div>
+            <div class="notif-meta"><span class="notif-time">13 يونيو</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: SETTINGS -->
+    <div>
+
+      <!-- STATS -->
+      <div class="stats-mini">
+        <div class="stat-mini"><div class="sm-val" id="unreadNum">14</div><div class="sm-lbl">غير مقروء</div></div>
+        <div class="stat-mini"><div class="sm-val">247</div><div class="sm-lbl">هذا الشهر</div></div>
+        <div class="stat-mini"><div class="sm-val" style="color:var(--green);">98%</div><div class="sm-lbl">معدل التوصيل</div></div>
+        <div class="stat-mini"><div class="sm-val" style="color:var(--blue);">3</div><div class="sm-lbl">قنوات نشطة</div></div>
+      </div>
+
+      <!-- PUSH DEMO -->
+      <div class="push-demo">
+        <div style="font-size:13px;font-weight:700;margin-bottom:12px;color:var(--gold);">📱 معاينة إشعار الجوال</div>
+        <div class="push-phone">
+          <div class="push-phone-header">iPhone · الآن</div>
+          <div class="push-notif">
+            <div class="push-app-icon">🏨</div>
+            <div class="push-content">
+              <div class="push-app-name">بوكنق السعودية</div>
+              <div class="push-title" id="pushTitle">حجز جديد! ✅</div>
+              <div class="push-body" id="pushBody">محمد العتيبي · 2,932 ر.س</div>
+            </div>
+            <div class="push-time">الآن</div>
+          </div>
+        </div>
+        <button class="btn-gold" style="width:100%;margin-top:12px;padding:10px;" onclick="simulatePush()">▶️ محاكاة إشعار</button>
+      </div>
+
+      <!-- CHANNELS -->
+      <div class="settings-card">
+        <div class="sc-title">📡 قنوات الإشعار</div>
+        <div class="channels-grid">
+          <div class="channel-card active" onclick="toggleChannel(this)">
+            <div class="ch-icon">📱</div>
+            <div class="ch-name">Push</div>
+            <div class="ch-status ch-active">✅ مفعّل</div>
+          </div>
+          <div class="channel-card active" onclick="toggleChannel(this)">
+            <div class="ch-icon">📧</div>
+            <div class="ch-name">بريد إلكتروني</div>
+            <div class="ch-status ch-active">✅ مفعّل</div>
+          </div>
+          <div class="channel-card active" onclick="toggleChannel(this)">
+            <div class="ch-icon">💬</div>
+            <div class="ch-name">واتساب</div>
+            <div class="ch-status ch-active">✅ مفعّل</div>
+          </div>
+          <div class="channel-card" onclick="toggleChannel(this)">
+            <div class="ch-icon">📲</div>
+            <div class="ch-name">SMS</div>
+            <div class="ch-status ch-inactive">غير مفعّل</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="settings-card">
+        <div class="sc-title">⚙️ إعدادات الإشعارات</div>
+        <div class="toggle-row">
+          <div class="toggle-info"><div class="toggle-label">حجوزات جديدة</div><div class="toggle-sub">إشعار فوري عند كل حجز</div></div>
+          <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info"><div class="toggle-label">المدفوعات</div><div class="toggle-sub">تأكيد استلام كل دفعة</div></div>
+          <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info"><div class="toggle-label">الإلغاءات</div><div class="toggle-sub">تنبيه عند إلغاء أي حجز</div></div>
+          <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info"><div class="toggle-label">التقييمات</div><div class="toggle-sub">إشعار عند كل تقييم جديد</div></div>
+          <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info"><div class="toggle-label">تنبيهات الإشغال</div><div class="toggle-sub">عند تجاوز 90% إشغال</div></div>
+          <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info"><div class="toggle-label">العروض والكوبونات</div><div class="toggle-sub">إشعارات العروض الحصرية</div></div>
+          <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info"><div class="toggle-label">وضع الصمت الليلي</div><div class="toggle-sub">إيقاف الإشعارات 11م - 7ص</div></div>
+          <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+let toastCount = 0;
+const testNotifs = [
+  {icon:'✅',title:'حجز جديد!',desc:'أحمد السعيد · فور سيزونز · 2 ليالي',amount:'1,950 ر.س',type:'green'},
+  {icon:'💰',title:'تم استلام دفعة',desc:'STC Pay · 850 ر.س',amount:'+850 ر.س',type:''},
+  {icon:'⭐',title:'تقييم 5 نجوم!',desc:'منى الحربي: "رائع جداً!"',amount:'⭐⭐⭐⭐⭐',type:'blue'},
+  {icon:'❌',title:'إلغاء حجز',desc:'عبدالله الشهري · استرداد',amount:'-1,200 ر.س',type:'red'},
+  {icon:'🔥',title:'إشغال عالٍ!',desc:'هيلتون الرياض وصل 95%',amount:'95%',type:''},
+];
+
+function showToast(data) {
+  const id = 'toast-' + (++toastCount);
+  const div = document.createElement('div');
+  div.className = `toast ${data.type||''}`;
+  div.id = id;
+  div.innerHTML = `
+    <div class="toast-icon">${data.icon}</div>
+    <div class="toast-body">
+      <div class="toast-title">${data.title}</div>
+      <div class="toast-desc">${data.desc}</div>
+      <div class="toast-time">الآن</div>
+    </div>
+    <div class="toast-close" onclick="removeToast('${id}')">×</div>`;
+  document.getElementById('toastContainer').prepend(div);
+  setTimeout(() => removeToast(id), 5000);
+}
+
+function removeToast(id) {
+  const el = document.getElementById(id);
+  if(el) { el.style.opacity='0'; el.style.transform='translateX(-60px)'; setTimeout(()=>el.remove(),300); }
+}
+
+function testNotif() {
+  const n = testNotifs[Math.floor(Math.random()*testNotifs.length)];
+  showToast(n);
+  document.getElementById('pushTitle').textContent = n.title;
+  document.getElementById('pushBody').textContent = n.desc;
+}
+
+function simulatePush() {
+  const n = testNotifs[Math.floor(Math.random()*testNotifs.length)];
+  document.getElementById('pushTitle').textContent = n.title;
+  document.getElementById('pushBody').textContent = n.desc;
+  showToast(n);
+}
+
+function dismissNotif(id) {
+  const el = document.getElementById(id);
+  if(el) { el.style.opacity='0'; el.style.transform='translateX(30px)'; setTimeout(()=>el.remove(), 300); }
+  updateUnread();
+}
+
+function markAllRead() {
+  document.querySelectorAll('.unread-dot').forEach(d=>d.remove());
+  document.querySelectorAll('.notif-item.unread').forEach(i=>i.classList.remove('unread'));
+  document.getElementById('unreadNum').textContent='0';
+  document.getElementById('unreadCount').textContent='لا توجد إشعارات غير مقروءة';
+}
+
+function clearAll() {
+  if(confirm('هل تريد مسح جميع الإشعارات؟')) {
+    document.querySelectorAll('.notif-item').forEach(i=>{i.style.opacity='0';setTimeout(()=>i.remove(),300);});
+    setTimeout(()=>{ document.getElementById('unreadNum').textContent='0'; },400);
+  }
+}
+
+function updateUnread() {
+  const count = document.querySelectorAll('.notif-item.unread').length;
+  document.getElementById('unreadNum').textContent = count;
+}
+
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+name)?.classList.add('active');
+  btn.classList.add('active');
+}
+
+function toggleChannel(el) {
+  el.classList.toggle('active');
+  const status = el.querySelector('.ch-status');
+  if(el.classList.contains('active')) { status.textContent='✅ مفعّل'; status.className='ch-status ch-active'; }
+  else { status.textContent='غير مفعّل'; status.className='ch-status ch-inactive'; }
+}
+
+// Auto notifications every 15 seconds
+setInterval(() => {
+  const n = testNotifs[Math.floor(Math.random()*testNotifs.length)];
+  showToast(n);
+}, 15000);
+
+// Show first toast after 2s
+setTimeout(() => showToast(testNotifs[0]), 2000);
+</script>
+</body>
+</html>

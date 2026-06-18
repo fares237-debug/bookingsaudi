@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بوكنق السعودية | Booking Saudi Arabia</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C; --gold-light: #E8C97A;
+    --dark: #0A0A0F; --dark2: #13131A; --dark3: #1C1C26;
+    --white: #F8F4EE; --gray: #8A8A9A; --green: #2ECC71; --red: #E74C3C;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Tajawal',sans-serif; background:var(--dark); color:var(--white); min-height:100vh; }
+
+  /* SPLASH */
+  .splash {
+    position:fixed; inset:0; background:var(--dark);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    z-index:9999; transition:opacity 0.8s ease;
+  }
+  .splash.hide { opacity:0; pointer-events:none; }
+  .splash-logo { width:80px; height:80px; background:linear-gradient(135deg,var(--gold),var(--gold-light)); border-radius:22px; display:flex; align-items:center; justify-content:center; font-size:40px; margin-bottom:20px; animation:pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+  .splash-title { font-size:28px; font-weight:900; background:linear-gradient(135deg,var(--gold),var(--gold-light)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:8px; }
+  .splash-sub { font-size:14px; color:var(--gray); margin-bottom:32px; }
+  .splash-bar { width:200px; height:3px; background:rgba(255,255,255,0.1); border-radius:2px; overflow:hidden; }
+  .splash-progress { height:100%; background:linear-gradient(90deg,var(--gold),var(--gold-light)); border-radius:2px; animation:load 2s ease forwards; }
+  @keyframes load { from{width:0} to{width:100%} }
+
+  /* NAV */
+  nav {
+    position:fixed; top:0; width:100%; z-index:100;
+    background:rgba(10,10,15,0.92); backdrop-filter:blur(20px);
+    border-bottom:1px solid rgba(201,168,76,0.2);
+    padding:0 4%; height:65px;
+    display:flex; align-items:center; justify-content:space-between;
+    transition:all 0.3s;
+  }
+  nav.scrolled { background:rgba(10,10,15,0.98); box-shadow:0 4px 30px rgba(0,0,0,0.5); }
+  .nav-logo { display:flex; align-items:center; gap:10px; text-decoration:none; cursor:pointer; }
+  .logo-icon { width:40px; height:40px; background:linear-gradient(135deg,var(--gold),var(--gold-light)); border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:20px; }
+  .logo-text { font-size:18px; font-weight:900; background:linear-gradient(135deg,var(--gold),var(--gold-light)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .logo-sub { font-size:10px; color:var(--gray); }
+
+  .nav-links { display:flex; align-items:center; gap:6px; list-style:none; }
+  .nav-link {
+    padding:8px 14px; border-radius:8px; cursor:pointer;
+    font-size:14px; color:var(--gray); transition:0.2s;
+    text-decoration:none; display:flex; align-items:center; gap:6px;
+  }
+  .nav-link:hover, .nav-link.active { color:var(--white); background:rgba(255,255,255,0.06); }
+  .nav-link.active { color:var(--gold); }
+
+  .nav-right { display:flex; align-items:center; gap:10px; }
+  .nav-lang { padding:6px 12px; border:1px solid rgba(255,255,255,0.1); border-radius:8px; font-size:13px; color:var(--gray); cursor:pointer; transition:0.2s; }
+  .nav-lang:hover { border-color:var(--gold); color:var(--gold); }
+  .btn-login { padding:8px 18px; border:1px solid rgba(201,168,76,0.4); color:var(--gold); background:transparent; border-radius:9px; cursor:pointer; font-family:'Tajawal',sans-serif; font-size:14px; transition:0.2s; }
+  .btn-login:hover { background:rgba(201,168,76,0.1); }
+  .btn-register { padding:8px 18px; background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--dark); border:none; border-radius:9px; cursor:pointer; font-family:'Tajawal',sans-serif; font-size:14px; font-weight:800; transition:0.3s; }
+  .btn-register:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(201,168,76,0.3); }
+
+  /* MOBILE NAV */
+  .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:8px; }
+  .hamburger span { width:22px; height:2px; background:var(--white); border-radius:2px; transition:0.3s; }
+
+  .mobile-menu {
+    display:none; position:fixed; top:65px; inset-inline:0; bottom:0;
+    background:rgba(10,10,15,0.98); backdrop-filter:blur(20px);
+    z-index:99; flex-direction:column; padding:24px;
+    border-top:1px solid rgba(201,168,76,0.15);
+  }
+  .mobile-menu.open { display:flex; }
+  .mobile-nav-link {
+    padding:16px 0; font-size:16px; color:var(--gray); cursor:pointer;
+    border-bottom:1px solid rgba(255,255,255,0.05);
+    display:flex; align-items:center; gap:12px; text-decoration:none;
+    transition:0.2s;
+  }
+  .mobile-nav-link:hover { color:var(--white); }
+  .mobile-nav-link.gold { color:var(--gold); font-weight:700; }
+  .mobile-btns { display:flex; flex-direction:column; gap:10px; margin-top:24px; }
+  .mobile-btn-login { padding:14px; border:1px solid rgba(201,168,76,0.4); color:var(--gold); background:transparent; border-radius:12px; cursor:pointer; font-family:'Tajawal',sans-serif; font-size:15px; }
+  .mobile-btn-register { padding:14px; background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--dark); border:none; border-radius:12px; cursor:pointer; font-family:'Tajawal',sans-serif; font-size:15px; font-weight:800; }
+
+  /* PAGES */
+  .page { display:none; min-height:100vh; padding-top:65px; }
+  .page.active { display:block; animation:pageIn 0.3s ease; }
+  @keyframes pageIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ===== HOME PAGE ===== */
+  .hero {
+    min-height:calc(100vh - 65px);
+    background:radial-gradient(ellipse at 20% 50%,rgba(201,168,76,0.08) 0%,transparent 60%),
+               radial-gradient(ellipse at 80% 20%,rgba(201,168,76,0.05) 0%,transparent 50%),
+               linear-gradient(180deg,var(--dark) 0%,var(--dark2) 100%);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:60px 5%;
+  }
+  .hero-badge { background:rgba(201,168,76,0.15); border:1px solid rgba(201,168,76,0.3); color:var(--gold); padding:6px 18px; border-radius:50px; font-size:13px; margin-bottom:24px; }
+  .hero h1 { font-size:clamp(32px,5vw,64px); font-weight:900; text-align:center; line-height:1.2; margin-bottom:16px; }
+  .hero h1 span { background:linear-gradient(135deg,var(--gold),var(--gold-light)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .hero p { font-size:17px; color:var(--gray); text-align:center; max-width:560px; margin-bottom:40px; }
+
+  .search-tabs { display:flex; gap:8px; margin-bottom:14px; }
+  .stab { padding:9px 22px; border-radius:9px; cursor:pointer; font-size:14px; font-family:'Tajawal',sans-serif; border:1px solid rgba(201,168,76,0.3); background:transparent; color:var(--gray); transition:0.2s; }
+  .stab.active, .stab:hover { background:var(--gold); color:var(--dark); border-color:var(--gold); font-weight:700; }
+
+  .search-box { background:var(--dark3); border:1px solid rgba(201,168,76,0.2); border-radius:18px; padding:20px; width:100%; max-width:860px; display:grid; grid-template-columns:2fr 1fr 1fr auto; gap:14px; align-items:end; box-shadow:0 20px 60px rgba(0,0,0,0.5); }
+  .sfield label { display:block; font-size:11px; color:var(--gold); font-weight:700; margin-bottom:6px; }
+  .sfield input, .sfield select { width:100%; background:var(--dark2); border:1px solid rgba(255,255,255,0.1); border-radius:9px; padding:11px 14px; color:var(--white); font-size:14px; font-family:'Tajawal',sans-serif; outline:none; transition:0.2s; }
+  .sfield input:focus, .sfield select:focus { border-color:var(--gold); }
+  .search-submit { background:linear-gradient(135deg,var(--gold),var(--gold-light)); border:none; border-radius:11px; padding:13px 28px; cursor:pointer; font-size:15px; font-weight:800; font-family:'Tajawal',sans-serif; color:var(--dark); transition:0.3s; white-space:nowrap; }
+  .search-submit:hover { transform:translateY(-2px); box-shadow:0 8px 25px rgba(201,168,76,0.4); }
+
+  .stats-row { display:flex; gap:48px; margin-top:44px; }
+  .stat { text-align:center; }
+  .stat-num { font-size:26px; font-weight:900; background:linear-gradient(135deg,var(--gold),var(--gold-light)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .stat-lbl { font-size:12px; color:var(--gray); margin-top:3px; }
+
+  /* SECTIONS */
+  .section { padding:70px 5%; }
+  .sec-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:36px; }
+  .sec-title { font-size:26px; font-weight:800; }
+  .sec-title span { background:linear-gradient(135deg,var(--gold),var(--gold-light)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .see-all { color:var(--gold); font-size:13px; font-weight:700; cursor:pointer; text-decoration:none; }
+
+  /* CITIES */
+  .cities-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  .city-card { position:relative; border-radius:14px; overflow:hidden; cursor:pointer; height:170px; transition:0.3s; background:var(--dark3); display:flex; align-items:center; justify-content:center; font-size:70px; }
+  .city-card:first-child { grid-column:span 2; height:220px; font-size:100px; }
+  .city-card:hover { transform:scale(1.03); }
+  .city-overlay { position:absolute; inset:0; background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,transparent 55%); }
+  .city-info { position:absolute; bottom:14px; right:14px; }
+  .city-name { font-size:17px; font-weight:800; }
+  .city-count { font-size:12px; color:rgba(255,255,255,0.7); }
+
+  /* CARDS */
+  .cards-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+  .prop-card { background:var(--dark3); border:1px solid rgba(255,255,255,0.06); border-radius:18px; overflow:hidden; cursor:pointer; transition:0.3s; }
+  .prop-card:hover { border-color:rgba(201,168,76,0.3); transform:translateY(-6px); box-shadow:0 18px 45px rgba(0,0,0,0.4); }
+  .card-img { height:190px; background:var(--dark2); display:flex; align-items:center; justify-content:center; font-size:70px; position:relative; }
+  .card-badge { position:absolute; top:10px; right:10px; padding:4px 10px; border-radius:6px; font-size:11px; font-weight:800; }
+  .badge-deal { background:var(--red); color:white; }
+  .badge-top { background:var(--gold); color:var(--dark); }
+  .badge-new { background:var(--green); color:white; }
+  .card-body { padding:16px; }
+  .card-type { font-size:11px; color:var(--gold); font-weight:700; letter-spacing:1px; margin-bottom:5px; }
+  .card-name { font-size:16px; font-weight:800; margin-bottom:6px; }
+  .card-loc { font-size:13px; color:var(--gray); margin-bottom:10px; }
+  .card-feats { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
+  .card-feat { background:rgba(255,255,255,0.05); padding:3px 9px; border-radius:5px; font-size:11px; color:var(--gray); }
+  .card-footer { display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.05); padding-top:12px; }
+  .card-price { font-size:22px; font-weight:900; color:var(--gold); }
+  .card-price small { font-size:11px; color:var(--gray); font-weight:400; }
+  .card-rating { font-size:12px; color:var(--gray); text-align:left; }
+  .card-rating strong { display:block; font-size:14px; color:var(--white); }
+
+  /* FEATURES */
+  .features-section { background:var(--dark2); border-top:1px solid rgba(201,168,76,0.08); border-bottom:1px solid rgba(201,168,76,0.08); }
+  .features-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:28px; }
+  .feat-card { text-align:center; }
+  .feat-icon { width:60px; height:60px; margin:0 auto 14px; background:rgba(201,168,76,0.1); border:1px solid rgba(201,168,76,0.2); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:26px; transition:0.3s; cursor:default; }
+  .feat-card:hover .feat-icon { background:var(--gold); transform:translateY(-4px); }
+  .feat-title { font-size:15px; font-weight:700; margin-bottom:6px; }
+  .feat-desc { font-size:13px; color:var(--gray); line-height:1.6; }
+
+  /* APP BANNER */
+  .app-banner { background:var(--dark3); border:1px solid rgba(201,168,76,0.15); border-radius:22px; padding:44px; display:flex; justify-content:space-between; align-items:center; margin:0 5% 70px; }
+  .app-text h2 { font-size:30px; font-weight:900; margin-bottom:10px; }
+  .app-text h2 span { background:linear-gradient(135deg,var(--gold),var(--gold-light)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .app-text p { color:var(--gray); margin-bottom:22px; max-width:380px; }
+  .app-btns { display:flex; gap:10px; flex-wrap:wrap; }
+  .store-btn { display:flex; align-items:center; gap:9px; background:var(--dark2); border:1px solid rgba(201,168,76,0.25); padding:11px 18px; border-radius:11px; cursor:pointer; transition:0.2s; color:var(--white); }
+  .store-btn:hover { border-color:var(--gold); background:rgba(201,168,76,0.08); }
+  .store-btn .si { font-size:26px; }
+  .store-btn .st { font-size:10px; color:var(--gray); }
+  .store-btn .sn { font-size:14px; font-weight:700; }
+  .app-emoji { font-size:100px; }
+
+  /* FOOTER */
+  footer { background:var(--dark2); border-top:1px solid rgba(201,168,76,0.1); padding:56px 5% 28px; }
+  .footer-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:44px; margin-bottom:44px; }
+  .footer-brand p { color:var(--gray); margin-top:12px; font-size:13px; line-height:1.8; }
+  .footer-col h4 { font-size:13px; font-weight:700; color:var(--gold); margin-bottom:14px; }
+  .footer-col ul { list-style:none; }
+  .footer-col li { margin-bottom:9px; }
+  .footer-col a { color:var(--gray); text-decoration:none; font-size:13px; transition:0.2s; cursor:pointer; }
+  .footer-col a:hover { color:var(--white); }
+  .footer-bottom { border-top:1px solid rgba(255,255,255,0.05); padding-top:22px; display:flex; justify-content:space-between; align-items:center; }
+  .footer-bottom p { font-size:12px; color:var(--gray); }
+  .socials { display:flex; gap:10px; }
+  .social { width:34px; height:34px; border-radius:8px; background:rgba(255,255,255,0.05); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:0.2s; font-size:15px; }
+  .social:hover { background:var(--gold); }
+
+  /* ===== INNER PAGES (iframe embed) ===== */
+  .page-frame { width:100%; border:none; min-height:calc(100vh - 65px); display:block; }
+
+  /* TOAST */
+  .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(100px); background:var(--dark3); border:1px solid rgba(201,168,76,0.3); padding:14px 24px; border-radius:12px; font-size:14px; z-index:9999; transition:transform 0.4s ease; white-space:nowrap; }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+  .toast.green { border-color:rgba(46,204,113,0.4); color:var(--green); }
+
+  @media(max-width:900px) {
+    .nav-links { display:none; }
+    .nav-right .btn-login, .nav-right .btn-register { display:none; }
+    .hamburger { display:flex; }
+    .search-box { grid-template-columns:1fr; }
+    .stats-row { gap:24px; flex-wrap:wrap; justify-content:center; }
+    .cities-grid { grid-template-columns:1fr 1fr; }
+    .city-card:first-child { grid-column:span 2; }
+    .cards-grid { grid-template-columns:1fr; }
+    .features-grid { grid-template-columns:1fr 1fr; }
+    .app-banner { flex-direction:column; text-align:center; }
+    .app-emoji { display:none; }
+    .footer-grid { grid-template-columns:1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div class="splash" id="splash">
+  <div class="splash-logo">🏨</div>
+  <div class="splash-title">بوكنق السعودية</div>
+  <div class="splash-sub">Booking Saudi Arabia</div>
+  <div class="splash-bar"><div class="splash-progress"></div></div>
+</div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="nav-logo" onclick="goHome()">
+    <div class="logo-icon">🏨</div>
+    <div>
+      <div class="logo-text">بوكنق السعودية</div>
+      <div class="logo-sub">Booking Saudi Arabia</div>
+    </div>
+  </div>
+
+  <ul class="nav-links">
+    <li><a class="nav-link active" onclick="showPage('home')">🏠 الرئيسية</a></li>
+    <li><a class="nav-link" onclick="showPage('search')">🔍 البحث</a></li>
+    <li><a class="nav-link" onclick="showPage('monthly')">🗓️ شهري</a></li>
+    <li><a class="nav-link" onclick="showPage('map')">🗺️ الخريطة</a></li>
+    <li><a class="nav-link" onclick="showPage('offers')">🔥 العروض</a></li>
+    <li><a class="nav-link" onclick="showPage('blog')">📝 المدونة</a></li>
+    <li><a class="nav-link" onclick="showPage('dashboard')">📊 لوحتي</a></li>
+    <li><a class="nav-link" onclick="showPage('add')">➕ أضف عقارك</a></li>
+  </ul>
+
+  <div class="nav-right">
+    <div class="nav-lang" onclick="toggleLang()">🌐 EN</div>
+    <button class="btn-login" onclick="showPage('login')">تسجيل الدخول</button>
+    <button class="btn-register" onclick="showPage('login')">إنشاء حساب</button>
+    <div class="hamburger" onclick="toggleMenu()" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a class="mobile-nav-link" onclick="showPage('home');toggleMenu()">🏠 الرئيسية</a>
+  <a class="mobile-nav-link" onclick="showPage('search');toggleMenu()">🔍 البحث المتقدم</a>
+  <a class="mobile-nav-link" onclick="showPage('advanced');toggleMenu()">🎯 بحث متقدم</a>
+  <a class="mobile-nav-link" onclick="showPage('monthly');toggleMenu()">🗓️ الحجز الشهري</a>
+  <a class="mobile-nav-link" onclick="showPage('map');toggleMenu()">🗺️ الخريطة التفاعلية</a>
+  <a class="mobile-nav-link" onclick="showPage('offers');toggleMenu()">🔥 العروض والكوبونات</a>
+  <a class="mobile-nav-link" onclick="showPage('hotel');toggleMenu()">🏨 صفحة الفندق</a>
+  <a class="mobile-nav-link" onclick="showPage('booking');toggleMenu()">💳 الحجز والدفع</a>
+  <a class="mobile-nav-link" onclick="showPage('dashboard');toggleMenu()">📊 لوحة التحكم</a>
+  <a class="mobile-nav-link" onclick="showPage('account');toggleMenu()">👤 حسابي</a>
+  <a class="mobile-nav-link" onclick="showPage('chat');toggleMenu()">💬 الرسائل</a>
+  <a class="mobile-nav-link" onclick="showPage('notifications');toggleMenu()">🔔 الإشعارات</a>
+  <a class="mobile-nav-link" onclick="showPage('reports');toggleMenu()">📊 التقارير</a>
+  <a class="mobile-nav-link" onclick="showPage('email');toggleMenu()">📧 نظام البريد</a>
+  <a class="mobile-nav-link" onclick="showPage('support');toggleMenu()">🎧 الدعم</a>
+  <a class="mobile-nav-link gold" onclick="showPage('add');toggleMenu()">➕ أضف عقارك</a>
+  <a class="mobile-nav-link" onclick="showPage('aiassistant');toggleMenu()">🤖 مساعد ذكاء اصطناعي</a>
+  <a class="mobile-nav-link" onclick="showPage('pricecompare');toggleMenu()">💰 مقارنة الأسعار</a>
+  <a class="mobile-nav-link" onclick="showPage('pricealerts');toggleMenu()">🔔 تنبيهات الأسعار</a>
+  <a class="mobile-nav-link" onclick="showPage('currency');toggleMenu()">🌍 متعدد العملات</a>
+  <a class="mobile-nav-link" onclick="showPage('livedash');toggleMenu()">📊 متابعة لحظية</a>
+  <a class="mobile-nav-link" onclick="showPage('recurring');toggleMenu()">🔄 حجوزات متكررة</a>
+  <a class="mobile-nav-link" onclick="showPage('calendar');toggleMenu()">📅 تقويم الحجوزات</a>
+  <a class="mobile-nav-link" onclick="showPage('gifts');toggleMenu()">🎁 الهدايا والباقات</a>
+  <a class="mobile-nav-link" onclick="showPage('integrations');toggleMenu()">🇸🇦 التكاملات الحكومية</a>
+  <a class="mobile-nav-link gold" onclick="showPage('partner');toggleMenu()">🤝 انضم كشريك</a>
+  <div class="mobile-btns">
+    <button class="mobile-btn-login" onclick="showPage('login');toggleMenu()">تسجيل الدخول</button>
+    <button class="mobile-btn-register" onclick="showPage('login');toggleMenu()">إنشاء حساب مجاني</button>
+  </div>
+</div>
+
+<!-- ===== HOME PAGE ===== -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">🇸🇦 أكبر منصة حجوزات في السعودية</div>
+    <h1>اكتشف <span>أفضل الإقامات</span><br>في المملكة</h1>
+    <p>فنادق فاخرة، شقق مميزة، ومنتجعات راقية بأفضل الأسعار المضمونة</p>
+
+    <div class="search-tabs">
+      <button class="stab active" onclick="setTab(this)">🏨 فنادق</button>
+      <button class="stab" onclick="setTab(this)">🏠 شقق</button>
+      <button class="stab" onclick="setTab(this)">🏖️ منتجعات</button>
+      <button class="stab" onclick="setTab(this)">🌟 عروض</button>
+    </div>
+
+    <div class="search-box">
+      <div class="sfield">
+        <label>📍 الوجهة</label>
+        <input type="text" placeholder="مدينة، فندق، أو منطقة...">
+      </div>
+      <div class="sfield">
+        <label>📅 تاريخ الوصول</label>
+        <input type="date">
+      </div>
+      <div class="sfield">
+        <label>📅 تاريخ المغادرة</label>
+        <input type="date">
+      </div>
+      <button class="search-submit" onclick="showPage('search')">🔍 بحث</button>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat"><div class="stat-num">+5,000</div><div class="stat-lbl">فندق وشقة</div></div>
+      <div class="stat"><div class="stat-num">+100</div><div class="stat-lbl">مدينة سعودية</div></div>
+      <div class="stat"><div class="stat-num">+500K</div><div class="stat-lbl">حجز ناجح</div></div>
+      <div class="stat"><div class="stat-num">4.9⭐</div><div class="stat-lbl">تقييم المستخدمين</div></div>
+    </div>
+  </div>
+
+  <!-- CITIES -->
+  <div class="section">
+    <div class="sec-header">
+      <h2 class="sec-title">استكشف <span>أشهر المدن</span></h2>
+      <a class="see-all" onclick="showPage('search')">عرض الكل ←</a>
+    </div>
+    <div class="cities-grid">
+      <div class="city-card" onclick="showPage('search')">🕌<div class="city-overlay"></div><div class="city-info"><div class="city-name">الرياض</div><div class="city-count">+1,200 عقار</div></div></div>
+      <div class="city-card" onclick="showPage('search')">🌊<div class="city-overlay"></div><div class="city-info"><div class="city-name">جدة</div><div class="city-count">+800 عقار</div></div></div>
+      <div class="city-card" onclick="showPage('search')">🕋<div class="city-overlay"></div><div class="city-info"><div class="city-name">مكة المكرمة</div><div class="city-count">+600 عقار</div></div></div>
+      <div class="city-card" onclick="showPage('search')">🌴<div class="city-overlay"></div><div class="city-info"><div class="city-name">العُلا</div><div class="city-count">+150 عقار</div></div></div>
+      <div class="city-card" onclick="showPage('search')">⛰️<div class="city-overlay"></div><div class="city-info"><div class="city-name">أبها</div><div class="city-count">+300 عقار</div></div></div>
+    </div>
+  </div>
+
+  <!-- FEATURED -->
+  <div class="section" style="padding-top:0;">
+    <div class="sec-header">
+      <h2 class="sec-title">عروض <span>مميزة</span> اليوم</h2>
+      <a class="see-all" onclick="showPage('search')">عرض الكل ←</a>
+    </div>
+    <div class="cards-grid">
+      <div class="prop-card" onclick="showPage('hotel')">
+        <div class="card-img">🏨<div class="card-badge badge-deal">خصم 30%</div></div>
+        <div class="card-body">
+          <div class="card-type">فندق فاخر ⭐⭐⭐⭐⭐</div>
+          <div class="card-name">فندق الريتز كارلتون الرياض</div>
+          <div class="card-loc">📍 حي العليا، الرياض</div>
+          <div class="card-feats"><span class="card-feat">🏊 مسبح</span><span class="card-feat">💆 سبا</span><span class="card-feat">✅ إلغاء مجاني</span></div>
+          <div class="card-footer"><div class="card-price">850 ر.س<small> /ليلة</small></div><div class="card-rating"><strong>⭐ 4.9</strong>324 تقييم</div></div>
+        </div>
+      </div>
+      <div class="prop-card" onclick="showPage('hotel')">
+        <div class="card-img">🏠<div class="card-badge badge-new">جديد</div></div>
+        <div class="card-body">
+          <div class="card-type">شقة فندقية ⭐⭐⭐⭐</div>
+          <div class="card-name">شقة بانورامية - كورنيش جدة</div>
+          <div class="card-loc">📍 الكورنيش، جدة</div>
+          <div class="card-feats"><span class="card-feat">🌊 إطلالة بحر</span><span class="card-feat">🍳 مطبخ</span></div>
+          <div class="card-footer"><div class="card-price">450 ر.س<small> /ليلة</small></div><div class="card-rating"><strong>⭐ 4.8</strong>156 تقييم</div></div>
+        </div>
+      </div>
+      <div class="prop-card" onclick="showPage('hotel')">
+        <div class="card-img">🏖️<div class="card-badge badge-top">الأعلى تقييماً</div></div>
+        <div class="card-body">
+          <div class="card-type">منتجع ⭐⭐⭐⭐⭐</div>
+          <div class="card-name">منتجع شرم البيضاء الفاخر</div>
+          <div class="card-loc">📍 تبوك، البحر الأحمر</div>
+          <div class="card-feats"><span class="card-feat">🤿 غوص</span><span class="card-feat">🏝️ شاطئ خاص</span></div>
+          <div class="card-footer"><div class="card-price">1,200 ر.س<small> /ليلة</small></div><div class="card-rating"><strong>⭐ 5.0</strong>89 تقييم</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="section features-section">
+    <div class="sec-header"><h2 class="sec-title">لماذا <span>بوكنق السعودية؟</span></h2></div>
+    <div class="features-grid">
+      <div class="feat-card"><div class="feat-icon">💰</div><div class="feat-title">أفضل سعر مضمون</div><div class="feat-desc">نضمن أقل سعر وإلا نرد الفرق فوراً</div></div>
+      <div class="feat-card"><div class="feat-icon">🔒</div><div class="feat-title">حجز آمن 100%</div><div class="feat-desc">دفع مشفر وحماية كاملة لبياناتك</div></div>
+      <div class="feat-card"><div class="feat-icon">📞</div><div class="feat-title">دعم 24/7 بالعربي</div><div class="feat-desc">فريق دعم متاح دائماً لمساعدتك</div></div>
+      <div class="feat-card"><div class="feat-icon">⚡</div><div class="feat-title">تأكيد فوري</div><div class="feat-desc">احصل على تأكيد حجزك في ثوانٍ</div></div>
+    </div>
+  </div>
+
+  <!-- ALL PAGES SECTION -->
+  <div class="section" style="padding-top:0;">
+    <div class="sec-header">
+      <h2 class="sec-title">🗺️ جميع <span>صفحات المشروع</span></h2>
+      <span class="see-all" style="color:var(--gray);cursor:default;">19 صفحة كاملة</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+      <div onclick="showPage('hotel')" style="background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px;cursor:pointer;transition:0.3s;text-align:center;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><div style="font-size:28px;margin-bottom:8px;">🏨</div><div style="font-size:13px;font-weight:800;">صفحة الفندق</div></div>
+      <div onclick="showPage('booking')" style="background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px;cursor:pointer;transition:0.3s;text-align:center;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><div style="font-size:28px;margin-bottom:8px;">💳</div><div style="font-size:13px;font-weight:800;">الحجز والدفع</div></div>
+      <div onclick="showPage('advanced')" style="background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px;cursor:pointer;transition:0.3s;text-align:center;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><div style="font-size:28px;margin-bottom:8px;">🎯</div><div style="font-size:13px;font-weight:800;">البحث المتقدم</div></div>
+      <div onclick="showPage('monthly')" style="background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px;cursor:pointer;transition:0.3s;text-align:center;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><div style="font-size:28px;margin-bottom:8px;">🗓️</div><div style="font-size:13px;font-weight:800;">الحجز الشهري</div></div>
+      <div onclick="showPage('map')" style="background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px;cursor:pointer;transition:0.3s;text-align:center;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><div style="font-size:28px;margin-bottom:8px;">🗺️</div><div style="font-size:13px;font-weight:800;">الخريطة التفاعلية</div></div>
+      <div onclick="showPage('offers')" style="background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px;cursor:pointer;transition:0.3s;text-align:center;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><div style="font-size:28px;margin-bottom:8px;">🔥</div><div style="font-size:13px;font-weight:800;">العروض والكوبونات</div></div>
+      <div onclick="showPage('dashboard')" style="background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px;cursor:pointer;transition:0.3s;text-align:center;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><div style="font-size:28px;margin-bottom:8px;">📊</div><div style="font-size:13px;font-weight:800;">لوحة المالك</div></div>
+      <div onclick="showPage('account')" style="background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px;cursor:pointer;transition:0.3s;text-align:center;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><div style="font-size:28px;margin-bottom:8px;">👤</div><div style="font-size:13px;font-weight:800;">حسابي</div></div>
+      <div onclick="showPage('chat')" style="background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px;cursor:pointer;transition:0.3s;text-align:center;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><div style="font-size:28px;margin-bottom:8px;">💬</div><div style="font-size:13px;font-weight:800;">نظام الشات</div></div>
+      <div onclick="showPage('notifications')" style="background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px;cursor:pointer;transition:0.3s;text-align:center;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><div style="font-size:28px;margin-bottom:8px;">🔔</div><div style="font-size:13px;font-weight:800;">الإشعارات</div></div>
+      <div onclick="showPage('reports')" style="background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px;cursor:pointer;transition:0.3s;text-align:center;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><div style="font-size:28px;margin-bottom:8px;">📈</div><div style="font-size:13px;font-weight:800;">تقارير الإيرادات</div></div>
+      <div onclick="showPage('email')" style="background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px;cursor:pointer;transition:0.3s;text-align:center;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><div style="font-size:28px;margin-bottom:8px;">📧</div><div style="font-size:13px;font-weight:800;">نظام البريد</div></div>
+      <div onclick="showPage('support')" style="background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px;cursor:pointer;transition:0.3s;text-align:center;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><div style="font-size:28px;margin-bottom:8px;">🎧</div><div style="font-size:13px;font-weight:800;">مركز الدعم</div></div>
+      <div onclick="showPage('partner')" style="background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px;cursor:pointer;transition:0.3s;text-align:center;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><div style="font-size:28px;margin-bottom:8px;">🤝</div><div style="font-size:13px;font-weight:800;">انضم كشريك</div></div>
+      <div onclick="showPage('add')" style="background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px;cursor:pointer;transition:0.3s;text-align:center;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><div style="font-size:28px;margin-bottom:8px;">➕</div><div style="font-size:13px;font-weight:800;">إضافة عقار</div></div>
+      <div onclick="showPage('appguide')" style="background:var(--dark3);border:1px solid rgba(201,168,76,0.2);border-radius:14px;padding:16px;cursor:pointer;transition:0.3s;text-align:center;background:rgba(201,168,76,0.06);" onmouseover="this.style.borderColor='rgba(201,168,76,0.5)'" onmouseout="this.style.borderColor='rgba(201,168,76,0.2)'"><div style="font-size:28px;margin-bottom:8px;">📱</div><div style="font-size:13px;font-weight:800;color:var(--gold);">دليل التطبيق</div></div>
+      <div onclick="showPage('blog')" style="background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px;cursor:pointer;transition:0.3s;text-align:center;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><div style="font-size:28px;margin-bottom:8px;">📝</div><div style="font-size:13px;font-weight:800;">المدونة</div></div>
+      <div onclick="showPage('aiassistant')" style="background:var(--dark3);border:1px solid rgba(155,89,182,0.2);border-radius:14px;padding:16px;cursor:pointer;transition:0.3s;text-align:center;background:rgba(155,89,182,0.05);" onmouseover="this.style.borderColor='rgba(155,89,182,0.5)'" onmouseout="this.style.borderColor='rgba(155,89,182,0.2)'"><div style="font-size:28px;margin-bottom:8px;">🤖</div><div style="font-size:13px;font-weight:800;color:#9B59B6;">مساعد ذكاء اصطناعي</div></div>
+      <div onclick="showPage('pricecompare')" style="background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px;cursor:pointer;transition:0.3s;text-align:center;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><div style="font-size:28px;margin-bottom:8px;">💰</div><div style="font-size:13px;font-weight:800;">مقارنة الأسعار</div></div>
+      <div onclick="showPage('pricealerts')" style="background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px;cursor:pointer;transition:0.3s;text-align:center;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><div style="font-size:28px;margin-bottom:8px;">🔔</div><div style="font-size:13px;font-weight:800;">تنبيهات الأسعار</div></div>
+      <div onclick="showPage('currency')" style="background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px;cursor:pointer;transition:0.3s;text-align:center;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><div style="font-size:28px;margin-bottom:8px;">🌍</div><div style="font-size:13px;font-weight:800;">متعدد العملات</div></div>
+      <div onclick="showPage('livedash')" style="background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px;cursor:pointer;transition:0.3s;text-align:center;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><div style="font-size:28px;margin-bottom:8px;">📊</div><div style="font-size:13px;font-weight:800;">متابعة لحظية</div></div>
+      <div onclick="showPage('recurring')" style="background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px;cursor:pointer;transition:0.3s;text-align:center;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><div style="font-size:28px;margin-bottom:8px;">🔄</div><div style="font-size:13px;font-weight:800;">حجوزات متكررة</div></div>
+      <div onclick="showPage('calendar')" style="background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px;cursor:pointer;transition:0.3s;text-align:center;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><div style="font-size:28px;margin-bottom:8px;">📅</div><div style="font-size:13px;font-weight:800;">تقويم الحجوزات</div></div>
+      <div onclick="showPage('gifts')" style="background:var(--dark3);border:1px solid rgba(233,30,140,0.2);border-radius:14px;padding:16px;cursor:pointer;transition:0.3s;text-align:center;background:rgba(233,30,140,0.04);" onmouseover="this.style.borderColor='rgba(233,30,140,0.5)'" onmouseout="this.style.borderColor='rgba(233,30,140,0.2)'"><div style="font-size:28px;margin-bottom:8px;">🎁</div><div style="font-size:13px;font-weight:800;color:#E91E8C;">الهدايا والباقات</div></div>
+      <div onclick="showPage('integrations')" style="background:var(--dark3);border:1px solid rgba(0,107,62,0.3);border-radius:14px;padding:16px;cursor:pointer;transition:0.3s;text-align:center;background:rgba(0,107,62,0.05);" onmouseover="this.style.borderColor='rgba(0,107,62,0.6)'" onmouseout="this.style.borderColor='rgba(0,107,62,0.3)'"><div style="font-size:28px;margin-bottom:8px;">🇸🇦</div><div style="font-size:13px;font-weight:800;color:#2ECC71;">التكاملات الحكومية</div></div>
+    </div>
+  </div>
+
+  <!-- APP BANNER -->
+  <div class="app-banner">
+    <div class="app-text">
+      <h2>حمّل تطبيق<br><span>بوكنق السعودية</span></h2>
+      <p>احجز في أي وقت من أي مكان مع خصومات حصرية تصل إلى 20%</p>
+      <div class="app-btns">
+        <div class="store-btn"><div class="si">🍎</div><div><div class="st">تحميل من</div><div class="sn">App Store</div></div></div>
+        <div class="store-btn"><div class="si">🤖</div><div><div class="st">تحميل من</div><div class="sn">Google Play</div></div></div>
+      </div>
+    </div>
+    <div class="app-emoji">📱</div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="logo-icon">🏨</div>
+          <div class="logo-text">بوكنق السعودية</div>
+        </div>
+        <p>أكبر منصة حجوزات فنادق وشقق في المملكة العربية السعودية. نربطك بأفضل الإقامات بأفضل الأسعار.</p>
+      </div>
+      <div class="footer-col">
+        <h4>استكشف</h4>
+        <ul>
+          <li><a onclick="showPage('search')">فنادق الرياض</a></li>
+          <li><a onclick="showPage('search')">شقق جدة</a></li>
+          <li><a onclick="showPage('search')">منتجعات أبها</a></li>
+          <li><a onclick="showPage('search')">فنادق مكة</a></li>
+          <li><a onclick="showPage('blog')">المدونة السياحية</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>للمالكين</h4>
+        <ul>
+          <li><a onclick="showPage('add')">أضف عقارك</a></li>
+          <li><a onclick="showPage('dashboard')">لوحة التحكم</a></li>
+          <li><a>برنامج الشراكة</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>المساعدة</h4>
+        <ul>
+          <li><a>مركز المساعدة</a></li>
+          <li><a>سياسة الإلغاء</a></li>
+          <li><a>تواصل معنا</a></li>
+          <li><a onclick="showPage('login')">تسجيل الدخول</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024 بوكنق السعودية. جميع الحقوق محفوظة.</p>
+      <div class="socials">
+        <div class="social">𝕏</div>
+        <div class="social">📘</div>
+        <div class="social">📸</div>
+        <div class="social">▶️</div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ===== OTHER PAGES (iframes) ===== -->
+<div class="page" id="page-search">
+  <iframe src="search-page.html" class="page-frame" id="frame-search"></iframe>
+</div>
+<div class="page" id="page-advanced">
+  <iframe src="advanced-search.html" class="page-frame" id="frame-advanced"></iframe>
+</div>
+<div class="page" id="page-hotel">
+  <iframe src="hotel-page.html" class="page-frame" id="frame-hotel"></iframe>
+</div>
+<div class="page" id="page-booking">
+  <iframe src="booking-page.html" class="page-frame" id="frame-booking"></iframe>
+</div>
+<div class="page" id="page-dashboard">
+  <iframe src="dashboard.html" class="page-frame" id="frame-dashboard"></iframe>
+</div>
+<div class="page" id="page-login">
+  <iframe src="login-page.html" class="page-frame" id="frame-login"></iframe>
+</div>
+<div class="page" id="page-add">
+  <iframe src="add-property.html" class="page-frame" id="frame-add"></iframe>
+</div>
+<div class="page" id="page-monthly">
+  <iframe src="monthly-booking.html" class="page-frame" id="frame-monthly"></iframe>
+</div>
+<div class="page" id="page-account">
+  <iframe src="my-account.html" class="page-frame" id="frame-account"></iframe>
+</div>
+<div class="page" id="page-chat">
+  <iframe src="chat-system.html" class="page-frame" id="frame-chat"></iframe>
+</div>
+<div class="page" id="page-map">
+  <iframe src="map-view.html" class="page-frame" id="frame-map"></iframe>
+</div>
+<div class="page" id="page-offers">
+  <iframe src="offers-coupons.html" class="page-frame" id="frame-offers"></iframe>
+</div>
+<div class="page" id="page-reports">
+  <iframe src="revenue-reports.html" class="page-frame" id="frame-reports"></iframe>
+</div>
+<div class="page" id="page-notifications">
+  <iframe src="notifications.html" class="page-frame" id="frame-notifications"></iframe>
+</div>
+<div class="page" id="page-email">
+  <iframe src="email-system.html" class="page-frame" id="frame-email"></iframe>
+</div>
+<div class="page" id="page-partner">
+  <iframe src="partner-register.html" class="page-frame" id="frame-partner"></iframe>
+</div>
+<div class="page" id="page-support">
+  <iframe src="support-center.html" class="page-frame" id="frame-support"></iframe>
+</div>
+<div class="page" id="page-blog">
+  <iframe src="blog.html" class="page-frame" id="frame-blog"></iframe>
+</div>
+<div class="page" id="page-gifts">
+  <iframe src="gifts-packages.html" class="page-frame" id="frame-gifts"></iframe>
+</div>
+<div class="page" id="page-pricealerts">
+  <iframe src="price-alerts.html" class="page-frame" id="frame-pricealerts"></iframe>
+</div>
+<div class="page" id="page-pricecompare">
+  <iframe src="price-compare.html" class="page-frame" id="frame-pricecompare"></iframe>
+</div>
+<div class="page" id="page-currency">
+  <iframe src="multi-currency.html" class="page-frame" id="frame-currency"></iframe>
+</div>
+<div class="page" id="page-livedash">
+  <iframe src="live-dashboard.html" class="page-frame" id="frame-livedash"></iframe>
+</div>
+<div class="page" id="page-recurring">
+  <iframe src="recurring-bookings.html" class="page-frame" id="frame-recurring"></iframe>
+</div>
+<div class="page" id="page-calendar">
+  <iframe src="booking-calendar.html" class="page-frame" id="frame-calendar"></iframe>
+</div>
+<div class="page" id="page-integrations">
+  <iframe src="integrations.html" class="page-frame" id="frame-integrations"></iframe>
+</div>
+<div class="page" id="page-aiassistant">
+  <iframe src="ai-assistant.html" class="page-frame" id="frame-aiassistant"></iframe>
+</div>
+<div class="page" id="page-appguide">
+  <iframe src="app-guide.html" class="page-frame" id="frame-appguide"></iframe>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+let currentPage = 'home';
+let isArabic = true;
+
+// Splash
+setTimeout(() => { document.getElementById('splash').classList.add('hide'); }, 2200);
+
+// Scroll nav
+window.addEventListener('scroll', () => {
+  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 50);
+});
+
+function showPage(name) {
+  // hide all
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+
+  // show target
+  const page = document.getElementById('page-'+name);
+  if(page) {
+    page.classList.add('active');
+    currentPage = name;
+  }
+
+  // highlight nav
+  document.querySelectorAll('.nav-link').forEach(l => {
+    if(l.getAttribute('onclick') && l.getAttribute('onclick').includes(name)) l.classList.add('active');
+  });
+
+  window.scrollTo({top:0, behavior:'smooth'});
+  showToast(getPageLabel(name));
+}
+
+function getPageLabel(name) {
+  const labels = {
+    home:'🏠 الصفحة الرئيسية',
+    search:'🔍 البحث والفلترة',
+    advanced:'🎯 البحث المتقدم',
+    hotel:'🏨 صفحة الفندق',
+    booking:'💳 الحجز والدفع',
+    dashboard:'📊 لوحة التحكم',
+    login:'🔑 تسجيل الدخول',
+    add:'➕ إضافة عقار',
+    monthly:'🗓️ الحجز الشهري',
+    account:'👤 حسابي',
+    chat:'💬 نظام الشات',
+    map:'🗺️ الخريطة التفاعلية',
+    offers:'🔥 العروض والكوبونات',
+    reports:'📈 تقارير الإيرادات',
+    notifications:'🔔 الإشعارات',
+    email:'📧 نظام البريد',
+    partner:'🤝 انضم كشريك',
+    support:'🎧 مركز الدعم',
+    appguide:'📱 دليل التطبيق',
+    blog:'📝 المدونة والمحتوى',
+    gifts:'🎁 الهدايا والباقات',
+    pricealerts:'🔔 تنبيهات الأسعار',
+    pricecompare:'💰 مقارنة الأسعار',
+    currency:'🌍 متعدد العملات',
+    livedash:'📊 متابعة لحظية',
+    recurring:'🔄 حجوزات متكررة',
+    calendar:'📅 تقويم الحجوزات',
+    integrations:'🇸🇦 التكاملات الحكومية',
+    aiassistant:'🤖 مساعد ذكاء اصطناعي',
+  };
+  return labels[name] || name;
+}
+
+function goHome() { showPage('home'); }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+function toggleMenu() {
+  const menu = document.getElementById('mobileMenu');
+  menu.classList.toggle('open');
+}
+
+function toggleLang() {
+  isArabic = !isArabic;
+  document.querySelector('.nav-lang').textContent = isArabic ? '🌐 EN' : '🌐 عر';
+  showToast(isArabic ? '🌐 تم التبديل للعربية' : '🌐 Switched to English');
+}
+
+function setTab(el) {
+  document.querySelectorAll('.stab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// Close mobile menu on outside click
+document.addEventListener('click', (e) => {
+  const menu = document.getElementById('mobileMenu');
+  const ham = document.getElementById('hamburger');
+  if(menu.classList.contains('open') && !menu.contains(e.target) && !ham.contains(e.target)) {
+    menu.classList.remove('open');
+  }
+});
+
+// ============================================
+// ⚡ نظام التحميل الذكي - تسريع الصفحات
+// ============================================
+
+// 1. Lazy loading iframes - لا تُحمَّل إلا عند الطلب
+const loadedFrames = new Set(['home']); // الرئيسية محملة مسبقاً
+
+const originalShowPage = showPage;
+window.showPage = function(name) {
+  // تحميل الـ iframe عند أول زيارة فقط
+  if (!loadedFrames.has(name)) {
+    const frame = document.getElementById('frame-' + name);
+    if (frame && !frame.src) {
+      const srcs = {
+        search:'search-page.html', advanced:'advanced-search.html',
+        hotel:'hotel-page.html', booking:'booking-page.html',
+        dashboard:'dashboard.html', login:'login-page.html',
+        add:'add-property.html', monthly:'monthly-booking.html',
+        account:'my-account.html', chat:'chat-system.html',
+        map:'map-view.html', offers:'offers-coupons.html',
+        reports:'revenue-reports.html', notifications:'notifications.html',
+        email:'email-system.html', partner:'partner-register.html',
+        support:'support-center.html', appguide:'app-guide.html',
+        blog:'blog.html',
+        gifts:'gifts-packages.html',
+        pricealerts:'price-alerts.html',
+        pricecompare:'price-compare.html',
+        currency:'multi-currency.html',
+        livedash:'live-dashboard.html',
+        recurring:'recurring-bookings.html',
+        calendar:'booking-calendar.html',
+        integrations:'integrations.html',
+        aiassistant:'ai-assistant.html',
+      };
+      if (srcs[name]) {
+        showLoadingSpinner(name);
+        frame.src = srcs[name];
+        frame.onload = () => { hideLoadingSpinner(name); };
+      }
+    }
+    loadedFrames.add(name);
+  }
+  originalShowPage(name);
+};
+
+// عند تحميل الصفحة، احذف src من كل الـ iframes واتركها تُحمَّل عند الطلب
+window.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.page-frame').forEach(frame => {
+    if (frame.id !== 'frame-home') {
+      frame.removeAttribute('src');
+    }
+  });
+});
+
+// 2. مؤشر تحميل بين الصفحات
+function showLoadingSpinner(name) {
+  const page = document.getElementById('page-' + name);
+  if (!page) return;
+  const existing = page.querySelector('.page-loader');
+  if (existing) return;
+  const loader = document.createElement('div');
+  loader.className = 'page-loader';
+  loader.innerHTML = `
+    <div style="
+      position:absolute;inset:0;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;background:var(--dark);
+      z-index:10;gap:16px;
+    ">
+      <div style="
+        width:60px;height:60px;border-radius:16px;
+        background:linear-gradient(135deg,#C9A84C,#E8C97A);
+        display:flex;align-items:center;justify-content:center;
+        font-size:28px;animation:spinPulse 1s infinite;
+      ">🏨</div>
+      <div style="
+        width:200px;height:3px;background:rgba(255,255,255,0.08);
+        border-radius:2px;overflow:hidden;
+      ">
+        <div style="
+          height:100%;background:linear-gradient(90deg,#C9A84C,#E8C97A);
+          border-radius:2px;animation:loadBar 1.5s ease-in-out infinite;
+        "></div>
+      </div>
+      <div style="font-size:13px;color:#8A8A9A;font-family:'Tajawal',sans-serif;">
+        جاري التحميل...
+      </div>
+    </div>`;
+  page.style.position = 'relative';
+  page.appendChild(loader);
+}
+
+function hideLoadingSpinner(name) {
+  const page = document.getElementById('page-' + name);
+  if (!page) return;
+  const loader = page.querySelector('.page-loader');
+  if (loader) {
+    loader.style.opacity = '0';
+    loader.style.transition = 'opacity 0.3s';
+    setTimeout(() => loader.remove(), 300);
+  }
+}
+
+// 3. Prefetch الصفحات الأكثر زيارة في الخلفية بعد 3 ثوانٍ
+setTimeout(() => {
+  const popular = ['search', 'hotel', 'login'];
+  popular.forEach((name, i) => {
+    if (!loadedFrames.has(name)) {
+      setTimeout(() => {
+        const frame = document.getElementById('frame-' + name);
+        const srcs = {
+          search:'search-page.html',
+          hotel:'hotel-page.html',
+          login:'login-page.html',
+        };
+        if (frame && srcs[name]) {
+          frame.src = srcs[name];
+          loadedFrames.add(name);
+        }
+      }, i * 1000);
+    }
+  });
+}, 3000);
+
+// 4. CSS للأنيميشن
+const perfStyle = document.createElement('style');
+perfStyle.textContent = `
+  @keyframes spinPulse {
+    0%,100%{transform:scale(1);box-shadow:0 0 0 rgba(201,168,76,0)}
+    50%{transform:scale(1.08);box-shadow:0 0 20px rgba(201,168,76,0.4)}
+  }
+  @keyframes loadBar {
+    0%{width:0;margin-right:auto}
+    50%{width:80%}
+    100%{width:0;margin-right:0;margin-left:auto}
+  }
+  .page-frame { background:var(--dark); }
+`;
+document.head.appendChild(perfStyle);
+
+// 5. تسريع النقرات على الجوال (إزالة تأخير 300ms)
+document.addEventListener('touchstart', function(){}, {passive:true});
+
+// 6. Cache بسيط للصفحة الرئيسية في الذاكرة
+if ('performance' in window) {
+  window.addEventListener('load', () => {
+    const timing = performance.getEntriesByType('navigation')[0];
+    if (timing) {
+      const loadTime = Math.round(timing.loadEventEnd - timing.startTime);
+      console.log(`⚡ بوكنق السعودية - تم التحميل في ${loadTime}ms`);
+    }
+  });
+}
+</script>
+</body>
+</html>

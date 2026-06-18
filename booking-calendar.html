@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تقويم الحجوزات | بوكنق السعودية</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold:#C9A84C; --gold-light:#E8C97A;
+    --dark:#0A0A0F; --dark2:#13131A; --dark3:#1C1C26; --dark4:#22222E;
+    --white:#F8F4EE; --gray:#8A8A9A;
+    --green:#2ECC71; --red:#E74C3C; --blue:#3498DB; --purple:#9B59B6; --orange:#E67E22;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Tajawal',sans-serif;background:var(--dark);color:var(--white);height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+
+  nav{background:rgba(10,10,15,0.98);border-bottom:1px solid rgba(201,168,76,0.2);padding:0 3%;height:60px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:100;}
+  .logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
+  .logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--gold),var(--gold-light));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+  .logo-text{font-size:16px;font-weight:800;background:linear-gradient(135deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .nav-center{display:flex;align-items:center;gap:12px;}
+  .nav-month{font-size:17px;font-weight:800;}
+  .nav-arrow{width:32px;height:32px;border-radius:8px;background:var(--dark3);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:0.2s;}
+  .nav-arrow:hover{border-color:var(--gold);color:var(--gold);}
+  .nav-right{display:flex;gap:8px;align-items:center;}
+  .nav-view-btn{padding:6px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:var(--gray);cursor:pointer;font-family:'Tajawal',sans-serif;font-size:12px;font-weight:700;transition:0.2s;}
+  .nav-view-btn.active{background:var(--gold);border-color:var(--gold);color:var(--dark);}
+  .btn-new{padding:7px 16px;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--dark);border:none;border-radius:8px;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:12px;font-weight:800;}
+  .nav-back{color:var(--gold);font-size:12px;text-decoration:none;}
+
+  /* LAYOUT */
+  .layout{flex:1;display:grid;grid-template-columns:240px 1fr 280px;overflow:hidden;}
+
+  /* LEFT PANEL */
+  .left-panel{background:var(--dark2);border-left:1px solid rgba(255,255,255,0.05);padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;}
+  .left-panel::-webkit-scrollbar{width:3px;}
+  .left-panel::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);}
+
+  /* MINI CALENDAR */
+  .mini-cal{background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:14px;}
+  .mc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  .mc-month{font-size:13px;font-weight:800;}
+  .mc-arrow{background:none;border:none;color:var(--gray);cursor:pointer;font-size:14px;padding:2px 6px;}
+  .mc-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+  .mc-day-header{text-align:center;font-size:10px;color:var(--gray);padding:4px 0;}
+  .mc-day{text-align:center;font-size:11px;padding:5px 2px;border-radius:5px;cursor:pointer;transition:0.2s;}
+  .mc-day:hover{background:rgba(201,168,76,0.1);color:var(--gold);}
+  .mc-day.today{background:var(--gold);color:var(--dark);font-weight:800;}
+  .mc-day.selected{background:rgba(201,168,76,0.2);color:var(--gold);}
+  .mc-day.has-booking{position:relative;}
+  .mc-day.has-booking::after{content:'';position:absolute;bottom:1px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--blue);}
+
+  /* LEGEND */
+  .legend-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:14px;}
+  .lc-title{font-size:12px;font-weight:700;color:var(--gray);margin-bottom:10px;}
+  .legend-item{display:flex;align-items:center;gap:8px;font-size:12px;margin-bottom:7px;}
+  .l-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+  .ld-confirmed{background:var(--green);}
+  .ld-pending{background:var(--orange);}
+  .ld-cancelled{background:var(--red);}
+  .ld-checkin{background:var(--blue);}
+  .ld-checkout{background:var(--purple);}
+  .ld-blocked{background:var(--gray);}
+
+  /* STATS */
+  .stats-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:14px;}
+  .sc-title{font-size:12px;font-weight:700;color:var(--gray);margin-bottom:10px;}
+  .stat-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:12px;}
+  .stat-row:last-child{margin-bottom:0;}
+  .sr-label{color:var(--gray);}
+  .sr-val{font-weight:800;}
+
+  /* FILTERS */
+  .filter-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:14px;}
+  .filter-title{font-size:12px;font-weight:700;color:var(--gray);margin-bottom:10px;}
+  .filter-item{display:flex;align-items:center;gap:8px;margin-bottom:7px;cursor:pointer;font-size:12px;}
+  .filter-item input{display:none;}
+  .fcheck{width:15px;height:15px;border-radius:4px;border:1px solid rgba(255,255,255,0.2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:0.2s;}
+  .filter-item input:checked~.fcheck{background:var(--gold);border-color:var(--gold);color:var(--dark);font-size:10px;}
+  .filter-item input:checked~.fcheck::after{content:'✓';}
+
+  /* MAIN CALENDAR */
+  .calendar-main{overflow:auto;background:var(--dark);}
+
+  /* MONTH VIEW */
+  .month-view{min-height:100%;display:flex;flex-direction:column;}
+  .cal-header{display:grid;grid-template-columns:repeat(7,1fr);background:var(--dark2);border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0;}
+  .cal-day-header{padding:10px;text-align:center;font-size:12px;font-weight:700;color:var(--gray);border-left:1px solid rgba(255,255,255,0.04);}
+  .cal-day-header.weekend{color:var(--gold);}
+
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);flex:1;}
+  .cal-cell{border-left:1px solid rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.04);padding:6px;min-height:110px;cursor:pointer;transition:0.2s;position:relative;overflow:hidden;}
+  .cal-cell:hover{background:rgba(255,255,255,0.02);}
+  .cal-cell.today{background:rgba(201,168,76,0.04);}
+  .cal-cell.other-month{opacity:0.35;}
+  .cal-cell.selected-range{background:rgba(52,152,219,0.08);}
+  .cal-cell.range-start{background:rgba(201,168,76,0.12);}
+  .cal-cell.range-end{background:rgba(201,168,76,0.12);}
+  .cal-cell.weekend{background:rgba(255,255,255,0.015);}
+
+  .cell-date{font-size:12px;font-weight:700;margin-bottom:4px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:50%;}
+  .today .cell-date{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--dark);}
+
+  /* BOOKING EVENTS */
+  .booking-event{border-radius:5px;padding:3px 7px;font-size:10px;font-weight:700;margin-bottom:3px;cursor:pointer;transition:0.2s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:4px;}
+  .booking-event:hover{filter:brightness(1.2);transform:scaleY(1.05);}
+  .be-confirmed{background:rgba(46,204,113,0.2);color:var(--green);border-right:3px solid var(--green);}
+  .be-pending{background:rgba(230,126,34,0.2);color:var(--orange);border-right:3px solid var(--orange);}
+  .be-cancelled{background:rgba(231,76,60,0.15);color:var(--red);border-right:3px solid var(--red);text-decoration:line-through;}
+  .be-checkin{background:rgba(52,152,219,0.2);color:var(--blue);border-right:3px solid var(--blue);}
+  .be-checkout{background:rgba(155,89,182,0.2);color:var(--purple);border-right:3px solid var(--purple);}
+  .be-blocked{background:rgba(138,138,154,0.2);color:var(--gray);border-right:3px solid var(--gray);}
+  .more-events{font-size:10px;color:var(--gold);cursor:pointer;padding:2px 4px;}
+
+  /* WEEK VIEW */
+  .week-view{display:grid;grid-template-columns:60px repeat(7,1fr);flex:1;}
+  .wv-time{padding:8px;font-size:10px;color:var(--gray);text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);}
+  .wv-day-header{padding:10px;text-align:center;border-left:1px solid rgba(255,255,255,0.04);background:var(--dark2);}
+  .wvdh-day{font-size:11px;color:var(--gray);}
+  .wvdh-date{font-size:20px;font-weight:900;margin-top:2px;}
+  .wv-cell{border-left:1px solid rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.04);min-height:40px;position:relative;cursor:pointer;transition:0.2s;}
+  .wv-cell:hover{background:rgba(255,255,255,0.02);}
+
+  /* RIGHT PANEL */
+  .right-panel{background:var(--dark2);border-right:1px solid rgba(255,255,255,0.05);padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;}
+  .right-panel::-webkit-scrollbar{width:3px;}
+  .rp-title{font-size:14px;font-weight:800;margin-bottom:4px;}
+
+  /* TODAY BOOKINGS */
+  .today-booking{background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:12px;overflow:hidden;}
+  .tb-header{padding:12px 14px;background:var(--dark4);font-size:13px;font-weight:800;display:flex;justify-content:space-between;align-items:center;}
+  .tb-count{background:var(--gold);color:var(--dark);padding:2px 8px;border-radius:6px;font-size:11px;font-weight:800;}
+  .tb-item{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.04);display:flex;gap:10px;align-items:flex-start;cursor:pointer;transition:0.2s;}
+  .tb-item:last-child{border-bottom:none;}
+  .tb-item:hover{background:rgba(255,255,255,0.02);}
+  .tb-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+  .tb-info{flex:1;}
+  .tb-name{font-size:13px;font-weight:700;margin-bottom:2px;}
+  .tb-hotel{font-size:11px;color:var(--gray);}
+  .tb-time{font-size:11px;color:var(--gold);font-weight:700;}
+  .tb-status{font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;}
+
+  /* UPCOMING */
+  .upcoming-item{background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px;cursor:pointer;transition:0.2s;}
+  .upcoming-item:hover{border-color:rgba(201,168,76,0.2);}
+  .ui-date{font-size:11px;color:var(--gold);font-weight:700;margin-bottom:4px;}
+  .ui-name{font-size:13px;font-weight:800;margin-bottom:2px;}
+  .ui-hotel{font-size:11px;color:var(--gray);}
+  .ui-price{font-size:14px;font-weight:900;color:var(--gold);margin-top:6px;}
+
+  /* MODAL */
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);z-index:1000;align-items:center;justify-content:center;}
+  .modal-overlay.show{display:flex;}
+  .modal{background:var(--dark3);border:1px solid rgba(201,168,76,0.2);border-radius:20px;padding:28px;max-width:480px;width:90%;animation:modalIn 0.3s ease;}
+  @keyframes modalIn{from{opacity:0;transform:scale(0.9)}to{opacity:1;transform:scale(1)}}
+  .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+  .modal-title{font-size:18px;font-weight:800;}
+  .modal-close{background:var(--dark4);border:none;color:var(--gray);width:28px;height:28px;border-radius:7px;cursor:pointer;font-size:16px;}
+  .mf{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+  .mf label{font-size:11px;color:var(--gold);font-weight:700;}
+  .mf input,.mf select{background:var(--dark2);border:1.5px solid rgba(255,255,255,0.08);border-radius:9px;padding:10px 12px;color:var(--white);font-family:'Tajawal',sans-serif;font-size:13px;outline:none;transition:0.2s;}
+  .mf input:focus,.mf select:focus{border-color:var(--gold);}
+  .mf-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .modal-btns{display:flex;gap:8px;margin-top:6px;}
+  .btn-save{flex:1;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--dark);border:none;padding:12px;border-radius:10px;font-family:'Tajawal',sans-serif;font-size:14px;font-weight:800;cursor:pointer;}
+  .btn-cancel-modal{background:transparent;color:var(--gray);border:1px solid rgba(255,255,255,0.1);padding:12px 20px;border-radius:10px;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:13px;}
+
+  /* BOOKING DETAIL MODAL */
+  .bd-status{display:inline-block;padding:5px 14px;border-radius:7px;font-size:12px;font-weight:800;margin-bottom:16px;}
+  .bd-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px;}
+  .bd-row:last-child{border-bottom:none;}
+  .bd-label{color:var(--gray);}
+  .bd-val{font-weight:700;}
+  .bd-actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;}
+  .bd-action{flex:1;padding:9px;border-radius:9px;font-family:'Tajawal',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-align:center;border:none;transition:0.2s;}
+  .bda-confirm{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--dark);}
+  .bda-chat{background:rgba(52,152,219,0.15);color:var(--blue);border:1px solid rgba(52,152,219,0.2)!important;}
+  .bda-cancel{background:rgba(231,76,60,0.12);color:var(--red);border:1px solid rgba(231,76,60,0.2)!important;}
+
+  @media(max-width:1000px){
+    .layout{grid-template-columns:1fr;}
+    .left-panel,.right-panel{display:none;}
+    .cal-cell{min-height:80px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- NEW BOOKING MODAL -->
+<div class="modal-overlay" id="newBookingModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">➕ حجز جديد</div>
+      <button class="modal-close" onclick="closeModal('newBookingModal')">×</button>
+    </div>
+    <div class="mf"><label>👤 اسم النزيل</label><input type="text" placeholder="محمد العتيبي" id="guestName"></div>
+    <div class="mf"><label>🏨 الفندق / الغرفة</label>
+      <select>
+        <option>الريتز كارلتون - غرفة ديلوكس</option>
+        <option>فور سيزونز - جناح كلوب</option>
+        <option>شقق ماريوت - شقة كبيرة</option>
+        <option>فيلا الياسمين - الفيلا كاملة</option>
+      </select>
+    </div>
+    <div class="mf-row">
+      <div class="mf"><label>📅 تسجيل دخول</label><input type="date" id="checkIn" value="2024-06-15"></div>
+      <div class="mf"><label>📅 تسجيل خروج</label><input type="date" id="checkOut" value="2024-06-18"></div>
+    </div>
+    <div class="mf-row">
+      <div class="mf"><label>👥 النزلاء</label>
+        <select><option>2 بالغ</option><option>1 بالغ</option><option>4 أشخاص</option></select>
+      </div>
+      <div class="mf"><label>📊 الحالة</label>
+        <select><option>✅ مؤكد</option><option>⏳ معلق</option><option>🔒 مسدود</option></select>
+      </div>
+    </div>
+    <div class="mf"><label>💰 المبلغ الإجمالي (ر.س)</label><input type="number" placeholder="2,932" id="totalAmount"></div>
+    <div class="mf"><label>📝 ملاحظات</label><input type="text" placeholder="طلبات خاصة..."></div>
+    <div class="modal-btns">
+      <button class="btn-cancel-modal" onclick="closeModal('newBookingModal')">إلغاء</button>
+      <button class="btn-save" onclick="saveBooking()">💾 حفظ الحجز</button>
+    </div>
+  </div>
+</div>
+
+<!-- BOOKING DETAIL MODAL -->
+<div class="modal-overlay" id="bookingDetailModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">📄 تفاصيل الحجز</div>
+      <button class="modal-close" onclick="closeModal('bookingDetailModal')">×</button>
+    </div>
+    <span class="bd-status" id="bdStatus" style="background:rgba(46,204,113,0.15);color:var(--green)">✅ مؤكد</span>
+    <div class="bd-row"><span class="bd-label">رقم الحجز</span><span class="bd-val" style="color:var(--gold)">#BSA-7831</span></div>
+    <div class="bd-row"><span class="bd-label">النزيل</span><span class="bd-val" id="bdGuest">محمد العتيبي</span></div>
+    <div class="bd-row"><span class="bd-label">الفندق</span><span class="bd-val" id="bdHotel">الريتز كارلتون - ديلوكس</span></div>
+    <div class="bd-row"><span class="bd-label">الوصول</span><span class="bd-val" id="bdCheckin">السبت 15 يونيو</span></div>
+    <div class="bd-row"><span class="bd-label">المغادرة</span><span class="bd-val" id="bdCheckout">الثلاثاء 18 يونيو</span></div>
+    <div class="bd-row"><span class="bd-label">المدة</span><span class="bd-val">3 ليالي</span></div>
+    <div class="bd-row"><span class="bd-label">المبلغ</span><span class="bd-val" style="color:var(--gold);font-size:16px;" id="bdAmount">2,932 ر.س</span></div>
+    <div class="bd-actions">
+      <button class="bd-action bda-confirm" onclick="closeModal('bookingDetailModal')">✅ تأكيد</button>
+      <button class="bd-action bda-chat" onclick="closeModal('bookingDetailModal');location.href='chat-system.html'">💬 شات</button>
+      <button class="bd-action bda-cancel" onclick="cancelBooking()">❌ إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo"><div class="logo-icon">🏨</div><div class="logo-text">بوكنق</div></a>
+  <div class="nav-center">
+    <div class="nav-arrow" onclick="prevMonth()">→</div>
+    <div class="nav-month" id="navMonth">يونيو 2024</div>
+    <div class="nav-arrow" onclick="nextMonth()">←</div>
+  </div>
+  <div class="nav-right">
+    <button class="nav-view-btn active" onclick="setView('month',this)">شهر</button>
+    <button class="nav-view-btn" onclick="setView('week',this)">أسبوع</button>
+    <button class="nav-view-btn" onclick="goToday()">اليوم</button>
+    <button class="btn-new" onclick="openModal('newBookingModal')">+ حجز جديد</button>
+    <a href="dashboard.html" class="nav-back">← لوحة التحكم</a>
+  </div>
+</nav>
+
+<div class="layout">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+
+    <!-- MINI CALENDAR -->
+    <div class="mini-cal">
+      <div class="mc-header">
+        <button class="mc-arrow" onclick="prevMonth()">›</button>
+        <span class="mc-month" id="miniMonth">يونيو 2024</span>
+        <button class="mc-arrow" onclick="nextMonth()">‹</button>
+      </div>
+      <div class="mc-grid" id="miniCalGrid">
+        <div class="mc-day-header">أ</div><div class="mc-day-header">ث</div><div class="mc-day-header">ر</div>
+        <div class="mc-day-header">خ</div><div class="mc-day-header">ج</div><div class="mc-day-header">س</div><div class="mc-day-header">ح</div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-card">
+      <div class="sc-title">📊 إحصائيات الشهر</div>
+      <div class="stat-row"><span class="sr-label">إجمالي الحجوزات</span><span class="sr-val">24</span></div>
+      <div class="stat-row"><span class="sr-label">مؤكدة</span><span class="sr-val" style="color:var(--green)">18</span></div>
+      <div class="stat-row"><span class="sr-label">معلقة</span><span class="sr-val" style="color:var(--orange)">4</span></div>
+      <div class="stat-row"><span class="sr-label">ملغاة</span><span class="sr-val" style="color:var(--red)">2</span></div>
+      <div class="stat-row"><span class="sr-label">الإيرادات</span><span class="sr-val" style="color:var(--gold)">48,750 ر.س</span></div>
+      <div class="stat-row"><span class="sr-label">معدل الإشغال</span><span class="sr-val" style="color:var(--gold)">87%</span></div>
+    </div>
+
+    <!-- LEGEND -->
+    <div class="legend-card">
+      <div class="lc-title">دليل الألوان</div>
+      <div class="legend-item"><div class="l-dot ld-confirmed"></div>حجز مؤكد</div>
+      <div class="legend-item"><div class="l-dot ld-pending"></div>معلق للتأكيد</div>
+      <div class="legend-item"><div class="l-dot ld-cancelled"></div>ملغي</div>
+      <div class="legend-item"><div class="l-dot ld-checkin"></div>تسجيل دخول اليوم</div>
+      <div class="legend-item"><div class="l-dot ld-checkout"></div>تسجيل خروج اليوم</div>
+      <div class="legend-item"><div class="l-dot ld-blocked"></div>محجوز/مغلق</div>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="filter-card">
+      <div class="filter-title">فلترة العقارات</div>
+      <label class="filter-item"><input type="checkbox" checked onchange="filterCalendar()"><span class="fcheck"></span>🏨 الريتز كارلتون</label>
+      <label class="filter-item"><input type="checkbox" checked onchange="filterCalendar()"><span class="fcheck"></span>🏙️ فور سيزونز</label>
+      <label class="filter-item"><input type="checkbox" checked onchange="filterCalendar()"><span class="fcheck"></span>🏠 شقق ماريوت</label>
+      <label class="filter-item"><input type="checkbox" onchange="filterCalendar()"><span class="fcheck"></span>🏡 فيلا الياسمين</label>
+      <label class="filter-item"><input type="checkbox" onchange="filterCalendar()"><span class="fcheck"></span>🌴 منتجع درة العروس</label>
+    </div>
+  </div>
+
+  <!-- MAIN CALENDAR -->
+  <div class="calendar-main" id="calendarMain">
+    <!-- Generated by JS -->
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+
+    <!-- TODAY -->
+    <div class="rp-title">📅 اليوم - 15 يونيو</div>
+    <div class="today-booking">
+      <div class="tb-header">تسجيل دخول اليوم <span class="tb-count">5</span></div>
+      <div class="tb-item" onclick="showBookingDetail('محمد العتيبي','الريتز كارلتون - ديلوكس','15 يونيو','18 يونيو','2,932')">
+        <div class="tb-dot" style="background:var(--blue)"></div>
+        <div class="tb-info">
+          <div class="tb-name">محمد العتيبي</div>
+          <div class="tb-hotel">الريتز كارلتون - ديلوكس</div>
+          <div class="tb-time">3:00 مساءً</div>
+        </div>
+        <span class="tb-status" style="background:rgba(52,152,219,0.15);color:var(--blue)">دخول</span>
+      </div>
+      <div class="tb-item" onclick="showBookingDetail('سارة الغامدي','فور سيزونز - جناح','15 يونيو','17 يونيو','2,250')">
+        <div class="tb-dot" style="background:var(--blue)"></div>
+        <div class="tb-info">
+          <div class="tb-name">سارة الغامدي</div>
+          <div class="tb-hotel">فور سيزونز - جناح</div>
+          <div class="tb-time">2:00 مساءً</div>
+        </div>
+        <span class="tb-status" style="background:rgba(52,152,219,0.15);color:var(--blue)">دخول</span>
+      </div>
+      <div class="tb-header" style="border-top:1px solid rgba(255,255,255,0.05);">تسجيل خروج <span class="tb-count">3</span></div>
+      <div class="tb-item" onclick="showBookingDetail('خالد المطيري','فيلا الياسمين','10 يونيو','15 يونيو','10,625')">
+        <div class="tb-dot" style="background:var(--purple)"></div>
+        <div class="tb-info">
+          <div class="tb-name">خالد المطيري</div>
+          <div class="tb-hotel">فيلا الياسمين</div>
+          <div class="tb-time">12:00 ظهراً</div>
+        </div>
+        <span class="tb-status" style="background:rgba(155,89,182,0.15);color:var(--purple)">خروج</span>
+      </div>
+    </div>
+
+    <!-- UPCOMING -->
+    <div class="rp-title" style="margin-top:4px;">📆 قادم قريباً</div>
+    <div class="upcoming-item" onclick="showBookingDetail('نورة الشمري','الريتز كارلتون - جناح ملكي','17 يونيو','20 يونيو','5,250')">
+      <div class="ui-date">الاثنين 17 يونيو</div>
+      <div class="ui-name">نورة الشمري</div>
+      <div class="ui-hotel">🏨 الريتز كارلتون - جناح ملكي</div>
+      <div class="ui-price">5,250 ر.س</div>
+    </div>
+    <div class="upcoming-item" onclick="showBookingDetail('فهد الدوسري','شقق ماريوت - شقة كبيرة','18 يونيو','25 يونيو','3,360')">
+      <div class="ui-date">الثلاثاء 18 يونيو</div>
+      <div class="ui-name">فهد الدوسري</div>
+      <div class="ui-hotel">🏠 شقق ماريوت - شقة كبيرة</div>
+      <div class="ui-price">3,360 ر.س</div>
+    </div>
+    <div class="upcoming-item" onclick="showBookingDetail('عبدالله الزهراني','فور سيزونز - غرفة سوبيريور','20 يونيو','22 يونيو','1,950')">
+      <div class="ui-date">الخميس 20 يونيو</div>
+      <div class="ui-name">عبدالله الزهراني</div>
+      <div class="ui-hotel">🏙️ فور سيزونز - سوبيريور</div>
+      <div class="ui-price">1,950 ر.س</div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="rp-title" style="margin-top:4px;">⚡ إجراءات سريعة</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <button onclick="openModal('newBookingModal')" style="background:var(--dark3);border:1px solid rgba(201,168,76,0.2);color:var(--gold);padding:10px;border-radius:10px;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:12px;font-weight:700;transition:0.2s;" onmouseover="this.style.background='rgba(201,168,76,0.1)'" onmouseout="this.style.background='var(--dark3)'">➕ حجز جديد</button>
+      <button onclick="location.href='revenue-reports.html'" style="background:var(--dark3);border:1px solid rgba(52,152,219,0.2);color:var(--blue);padding:10px;border-radius:10px;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:12px;font-weight:700;" >📊 التقارير</button>
+      <button onclick="location.href='notifications.html'" style="background:var(--dark3);border:1px solid rgba(255,255,255,0.08);color:var(--gray);padding:10px;border-radius:10px;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:12px;font-weight:700;">🔔 الإشعارات</button>
+      <button onclick="location.href='chat-system.html'" style="background:var(--dark3);border:1px solid rgba(255,255,255,0.08);color:var(--gray);padding:10px;border-radius:10px;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:12px;font-weight:700;">💬 الشات</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== DATA =====
+const BOOKINGS = [
+  { id:'BSA-7831', guest:'محمد العتيبي', hotel:'🏨 الريتز كارلتون - ديلوكس', checkin:'2024-06-15', checkout:'2024-06-18', status:'confirmed', amount:'2,932', color:'be-confirmed' },
+  { id:'BSA-7830', guest:'سارة الغامدي', hotel:'🏙️ فور سيزونز - جناح', checkin:'2024-06-15', checkout:'2024-06-17', status:'checkin', amount:'2,250', color:'be-checkin' },
+  { id:'BSA-7829', guest:'خالد المطيري', hotel:'🏡 فيلا الياسمين', checkin:'2024-06-10', checkout:'2024-06-15', status:'checkout', amount:'10,625', color:'be-checkout' },
+  { id:'BSA-7828', guest:'نورة الشمري', hotel:'🏨 الريتز - جناح ملكي', checkin:'2024-06-17', checkout:'2024-06-20', status:'confirmed', amount:'5,250', color:'be-confirmed' },
+  { id:'BSA-7827', guest:'فهد الدوسري', hotel:'🏠 شقق ماريوت', checkin:'2024-06-18', checkout:'2024-06-25', status:'pending', amount:'3,360', color:'be-pending' },
+  { id:'BSA-7826', guest:'عبدالله الزهراني', hotel:'🏙️ فور سيزونز - سوبيريور', checkin:'2024-06-20', checkout:'2024-06-22', status:'confirmed', amount:'1,950', color:'be-confirmed' },
+  { id:'BSA-7825', guest:'منى الحربي', hotel:'🏨 الريتز كارلتون - ديلوكس', checkin:'2024-06-22', checkout:'2024-06-25', status:'pending', amount:'2,932', color:'be-pending' },
+  { id:'BSA-7824', guest:'إبراهيم السعيد', hotel:'🏡 فيلا الياسمين', checkin:'2024-06-25', checkout:'2024-07-02', status:'confirmed', amount:'14,875', color:'be-confirmed' },
+  { id:'BSA-7823', guest:'ريم الشمري', hotel:'🏠 شقق ماريوت', checkin:'2024-06-08', checkout:'2024-06-12', status:'cancelled', amount:'1,920', color:'be-cancelled' },
+  { id:'BLOCKED', guest:'صيانة', hotel:'🏨 الريتز كارلتون', checkin:'2024-06-12', checkout:'2024-06-14', status:'blocked', amount:'-', color:'be-blocked' },
+  { id:'BSA-7822', guest:'أحمد الغامدي', hotel:'🏙️ فور سيزونز - جناح', checkin:'2024-06-05', checkout:'2024-06-08', status:'confirmed', amount:'3,375', color:'be-confirmed' },
+];
+
+let currentMonth = 5; // June (0-indexed)
+let currentYear = 2024;
+let currentView = 'month';
+
+// ===== CALENDAR RENDER =====
+function renderCalendar() {
+  const main = document.getElementById('calendarMain');
+  if (currentView === 'month') renderMonthView(main);
+  else renderWeekView(main);
+  renderMiniCal();
+  updateNavMonth();
+}
+
+function renderMonthView(container) {
+  const monthNames = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+  const dayNames = ['الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت','الأحد'];
+
+  const firstDay = new Date(currentYear, currentMonth, 1);
+  const lastDay = new Date(currentYear, currentMonth + 1, 0);
+  let startDay = firstDay.getDay();
+  startDay = startDay === 0 ? 6 : startDay - 1;
+
+  const today = new Date();
+  const isCurrentMonth = today.getMonth() === currentMonth && today.getFullYear() === currentYear;
+
+  let html = `<div class="month-view">
+    <div class="cal-header">
+      ${dayNames.map((d,i) => `<div class="cal-day-header ${i>=4?'weekend':''}">${d}</div>`).join('')}
+    </div>
+    <div class="cal-grid">`;
+
+  // Previous month days
+  const prevLastDay = new Date(currentYear, currentMonth, 0).getDate();
+  for (let i = startDay - 1; i >= 0; i--) {
+    html += `<div class="cal-cell other-month"><div class="cell-date">${prevLastDay - i}</div></div>`;
+  }
+
+  // Current month
+  for (let d = 1; d <= lastDay.getDate(); d++) {
+    const dateStr = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dayOfWeek = (startDay + d - 1) % 7;
+    const isToday = isCurrentMonth && d === today.getDate();
+    const isWeekend = dayOfWeek >= 4;
+
+    const dayBookings = BOOKINGS.filter(b => {
+      const ci = new Date(b.checkin);
+      const co = new Date(b.checkout);
+      const cur = new Date(dateStr);
+      return cur >= ci && cur < co;
+    });
+
+    html += `<div class="cal-cell ${isToday?'today':''} ${isWeekend?'weekend':''}" onclick="cellClick(${d},'${dateStr}')">
+      <div class="cell-date">${d}</div>`;
+
+    const shown = dayBookings.slice(0, 2);
+    shown.forEach(b => {
+      html += `<div class="booking-event ${b.color}" onclick="event.stopPropagation();showBookingDetail('${b.guest}','${b.hotel}','${b.checkin}','${b.checkout}','${b.amount}')">
+        <span>${getStatusIcon(b.status)}</span>
+        <span>${b.guest.split(' ')[0]}</span>
+      </div>`;
+    });
+
+    if (dayBookings.length > 2) {
+      html += `<div class="more-events" onclick="event.stopPropagation()">+${dayBookings.length - 2} أكثر</div>`;
+    }
+
+    html += `</div>`;
+  }
+
+  // Next month
+  const totalCells = Math.ceil((startDay + lastDay.getDate()) / 7) * 7;
+  const remaining = totalCells - startDay - lastDay.getDate();
+  for (let d = 1; d <= remaining; d++) {
+    html += `<div class="cal-cell other-month"><div class="cell-date">${d}</div></div>`;
+  }
+
+  html += `</div></div>`;
+  container.innerHTML = html;
+}
+
+function renderWeekView(container) {
+  const days = ['الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت','الأحد'];
+  const dates = [10,11,12,13,14,15,16];
+  const hours = ['6ص','7ص','8ص','9ص','10ص','11ص','12م','1م','2م','3م','4م','5م','6م','7م','8م'];
+
+  let html = `<div class="month-view">
+    <div class="cal-header">
+      <div class="cal-day-header" style="width:60px;"></div>
+      ${days.map((d,i) => `<div class="cal-day-header"><div class="wvdh-day">${d}</div><div class="wvdh-date">${dates[i]}</div></div>`).join('')}
+    </div>
+    <div style="display:grid;grid-template-columns:60px repeat(7,1fr);flex:1;">`;
+
+  hours.forEach(h => {
+    html += `<div class="wv-time">${h}</div>`;
+    for (let i = 0; i < 7; i++) {
+      html += `<div class="wv-cell" onclick="openModal('newBookingModal')"></div>`;
+    }
+  });
+
+  html += `</div></div>`;
+  container.innerHTML = html;
+}
+
+function renderMiniCal() {
+  const days = ['أ','ث','ر','خ','ج','س','ح'];
+  const grid = document.getElementById('miniCalGrid');
+  const firstDay = new Date(currentYear, currentMonth, 1);
+  let startDay = firstDay.getDay();
+  startDay = startDay === 0 ? 6 : startDay - 1;
+  const lastDay = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const today = new Date();
+  const isCurrentMonth = today.getMonth() === currentMonth && today.getFullYear() === currentYear;
+
+  let html = days.map(d => `<div class="mc-day-header">${d}</div>`).join('');
+  for (let i = 0; i < startDay; i++) html += '<div></div>';
+  for (let d = 1; d <= lastDay; d++) {
+    const isToday = isCurrentMonth && d === today.getDate();
+    const hasBooking = BOOKINGS.some(b => {
+      const dateStr = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      return b.checkin <= dateStr && b.checkout > dateStr;
+    });
+    html += `<div class="mc-day ${isToday?'today':''} ${hasBooking?'has-booking':''}" onclick="jumpToDay(${d})">${d}</div>`;
+  }
+  grid.innerHTML = html;
+}
+
+function updateNavMonth() {
+  const monthNames = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+  const label = `${monthNames[currentMonth]} ${currentYear}`;
+  document.getElementById('navMonth').textContent = label;
+  document.getElementById('miniMonth').textContent = label;
+}
+
+function getStatusIcon(s) {
+  return {confirmed:'✅', pending:'⏳', cancelled:'❌', checkin:'🏨', checkout:'🚪', blocked:'🔒'}[s] || '';
+}
+
+// ===== NAVIGATION =====
+function prevMonth() { currentMonth--; if(currentMonth<0){currentMonth=11;currentYear--;} renderCalendar(); }
+function nextMonth() { currentMonth++; if(currentMonth>11){currentMonth=0;currentYear++;} renderCalendar(); }
+function goToday() { const t=new Date(); currentMonth=t.getMonth(); currentYear=t.getFullYear(); renderCalendar(); }
+function jumpToDay(d) { }
+
+function setView(v, btn) {
+  currentView = v;
+  document.querySelectorAll('.nav-view-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCalendar();
+}
+
+function cellClick(day, dateStr) {
+  document.getElementById('checkIn').value = dateStr;
+  const checkout = new Date(dateStr);
+  checkout.setDate(checkout.getDate() + 1);
+  document.getElementById('checkOut').value = checkout.toISOString().split('T')[0];
+  openModal('newBookingModal');
+}
+
+function filterCalendar() { renderCalendar(); }
+
+// ===== MODALS =====
+function openModal(id) { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+function showBookingDetail(guest, hotel, checkin, checkout, amount) {
+  document.getElementById('bdGuest').textContent = guest;
+  document.getElementById('bdHotel').textContent = hotel;
+  document.getElementById('bdCheckin').textContent = checkin;
+  document.getElementById('bdCheckout').textContent = checkout;
+  document.getElementById('bdAmount').textContent = amount + ' ر.س';
+  openModal('bookingDetailModal');
+}
+
+function saveBooking() {
+  const name = document.getElementById('guestName').value;
+  if(!name) { alert('يرجى إدخال اسم النزيل'); return; }
+  alert(`✅ تم حفظ حجز "${name}" بنجاح!\nسيتم إرسال تأكيد عبر SMS وبريد إلكتروني.`);
+  closeModal('newBookingModal');
+  renderCalendar();
+}
+
+function cancelBooking() {
+  if(confirm('هل أنت متأكد من إلغاء هذا الحجز؟')) {
+    alert('✅ تم إلغاء الحجز وإرسال إشعار للنزيل');
+    closeModal('bookingDetailModal');
+  }
+}
+
+// Close on outside click
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if(e.target===m) m.classList.remove('show'); });
+});
+
+// Init
+renderCalendar();
+</script>
+</body>
+</html>

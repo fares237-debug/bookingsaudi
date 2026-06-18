@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نتائج البحث - الرياض | بوكنق السعودية</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --dark: #0A0A0F;
+    --dark2: #13131A;
+    --dark3: #1C1C26;
+    --white: #F8F4EE;
+    --gray: #8A8A9A;
+    --green: #2ECC71;
+    --red: #E74C3C;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Tajawal',sans-serif; background:var(--dark); color:var(--white); }
+
+  /* NAV */
+  nav {
+    position:sticky; top:0; z-index:100;
+    background:rgba(10,10,15,0.97); backdrop-filter:blur(20px);
+    border-bottom:1px solid rgba(201,168,76,0.2);
+    padding:0 3%; height:65px;
+    display:flex; align-items:center; gap:16px;
+  }
+  .logo { display:flex; align-items:center; gap:8px; text-decoration:none; flex-shrink:0; }
+  .logo-icon { width:36px; height:36px; background:linear-gradient(135deg,var(--gold),var(--gold-light)); border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:16px; }
+  .logo-text { font-size:16px; font-weight:800; background:linear-gradient(135deg,var(--gold),var(--gold-light)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+
+  /* SEARCH BAR IN NAV */
+  .nav-search {
+    flex:1; display:flex; align-items:center;
+    background:var(--dark3); border:1px solid rgba(201,168,76,0.2);
+    border-radius:12px; padding:0 4px 0 4px; gap:4px; height:44px;
+  }
+  .nav-search input {
+    background:none; border:none; outline:none;
+    color:var(--white); font-family:'Tajawal',sans-serif; font-size:14px;
+    padding:0 12px; flex:1; min-width:0;
+  }
+  .nav-search-divider { width:1px; height:24px; background:rgba(255,255,255,0.1); }
+  .nav-search input[type=date] { width:130px; font-size:13px; }
+  .nav-search-btn {
+    background:linear-gradient(135deg,var(--gold),var(--gold-light));
+    border:none; border-radius:9px; padding:8px 18px;
+    color:var(--dark); font-weight:800; font-family:'Tajawal',sans-serif;
+    font-size:14px; cursor:pointer; white-space:nowrap;
+  }
+
+  /* LAYOUT */
+  .page-layout { display:flex; min-height:calc(100vh - 65px); }
+
+  /* SIDEBAR */
+  .sidebar {
+    width:280px; flex-shrink:0;
+    background:var(--dark2); border-left:1px solid rgba(255,255,255,0.05);
+    padding:20px; overflow-y:auto; height:calc(100vh - 65px);
+    position:sticky; top:65px;
+  }
+
+  .filter-section { margin-bottom:24px; }
+  .filter-title {
+    font-size:14px; font-weight:800; margin-bottom:14px;
+    color:var(--white); display:flex; justify-content:space-between; align-items:center;
+  }
+  .filter-title .clear { font-size:12px; color:var(--gold); cursor:pointer; font-weight:400; }
+
+  /* PRICE RANGE */
+  .price-range { margin-bottom:8px; }
+  .price-labels { display:flex; justify-content:space-between; font-size:12px; color:var(--gray); margin-bottom:8px; }
+  input[type=range] {
+    width:100%; -webkit-appearance:none; height:4px;
+    background:linear-gradient(90deg,var(--gold) 50%,rgba(255,255,255,0.1) 50%);
+    border-radius:2px; outline:none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance:none; width:18px; height:18px; border-radius:50%;
+    background:var(--gold); cursor:pointer; border:2px solid var(--dark);
+    box-shadow:0 0 8px rgba(201,168,76,0.5);
+  }
+
+  /* CHECKBOXES */
+  .check-list { display:flex; flex-direction:column; gap:10px; }
+  .check-item {
+    display:flex; align-items:center; gap:10px;
+    cursor:pointer; font-size:14px; color:var(--gray);
+    transition:0.2s; user-select:none;
+  }
+  .check-item:hover { color:var(--white); }
+  .check-item input { display:none; }
+  .checkmark {
+    width:18px; height:18px; border:1.5px solid rgba(255,255,255,0.2);
+    border-radius:5px; flex-shrink:0; display:flex; align-items:center;
+    justify-content:center; transition:0.2s; font-size:11px;
+  }
+  .check-item input:checked ~ .checkmark { background:var(--gold); border-color:var(--gold); color:var(--dark); }
+  .check-item input:checked ~ .checkmark::after { content:'✓'; }
+  .check-count { margin-right:auto; font-size:11px; color:var(--gray); }
+
+  /* STAR FILTER */
+  .star-filter { display:flex; gap:8px; flex-wrap:wrap; }
+  .star-btn {
+    padding:6px 14px; border-radius:20px;
+    border:1px solid rgba(255,255,255,0.1);
+    background:transparent; color:var(--gray);
+    cursor:pointer; font-size:13px; transition:0.2s;
+    font-family:'Tajawal',sans-serif;
+  }
+  .star-btn.active, .star-btn:hover {
+    border-color:var(--gold); color:var(--gold); background:rgba(201,168,76,0.1);
+  }
+
+  /* RATING FILTER */
+  .rating-filter { display:flex; flex-direction:column; gap:8px; }
+  .rating-btn {
+    display:flex; align-items:center; gap:10px;
+    padding:8px 12px; border-radius:10px;
+    border:1px solid rgba(255,255,255,0.08);
+    background:transparent; cursor:pointer; transition:0.2s;
+    font-family:'Tajawal',sans-serif; color:var(--gray); font-size:13px;
+  }
+  .rating-btn .score {
+    background:var(--dark3); padding:2px 8px; border-radius:6px;
+    font-weight:800; font-size:13px;
+  }
+  .rating-btn.active, .rating-btn:hover { border-color:var(--gold); color:var(--white); }
+  .rating-btn.active .score { background:var(--gold); color:var(--dark); }
+
+  /* RESULTS */
+  .results-area { flex:1; padding:20px 24px; overflow-y:auto; }
+
+  .results-header {
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:20px; flex-wrap:wrap; gap:12px;
+  }
+  .results-title { font-size:18px; font-weight:800; }
+  .results-title span { color:var(--gold); }
+  .results-meta { font-size:13px; color:var(--gray); margin-top:4px; }
+
+  .sort-controls { display:flex; align-items:center; gap:10px; }
+  .sort-label { font-size:13px; color:var(--gray); }
+  .sort-select {
+    background:var(--dark3); border:1px solid rgba(255,255,255,0.1);
+    border-radius:8px; padding:8px 14px; color:var(--white);
+    font-family:'Tajawal',sans-serif; font-size:13px; outline:none;
+  }
+
+  .view-toggle { display:flex; gap:4px; }
+  .view-btn {
+    width:36px; height:36px; border-radius:8px;
+    border:1px solid rgba(255,255,255,0.1);
+    background:transparent; cursor:pointer; transition:0.2s;
+    display:flex; align-items:center; justify-content:center; font-size:16px;
+  }
+  .view-btn.active { background:var(--gold); border-color:var(--gold); }
+
+  /* MAP TOGGLE */
+  .map-toggle {
+    display:flex; align-items:center; gap:8px;
+    background:var(--dark3); border:1px solid rgba(201,168,76,0.2);
+    padding:8px 16px; border-radius:8px; cursor:pointer;
+    font-size:13px; color:var(--gold); font-weight:700;
+    transition:0.2s;
+  }
+  .map-toggle:hover { background:rgba(201,168,76,0.1); }
+
+  /* PROPERTY CARD - LIST VIEW */
+  .property-card {
+    background:var(--dark3); border:1px solid rgba(255,255,255,0.06);
+    border-radius:18px; overflow:hidden; margin-bottom:16px;
+    display:grid; grid-template-columns:260px 1fr;
+    transition:0.3s; cursor:pointer;
+    animation:fadeIn 0.4s ease;
+  }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  .property-card:hover { border-color:rgba(201,168,76,0.3); transform:translateX(-4px); box-shadow:0 10px 40px rgba(0,0,0,0.4); }
+
+  .prop-img {
+    background:var(--dark2); display:flex; align-items:center;
+    justify-content:center; font-size:80px; position:relative;
+    min-height:200px;
+  }
+  .prop-img-badge {
+    position:absolute; top:12px; right:12px;
+    padding:4px 10px; border-radius:6px; font-size:11px; font-weight:800;
+  }
+  .badge-deal { background:var(--red); color:white; }
+  .badge-top { background:var(--gold); color:var(--dark); }
+  .badge-new { background:var(--green); color:white; }
+  .prop-save {
+    position:absolute; top:12px; left:12px;
+    width:32px; height:32px; border-radius:50%;
+    background:rgba(0,0,0,0.5); display:flex; align-items:center;
+    justify-content:center; font-size:16px; cursor:pointer; transition:0.2s;
+  }
+  .prop-save:hover { background:rgba(201,168,76,0.3); }
+  .prop-save.saved { color:var(--red); }
+
+  .prop-info { padding:20px; display:flex; flex-direction:column; justify-content:space-between; }
+  .prop-top { }
+  .prop-type { font-size:11px; color:var(--gold); font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; }
+  .prop-name { font-size:18px; font-weight:800; margin-bottom:8px; }
+  .prop-location { font-size:13px; color:var(--gray); margin-bottom:10px; display:flex; align-items:center; gap:4px; }
+  .prop-features { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+  .feat { background:rgba(255,255,255,0.05); padding:4px 10px; border-radius:6px; font-size:12px; color:var(--gray); }
+  .prop-bottom { display:flex; justify-content:space-between; align-items:flex-end; }
+  .prop-rating { display:flex; align-items:center; gap:8px; }
+  .rating-score-sm {
+    background:var(--gold); color:var(--dark); font-weight:900;
+    padding:4px 10px; border-radius:8px; font-size:14px;
+  }
+  .rating-text { font-size:13px; }
+  .rating-text .label { font-weight:700; }
+  .rating-text .count { color:var(--gray); font-size:12px; }
+  .prop-price { text-align:left; }
+  .old-price { font-size:12px; color:var(--gray); text-decoration:line-through; }
+  .price-val { font-size:26px; font-weight:900; color:var(--gold); }
+  .price-per { font-size:12px; color:var(--gray); }
+  .price-note { font-size:11px; color:var(--green); font-weight:700; }
+
+  /* GRID VIEW */
+  .results-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; display:none; }
+  .grid-card {
+    background:var(--dark3); border:1px solid rgba(255,255,255,0.06);
+    border-radius:16px; overflow:hidden; cursor:pointer; transition:0.3s;
+    animation:fadeIn 0.4s ease;
+  }
+  .grid-card:hover { border-color:rgba(201,168,76,0.3); transform:translateY(-6px); }
+  .grid-img { height:160px; background:var(--dark2); display:flex; align-items:center; justify-content:center; font-size:60px; position:relative; }
+  .grid-info { padding:14px; }
+  .grid-name { font-size:15px; font-weight:800; margin-bottom:6px; }
+  .grid-loc { font-size:12px; color:var(--gray); margin-bottom:10px; }
+  .grid-footer { display:flex; justify-content:space-between; align-items:center; }
+  .grid-price { font-size:18px; font-weight:900; color:var(--gold); }
+  .grid-rating { background:var(--gold); color:var(--dark); padding:3px 8px; border-radius:6px; font-size:12px; font-weight:800; }
+
+  /* PAGINATION */
+  .pagination { display:flex; justify-content:center; gap:8px; margin-top:32px; flex-wrap:wrap; }
+  .page-btn {
+    width:40px; height:40px; border-radius:10px;
+    border:1px solid rgba(255,255,255,0.1);
+    background:transparent; color:var(--gray);
+    cursor:pointer; font-family:'Tajawal',sans-serif; font-size:14px;
+    transition:0.2s; display:flex; align-items:center; justify-content:center;
+  }
+  .page-btn.active { background:var(--gold); border-color:var(--gold); color:var(--dark); font-weight:800; }
+  .page-btn:hover:not(.active) { border-color:var(--gold); color:var(--gold); }
+
+  /* FILTER CHIP ACTIVE */
+  .active-filters { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+  .filter-chip {
+    display:flex; align-items:center; gap:6px;
+    background:rgba(201,168,76,0.15); border:1px solid rgba(201,168,76,0.3);
+    color:var(--gold); padding:5px 12px; border-radius:20px; font-size:12px;
+    cursor:pointer;
+  }
+  .filter-chip .remove { font-size:14px; }
+
+  /* NO RESULTS */
+  .no-results { text-align:center; padding:60px 20px; color:var(--gray); }
+  .no-results .icon { font-size:60px; margin-bottom:16px; }
+
+  @media(max-width:900px) {
+    .sidebar { display:none; }
+    .property-card { grid-template-columns:1fr; }
+    .prop-img { min-height:180px; }
+    .results-grid { grid-template-columns:1fr 1fr; }
+    .nav-search input[type=date] { display:none; }
+  }
+  @media(max-width:600px) {
+    .results-grid { grid-template-columns:1fr; }
+    .results-header { flex-direction:column; align-items:flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="booking-saudi.html" class="logo">
+    <div class="logo-icon">🏨</div>
+    <div class="logo-text">بوكنق</div>
+  </a>
+  <div class="nav-search">
+    <input type="text" placeholder="📍 الرياض" value="الرياض">
+    <div class="nav-search-divider"></div>
+    <input type="date" value="2024-06-15">
+    <div class="nav-search-divider"></div>
+    <input type="date" value="2024-06-18">
+    <div class="nav-search-divider"></div>
+    <input type="text" placeholder="👥 2 بالغ" value="2 بالغ" style="width:80px;">
+    <button class="nav-search-btn">🔍 بحث</button>
+  </div>
+</nav>
+
+<div class="page-layout">
+
+  <!-- SIDEBAR FILTERS -->
+  <div class="sidebar">
+
+    <div class="filter-section">
+      <div class="filter-title">السعر في الليلة <span class="clear" onclick="clearFilter()">مسح</span></div>
+      <div class="price-range">
+        <div class="price-labels">
+          <span>0 ر.س</span>
+          <span id="priceVal">2,000 ر.س</span>
+        </div>
+        <input type="range" min="0" max="5000" value="2000" step="100" oninput="document.getElementById('priceVal').textContent=this.value+' ر.س'; filterResults()">
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-title">تصنيف النجوم</div>
+      <div class="star-filter">
+        <button class="star-btn" onclick="toggleStar(this)">⭐ 1</button>
+        <button class="star-btn" onclick="toggleStar(this)">⭐⭐ 2</button>
+        <button class="star-btn" onclick="toggleStar(this)">⭐⭐⭐ 3</button>
+        <button class="star-btn active" onclick="toggleStar(this)">⭐⭐⭐⭐ 4</button>
+        <button class="star-btn active" onclick="toggleStar(this)">⭐⭐⭐⭐⭐ 5</button>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-title">تقييم النزلاء</div>
+      <div class="rating-filter">
+        <button class="rating-btn active" onclick="toggleRating(this)">
+          <span class="score">9+</span> ممتاز جداً
+        </button>
+        <button class="rating-btn" onclick="toggleRating(this)">
+          <span class="score">8+</span> ممتاز
+        </button>
+        <button class="rating-btn" onclick="toggleRating(this)">
+          <span class="score">7+</span> جيد جداً
+        </button>
+        <button class="rating-btn" onclick="toggleRating(this)">
+          <span class="score">6+</span> جيد
+        </button>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-title">نوع الإقامة</div>
+      <div class="check-list">
+        <label class="check-item">
+          <input type="checkbox" checked onchange="filterResults()">
+          <span class="checkmark"></span>
+          🏨 فندق
+          <span class="check-count">248</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" checked onchange="filterResults()">
+          <span class="checkmark"></span>
+          🏠 شقة فندقية
+          <span class="check-count">182</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" onchange="filterResults()">
+          <span class="checkmark"></span>
+          🏖️ منتجع
+          <span class="check-count">34</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" onchange="filterResults()">
+          <span class="checkmark"></span>
+          🏡 فيلا
+          <span class="check-count">67</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" onchange="filterResults()">
+          <span class="checkmark"></span>
+          🏕️ استراحة
+          <span class="check-count">28</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-title">المرافق</div>
+      <div class="check-list">
+        <label class="check-item">
+          <input type="checkbox" checked onchange="filterResults()">
+          <span class="checkmark"></span>
+          📶 واي فاي مجاني
+        </label>
+        <label class="check-item">
+          <input type="checkbox" onchange="filterResults()">
+          <span class="checkmark"></span>
+          🏊 مسبح
+        </label>
+        <label class="check-item">
+          <input type="checkbox" onchange="filterResults()">
+          <span class="checkmark"></span>
+          🅿️ موقف مجاني
+        </label>
+        <label class="check-item">
+          <input type="checkbox" onchange="filterResults()">
+          <span class="checkmark"></span>
+          🍳 إفطار مشمول
+        </label>
+        <label class="check-item">
+          <input type="checkbox" onchange="filterResults()">
+          <span class="checkmark"></span>
+          💆 سبا
+        </label>
+        <label class="check-item">
+          <input type="checkbox" onchange="filterResults()">
+          <span class="checkmark"></span>
+          🏋️ نادي رياضي
+        </label>
+        <label class="check-item">
+          <input type="checkbox" onchange="filterResults()">
+          <span class="checkmark"></span>
+          🧒 نادي أطفال
+        </label>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-title">سياسة الإلغاء</div>
+      <div class="check-list">
+        <label class="check-item">
+          <input type="checkbox" onchange="filterResults()">
+          <span class="checkmark"></span>
+          ✅ إلغاء مجاني فقط
+        </label>
+        <label class="check-item">
+          <input type="checkbox" onchange="filterResults()">
+          <span class="checkmark"></span>
+          🚫 بدون دفع مسبق
+        </label>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-title">الحي / المنطقة</div>
+      <div class="check-list">
+        <label class="check-item">
+          <input type="checkbox" checked onchange="filterResults()">
+          <span class="checkmark"></span>
+          العليا
+          <span class="check-count">89</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" onchange="filterResults()">
+          <span class="checkmark"></span>
+          النخيل
+          <span class="check-count">54</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" onchange="filterResults()">
+          <span class="checkmark"></span>
+          الملز
+          <span class="check-count">42</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" onchange="filterResults()">
+          <span class="checkmark"></span>
+          الدرعية
+          <span class="check-count">18</span>
+        </label>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-area">
+
+    <!-- ACTIVE FILTERS -->
+    <div class="active-filters" id="activeFilters">
+      <div class="filter-chip">⭐⭐⭐⭐ 4+ نجوم <span class="remove" onclick="removeChip(this)">×</span></div>
+      <div class="filter-chip">📶 واي فاي مجاني <span class="remove" onclick="removeChip(this)">×</span></div>
+      <div class="filter-chip">9+ تقييم <span class="remove" onclick="removeChip(this)">×</span></div>
+    </div>
+
+    <!-- RESULTS HEADER -->
+    <div class="results-header">
+      <div>
+        <div class="results-title">الرياض: <span id="resultCount">247</span> عقار متاح</div>
+        <div class="results-meta">15-18 يونيو · 2 بالغ · 3 ليالي</div>
+      </div>
+      <div class="sort-controls">
+        <span class="sort-label">ترتيب:</span>
+        <select class="sort-select" onchange="sortResults(this.value)">
+          <option value="recommended">الأكثر توصية</option>
+          <option value="price_asc">السعر: الأقل أولاً</option>
+          <option value="price_desc">السعر: الأعلى أولاً</option>
+          <option value="rating">الأعلى تقييماً</option>
+          <option value="distance">الأقرب للمركز</option>
+        </select>
+        <div class="view-toggle">
+          <button class="view-btn active" id="listViewBtn" onclick="setView('list')" title="قائمة">☰</button>
+          <button class="view-btn" id="gridViewBtn" onclick="setView('grid')" title="شبكة">⊞</button>
+        </div>
+        <div class="map-toggle" onclick="alert('سيتم إضافة خريطة تفاعلية قريباً! 🗺️')">
+          🗺️ عرض الخريطة
+        </div>
+      </div>
+    </div>
+
+    <!-- LIST VIEW -->
+    <div id="listView">
+
+      <div class="property-card" onclick="location.href='hotel-page.html'">
+        <div class="prop-img">🏨
+          <div class="prop-img-badge badge-top">الأعلى تقييماً</div>
+          <div class="prop-save" onclick="event.stopPropagation();this.classList.toggle('saved');this.textContent=this.classList.contains('saved')?'❤️':'🤍'">🤍</div>
+        </div>
+        <div class="prop-info">
+          <div class="prop-top">
+            <div class="prop-type">فندق فاخر ⭐⭐⭐⭐⭐</div>
+            <div class="prop-name">فندق الريتز كارلتون الرياض</div>
+            <div class="prop-location">📍 حي العليا · 2 كم من المركز</div>
+            <div class="prop-features">
+              <span class="feat">📶 واي فاي</span>
+              <span class="feat">🏊 مسبح</span>
+              <span class="feat">🍳 إفطار</span>
+              <span class="feat">💆 سبا</span>
+              <span class="feat">✅ إلغاء مجاني</span>
+            </div>
+          </div>
+          <div class="prop-bottom">
+            <div class="prop-rating">
+              <div class="rating-score-sm">9.8</div>
+              <div class="rating-text">
+                <div class="label">ممتاز جداً</div>
+                <div class="count">324 تقييم</div>
+              </div>
+            </div>
+            <div class="prop-price">
+              <div class="old-price">1,100 ر.س</div>
+              <div class="price-val">850 ر.س</div>
+              <div class="price-per">/ ليلة · شامل الضريبة</div>
+              <div class="price-note">⚡ 3 غرف متبقية!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="property-card" onclick="location.href='hotel-page.html'">
+        <div class="prop-img">🏙️
+          <div class="prop-img-badge badge-deal">خصم 25%</div>
+          <div class="prop-save" onclick="event.stopPropagation();this.classList.toggle('saved');this.textContent=this.classList.contains('saved')?'❤️':'🤍'">🤍</div>
+        </div>
+        <div class="prop-info">
+          <div class="prop-top">
+            <div class="prop-type">فندق ⭐⭐⭐⭐⭐</div>
+            <div class="prop-name">فندق فور سيزونز الرياض</div>
+            <div class="prop-location">📍 برج المملكة · وسط المدينة</div>
+            <div class="prop-features">
+              <span class="feat">📶 واي فاي</span>
+              <span class="feat">🏊 مسبح خارجي</span>
+              <span class="feat">🚗 فاليه</span>
+              <span class="feat">✅ إلغاء مجاني</span>
+            </div>
+          </div>
+          <div class="prop-bottom">
+            <div class="prop-rating">
+              <div class="rating-score-sm">9.6</div>
+              <div class="rating-text">
+                <div class="label">ممتاز</div>
+                <div class="count">518 تقييم</div>
+              </div>
+            </div>
+            <div class="prop-price">
+              <div class="old-price">1,300 ر.س</div>
+              <div class="price-val">975 ر.س</div>
+              <div class="price-per">/ ليلة · شامل الضريبة</div>
+              <div class="price-note">🔥 عرض محدود</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="property-card" onclick="location.href='hotel-page.html'">
+        <div class="prop-img">🏠
+          <div class="prop-img-badge badge-new">جديد</div>
+          <div class="prop-save" onclick="event.stopPropagation();this.classList.toggle('saved');this.textContent=this.classList.contains('saved')?'❤️':'🤍'">🤍</div>
+        </div>
+        <div class="prop-info">
+          <div class="prop-top">
+            <div class="prop-type">شقة فندقية ⭐⭐⭐⭐</div>
+            <div class="prop-name">شقق ماريوت الرياض التنفيذية</div>
+            <div class="prop-location">📍 حي النخيل · 4 كم من المركز</div>
+            <div class="prop-features">
+              <span class="feat">📶 واي فاي</span>
+              <span class="feat">🍳 مطبخ كامل</span>
+              <span class="feat">🅿️ موقف مجاني</span>
+              <span class="feat">🏋️ نادي رياضي</span>
+            </div>
+          </div>
+          <div class="prop-bottom">
+            <div class="prop-rating">
+              <div class="rating-score-sm">9.2</div>
+              <div class="rating-text">
+                <div class="label">ممتاز</div>
+                <div class="count">213 تقييم</div>
+              </div>
+            </div>
+            <div class="prop-price">
+              <div class="price-val">480 ر.س</div>
+              <div class="price-per">/ ليلة · شامل الضريبة</div>
+              <div class="price-note">✅ إلغاء مجاني</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="property-card" onclick="location.href='hotel-page.html'">
+        <div class="prop-img">🌴
+          <div class="prop-save" onclick="event.stopPropagation();this.classList.toggle('saved');this.textContent=this.classList.contains('saved')?'❤️':'🤍'">🤍</div>
+        </div>
+        <div class="prop-info">
+          <div class="prop-top">
+            <div class="prop-type">منتجع ⭐⭐⭐⭐⭐</div>
+            <div class="prop-name">منتجع درة العروس الرياض</div>
+            <div class="prop-location">📍 حي الدرعية · 8 كم من المركز</div>
+            <div class="prop-features">
+              <span class="feat">🏊 3 مسابح</span>
+              <span class="feat">💆 سبا فاخر</span>
+              <span class="feat">🌿 حدائق</span>
+              <span class="feat">🍽️ 4 مطاعم</span>
+            </div>
+          </div>
+          <div class="prop-bottom">
+            <div class="prop-rating">
+              <div class="rating-score-sm">9.5</div>
+              <div class="rating-text">
+                <div class="label">ممتاز جداً</div>
+                <div class="count">187 تقييم</div>
+              </div>
+            </div>
+            <div class="prop-price">
+              <div class="price-val">1,200 ر.س</div>
+              <div class="price-per">/ ليلة · شامل الضريبة</div>
+              <div class="price-note">⚡ 2 غرف فقط!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="property-card" onclick="location.href='hotel-page.html'">
+        <div class="prop-img">🏡
+          <div class="prop-img-badge badge-deal">خصم 15%</div>
+          <div class="prop-save" onclick="event.stopPropagation();this.classList.toggle('saved');this.textContent=this.classList.contains('saved')?'❤️':'🤍'">🤍</div>
+        </div>
+        <div class="prop-info">
+          <div class="prop-top">
+            <div class="prop-type">فيلا فاخرة ⭐⭐⭐⭐⭐</div>
+            <div class="prop-name">فيلا الملكية الخاصة - حي الياسمين</div>
+            <div class="prop-location">📍 حي الياسمين · 6 كم من المركز</div>
+            <div class="prop-features">
+              <span class="feat">👥 10 أشخاص</span>
+              <span class="feat">🏊 مسبح خاص</span>
+              <span class="feat">🌿 حديقة</span>
+              <span class="feat">🍳 مطبخ</span>
+            </div>
+          </div>
+          <div class="prop-bottom">
+            <div class="prop-rating">
+              <div class="rating-score-sm">9.7</div>
+              <div class="rating-text">
+                <div class="label">ممتاز جداً</div>
+                <div class="count">94 تقييم</div>
+              </div>
+            </div>
+            <div class="prop-price">
+              <div class="old-price">2,500 ر.س</div>
+              <div class="price-val">2,125 ر.س</div>
+              <div class="price-per">/ ليلة · للمجموعة كاملة</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- GRID VIEW -->
+    <div id="gridView" style="display:none;">
+      <div class="results-grid" style="display:grid;">
+        <div class="grid-card" onclick="location.href='hotel-page.html'">
+          <div class="grid-img">🏨<div class="prop-img-badge badge-top" style="position:absolute;top:10px;right:10px;">الأعلى</div></div>
+          <div class="grid-info">
+            <div class="prop-type">فندق ⭐⭐⭐⭐⭐</div>
+            <div class="grid-name">فندق الريتز كارلتون الرياض</div>
+            <div class="grid-loc">📍 حي العليا</div>
+            <div class="grid-footer"><div class="grid-price">850 ر.س</div><div class="grid-rating">9.8</div></div>
+          </div>
+        </div>
+        <div class="grid-card" onclick="location.href='hotel-page.html'">
+          <div class="grid-img">🏙️<div class="prop-img-badge badge-deal" style="position:absolute;top:10px;right:10px;">-25%</div></div>
+          <div class="grid-info">
+            <div class="prop-type">فندق ⭐⭐⭐⭐⭐</div>
+            <div class="grid-name">فندق فور سيزونز الرياض</div>
+            <div class="grid-loc">📍 برج المملكة</div>
+            <div class="grid-footer"><div class="grid-price">975 ر.س</div><div class="grid-rating">9.6</div></div>
+          </div>
+        </div>
+        <div class="grid-card" onclick="location.href='hotel-page.html'">
+          <div class="grid-img">🏠</div>
+          <div class="grid-info">
+            <div class="prop-type">شقة ⭐⭐⭐⭐</div>
+            <div class="grid-name">شقق ماريوت التنفيذية</div>
+            <div class="grid-loc">📍 حي النخيل</div>
+            <div class="grid-footer"><div class="grid-price">480 ر.س</div><div class="grid-rating">9.2</div></div>
+          </div>
+        </div>
+        <div class="grid-card" onclick="location.href='hotel-page.html'">
+          <div class="grid-img">🌴</div>
+          <div class="grid-info">
+            <div class="prop-type">منتجع ⭐⭐⭐⭐⭐</div>
+            <div class="grid-name">منتجع درة العروس</div>
+            <div class="grid-loc">📍 الدرعية</div>
+            <div class="grid-footer"><div class="grid-price">1,200 ر.س</div><div class="grid-rating">9.5</div></div>
+          </div>
+        </div>
+        <div class="grid-card" onclick="location.href='hotel-page.html'">
+          <div class="grid-img">🏡</div>
+          <div class="grid-info">
+            <div class="prop-type">فيلا ⭐⭐⭐⭐⭐</div>
+            <div class="grid-name">فيلا الملكية الخاصة</div>
+            <div class="grid-loc">📍 حي الياسمين</div>
+            <div class="grid-footer"><div class="grid-price">2,125 ر.س</div><div class="grid-rating">9.7</div></div>
+          </div>
+        </div>
+        <div class="grid-card" onclick="location.href='hotel-page.html'">
+          <div class="grid-img">🏢</div>
+          <div class="grid-info">
+            <div class="prop-type">فندق ⭐⭐⭐⭐</div>
+            <div class="grid-name">فندق هيلتون الرياض</div>
+            <div class="grid-loc">📍 حي الملز</div>
+            <div class="grid-footer"><div class="grid-price">650 ر.س</div><div class="grid-rating">8.9</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="pagination">
+      <button class="page-btn">→</button>
+      <button class="page-btn active">1</button>
+      <button class="page-btn">2</button>
+      <button class="page-btn">3</button>
+      <button class="page-btn">4</button>
+      <button class="page-btn">5</button>
+      <button class="page-btn">...</button>
+      <button class="page-btn">25</button>
+      <button class="page-btn">←</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function setView(type) {
+  if (type === 'list') {
+    document.getElementById('listView').style.display = 'block';
+    document.getElementById('gridView').style.display = 'none';
+    document.getElementById('listViewBtn').classList.add('active');
+    document.getElementById('gridViewBtn').classList.remove('active');
+  } else {
+    document.getElementById('listView').style.display = 'none';
+    document.getElementById('gridView').style.display = 'block';
+    document.getElementById('listViewBtn').classList.remove('active');
+    document.getElementById('gridViewBtn').classList.add('active');
+  }
+}
+
+function toggleStar(el) { el.classList.toggle('active'); filterResults(); }
+function toggleRating(el) {
+  document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  filterResults();
+}
+function removeChip(el) { el.parentElement.remove(); filterResults(); }
+function clearFilter() { document.getElementById('activeFilters').innerHTML = ''; filterResults(); }
+
+function filterResults() {
+  const count = Math.floor(Math.random() * 100) + 150;
+  document.getElementById('resultCount').textContent = count;
+}
+
+function sortResults(val) {
+  const cards = document.querySelectorAll('.property-card');
+  cards.forEach((c,i) => {
+    c.style.animationDelay = (i*0.1)+'s';
+    c.style.opacity = '0';
+    setTimeout(() => { c.style.opacity = '1'; }, i*80);
+  });
+}
+
+// Pagination
+document.querySelectorAll('.page-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+    if (!['→','←','...'].includes(this.textContent)) this.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

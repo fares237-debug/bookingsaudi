@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الحجوزات المتكررة | بوكنق السعودية</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold:#C9A84C; --gold-light:#E8C97A;
+    --dark:#0A0A0F; --dark2:#13131A; --dark3:#1C1C26; --dark4:#22222E;
+    --white:#F8F4EE; --gray:#8A8A9A;
+    --green:#2ECC71; --red:#E74C3C; --blue:#3498DB; --purple:#9B59B6; --orange:#E67E22;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Tajawal',sans-serif;background:var(--dark);color:var(--white);}
+
+  nav{background:rgba(10,10,15,0.98);border-bottom:1px solid rgba(201,168,76,0.2);padding:0 5%;height:65px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+  .logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+  .logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--gold),var(--gold-light));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+  .logo-text{font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .nav-right{display:flex;gap:10px;align-items:center;}
+  .btn-gold{padding:9px 20px;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--dark);border:none;border-radius:9px;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:13px;font-weight:800;transition:0.3s;}
+  .btn-gold:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(201,168,76,0.3);}
+  .nav-back{color:var(--gold);font-size:13px;text-decoration:none;}
+
+  /* HERO */
+  .hero{background:linear-gradient(135deg,rgba(155,89,182,0.08),rgba(201,168,76,0.05),transparent),var(--dark2);padding:48px 5% 36px;border-bottom:1px solid rgba(255,255,255,0.05);}
+  .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(155,89,182,0.12);border:1px solid rgba(155,89,182,0.25);color:var(--purple);padding:6px 16px;border-radius:50px;font-size:13px;font-weight:700;margin-bottom:16px;}
+  .hero h1{font-size:clamp(26px,4vw,46px);font-weight:900;margin-bottom:10px;}
+  .hero h1 span{background:linear-gradient(135deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .hero p{font-size:15px;color:var(--gray);max-width:560px;line-height:1.8;}
+
+  .container{max-width:1100px;margin:0 auto;padding:32px 5% 80px;}
+
+  /* STATS */
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+  .stat-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.05);border-radius:14px;padding:18px;}
+  .stat-icon{font-size:24px;margin-bottom:10px;}
+  .stat-val{font-size:26px;font-weight:900;margin-bottom:3px;}
+  .stat-lbl{font-size:12px;color:var(--gray);}
+
+  /* TABS */
+  .tabs{display:flex;gap:4px;background:var(--dark3);border-radius:12px;padding:4px;margin-bottom:24px;}
+  .tab{flex:1;padding:10px 16px;border-radius:9px;cursor:pointer;font-size:14px;font-weight:700;transition:0.2s;color:var(--gray);border:none;font-family:'Tajawal',sans-serif;background:transparent;}
+  .tab.active{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--dark);}
+  .tab-content{display:none;animation:fadeIn 0.3s ease;}
+  .tab-content.active{display:block;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+  /* LAYOUT */
+  .layout{display:grid;grid-template-columns:1fr 340px;gap:24px;}
+
+  /* RECURRING CARD */
+  .rec-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:18px;overflow:hidden;margin-bottom:16px;transition:0.3s;}
+  .rec-card:hover{border-color:rgba(201,168,76,0.2);}
+  .rc-header{padding:16px 20px;background:var(--dark4);display:flex;justify-content:space-between;align-items:center;}
+  .rc-id{font-size:12px;color:var(--gray);}
+  .rc-id strong{color:var(--gold);font-size:14px;display:block;}
+  .rc-badges{display:flex;gap:8px;align-items:center;}
+  .rc-freq{font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;}
+  .rf-weekly{background:rgba(52,152,219,0.15);color:var(--blue);}
+  .rf-monthly{background:rgba(155,89,182,0.15);color:var(--purple);}
+  .rf-yearly{background:rgba(201,168,76,0.15);color:var(--gold);}
+  .rc-status{font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;}
+  .rs-active{background:rgba(46,204,113,0.15);color:var(--green);}
+  .rs-paused{background:rgba(230,126,34,0.15);color:var(--orange);}
+  .rs-ended{background:rgba(255,255,255,0.06);color:var(--gray);}
+
+  .rc-body{padding:18px 20px;display:grid;grid-template-columns:64px 1fr auto;gap:16px;align-items:start;}
+  .rc-img{width:64px;height:64px;border-radius:12px;background:var(--dark2);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;}
+  .rc-info{flex:1;}
+  .rc-guest{font-size:16px;font-weight:800;margin-bottom:3px;}
+  .rc-hotel{font-size:13px;color:var(--gray);margin-bottom:8px;}
+  .rc-schedule{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;}
+  .rs-item{display:flex;align-items:center;gap:5px;}
+  .rs-item label{color:var(--gray);font-size:11px;}
+  .rc-price-col{text-align:left;flex-shrink:0;}
+  .rc-price{font-size:22px;font-weight:900;color:var(--gold);}
+  .rc-price-per{font-size:11px;color:var(--gray);}
+  .rc-total{font-size:12px;color:var(--green);font-weight:700;margin-top:4px;}
+
+  .rc-footer{padding:12px 20px;border-top:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+  .rc-next{font-size:12px;color:var(--gray);}
+  .rc-next strong{color:var(--blue);}
+  .rc-actions{display:flex;gap:6px;}
+  .rc-btn{padding:6px 14px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;transition:0.2s;font-family:'Tajawal',sans-serif;border:none;}
+  .rcb-edit{background:rgba(201,168,76,0.1);color:var(--gold);border:1px solid rgba(201,168,76,0.2)!important;}
+  .rcb-pause{background:rgba(230,126,34,0.1);color:var(--orange);border:1px solid rgba(230,126,34,0.2)!important;}
+  .rcb-cancel{background:rgba(231,76,60,0.1);color:var(--red);border:1px solid rgba(231,76,60,0.2)!important;}
+  .rcb-resume{background:rgba(46,204,113,0.1);color:var(--green);border:1px solid rgba(46,204,113,0.2)!important;}
+
+  /* PROGRESS BAR */
+  .rc-progress{margin:10px 20px 0;}
+  .rcp-label{display:flex;justify-content:space-between;font-size:11px;color:var(--gray);margin-bottom:5px;}
+  .rcp-bar{height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;}
+  .rcp-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold),var(--gold-light));transition:width 1s ease;}
+
+  /* HISTORY */
+  .history-item{background:var(--dark3);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:14px 16px;margin-bottom:8px;display:flex;gap:12px;align-items:center;}
+  .hi-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+  .hi-green{background:rgba(46,204,113,0.12);}
+  .hi-gold{background:rgba(201,168,76,0.12);}
+  .hi-red{background:rgba(231,76,60,0.12);}
+  .hi-info{flex:1;}
+  .hi-title{font-size:13px;font-weight:700;margin-bottom:2px;}
+  .hi-sub{font-size:12px;color:var(--gray);}
+  .hi-right{text-align:left;}
+  .hi-amount{font-size:15px;font-weight:900;color:var(--gold);}
+  .hi-date{font-size:11px;color:var(--gray);}
+
+  /* CREATE FORM */
+  .create-card{background:var(--dark3);border:1px solid rgba(201,168,76,0.15);border-radius:18px;overflow:hidden;position:sticky;top:80px;}
+  .create-header{background:linear-gradient(135deg,var(--gold),var(--gold-light));padding:18px 20px;}
+  .create-header h3{font-size:16px;font-weight:800;color:var(--dark);}
+  .create-header p{font-size:12px;color:rgba(0,0,0,0.6);margin-top:2px;}
+  .create-body{padding:20px;}
+  .field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+  .field label{font-size:12px;color:var(--gold);font-weight:700;}
+  .field input,.field select{background:var(--dark2);border:1.5px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px 12px;color:var(--white);font-family:'Tajawal',sans-serif;font-size:13px;outline:none;transition:0.2s;}
+  .field input:focus,.field select:focus{border-color:var(--gold);}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+  /* FREQUENCY SELECTOR */
+  .freq-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+  .freq-btn{padding:10px 6px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.08);background:var(--dark2);cursor:pointer;text-align:center;transition:0.2s;font-family:'Tajawal',sans-serif;}
+  .freq-btn:hover{border-color:rgba(201,168,76,0.3);}
+  .freq-btn.selected{border-color:var(--gold);background:rgba(201,168,76,0.1);}
+  .fb-icon{font-size:22px;margin-bottom:5px;}
+  .fb-name{font-size:12px;font-weight:700;}
+  .freq-btn.selected .fb-name{color:var(--gold);}
+  .fb-disc{font-size:10px;color:var(--gray);}
+
+  /* DISCOUNT PREVIEW */
+  .disc-preview{background:var(--dark2);border-radius:12px;padding:14px;margin-bottom:14px;}
+  .dp-title{font-size:12px;color:var(--gray);margin-bottom:10px;}
+  .dp-row{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px;}
+  .dp-row label{color:var(--gray);}
+  .dp-val{font-weight:700;}
+  .dp-total{display:flex;justify-content:space-between;font-size:15px;font-weight:900;border-top:1px solid rgba(255,255,255,0.07);padding-top:10px;margin-top:4px;}
+  .dp-savings{font-size:12px;color:var(--green);font-weight:700;text-align:center;margin-top:8px;}
+
+  .btn-create{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--dark);border:none;padding:13px;border-radius:11px;font-family:'Tajawal',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:0.3s;}
+  .btn-create:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(201,168,76,0.3);}
+
+  /* BENEFITS */
+  .benefits-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.05);border-radius:14px;padding:18px;margin-top:14px;}
+  .bc-title{font-size:13px;font-weight:700;color:var(--gold);margin-bottom:12px;}
+  .benefit-item{display:flex;gap:8px;font-size:12px;color:var(--gray);margin-bottom:8px;align-items:flex-start;}
+
+  /* SUCCESS MODAL */
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);z-index:1000;align-items:center;justify-content:center;}
+  .modal-overlay.show{display:flex;}
+  .modal{background:var(--dark3);border:1px solid rgba(201,168,76,0.2);border-radius:20px;padding:36px;max-width:440px;width:90%;text-align:center;animation:popIn 0.3s ease;}
+  @keyframes popIn{from{transform:scale(0.85);opacity:0}to{transform:scale(1);opacity:1}}
+  .modal-icon{font-size:64px;margin-bottom:14px;}
+  .modal-title{font-size:22px;font-weight:900;margin-bottom:8px;}
+  .modal-title span{background:linear-gradient(135deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .modal-desc{color:var(--gray);font-size:14px;line-height:1.7;margin-bottom:20px;}
+  .modal-btn{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--dark);border:none;padding:13px;border-radius:11px;font-family:'Tajawal',sans-serif;font-size:15px;font-weight:800;cursor:pointer;}
+
+  @media(max-width:900px){
+    .layout{grid-template-columns:1fr;}
+    .create-card{position:static;}
+    .stats-grid{grid-template-columns:1fr 1fr;}
+    .rc-body{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<!-- SUCCESS MODAL -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal">
+    <div class="modal-icon">🔄</div>
+    <div class="modal-title">تم إنشاء <span>الحجز المتكرر!</span></div>
+    <div class="modal-desc">سيتم تجديد الحجز تلقائياً حسب الجدول المحدد. ستصلك إشعارات قبل كل تجديد بـ 7 أيام.</div>
+    <button class="modal-btn" onclick="document.getElementById('successModal').classList.remove('show')">✅ رائع!</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo"><div class="logo-icon">🏨</div><div class="logo-text">بوكنق السعودية</div></a>
+  <div class="nav-right">
+    <button class="btn-gold" onclick="document.querySelector('.create-body').scrollIntoView({behavior:'smooth'})">🔄 حجز متكرر جديد</button>
+    <a href="dashboard.html" class="nav-back">← لوحة التحكم</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">🔄 تجديد تلقائي</div>
+  <h1>الحجوزات <span>المتكررة</span></h1>
+  <p>احجز مرة واحدة واستمتع بتجديد تلقائي كل أسبوع أو شهر أو سنة مع خصومات حصرية تصل إلى 40%</p>
+</div>
+
+<div class="container">
+
+  <!-- STATS -->
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon">🔄</div><div class="stat-val">8</div><div class="stat-lbl">حجز متكرر نشط</div></div>
+    <div class="stat-card"><div class="stat-icon">💰</div><div class="stat-val">24,800 ر.س</div><div class="stat-lbl">إيرادات شهرية ثابتة</div></div>
+    <div class="stat-card"><div class="stat-icon">🎯</div><div class="stat-val">94%</div><div class="stat-lbl">معدل التجديد التلقائي</div></div>
+    <div class="stat-card"><div class="stat-icon">💎</div><div class="stat-val">6,200 ر.س</div><div class="stat-lbl">وفّره العملاء هذا الشهر</div></div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('active',this)">🟢 النشطة (6)</button>
+    <button class="tab" onclick="switchTab('paused',this)">⏸️ المتوقفة (1)</button>
+    <button class="tab" onclick="switchTab('history',this)">📋 السجل</button>
+  </div>
+
+  <div class="layout">
+    <div>
+
+      <!-- ACTIVE -->
+      <div class="tab-content active" id="tab-active">
+
+        <!-- RECURRING 1 -->
+        <div class="rec-card">
+          <div class="rc-header">
+            <div class="rc-id">رقم الحجز<strong>#REC-1024</strong></div>
+            <div class="rc-badges">
+              <span class="rc-freq rf-monthly">🔄 شهري</span>
+              <span class="rc-status rs-active">✅ نشط</span>
+            </div>
+          </div>
+          <div class="rc-progress">
+            <div class="rcp-label"><span>تقدم الدورة الحالية</span><span>18 / 30 يوم</span></div>
+            <div class="rcp-bar"><div class="rcp-fill" style="width:60%"></div></div>
+          </div>
+          <div class="rc-body">
+            <div class="rc-img">🏢</div>
+            <div class="rc-info">
+              <div class="rc-guest">خالد المطيري</div>
+              <div class="rc-hotel">🏙️ فور سيزونز الرياض - جناح تنفيذي</div>
+              <div class="rc-schedule">
+                <div class="rs-item"><label>بداية:</label><strong>1 يناير 2024</strong></div>
+                <div class="rs-item"><label>ينتهي:</label><strong>31 ديسمبر 2024</strong></div>
+                <div class="rs-item"><label>الدورة:</label><strong>12/1</strong></div>
+                <div class="rs-item"><label>الخصم:</label><strong style="color:var(--green)">-25%</strong></div>
+              </div>
+            </div>
+            <div class="rc-price-col">
+              <div class="rc-price">731 ر.س</div>
+              <div class="rc-price-per">/ ليلة (بدل 975)</div>
+              <div class="rc-total">+22,050 ر.س/سنة</div>
+            </div>
+          </div>
+          <div class="rc-footer">
+            <div class="rc-next">🗓️ التجديد التالي: <strong>1 يوليو 2024</strong></div>
+            <div class="rc-actions">
+              <button class="rc-btn rcb-edit" onclick="alert('تعديل الحجز المتكرر')">✏️ تعديل</button>
+              <button class="rc-btn rcb-pause" onclick="togglePause(this)">⏸️ إيقاف</button>
+              <button class="rc-btn rcb-cancel" onclick="cancelRecurring()">❌ إلغاء</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RECURRING 2 -->
+        <div class="rec-card">
+          <div class="rc-header">
+            <div class="rc-id">رقم الحجز<strong>#REC-1019</strong></div>
+            <div class="rc-badges">
+              <span class="rc-freq rf-weekly">🔄 أسبوعي</span>
+              <span class="rc-status rs-active">✅ نشط</span>
+            </div>
+          </div>
+          <div class="rc-progress">
+            <div class="rcp-label"><span>الأسبوع الحالي</span><span>5 / 7 أيام</span></div>
+            <div class="rcp-bar"><div class="rcp-fill" style="width:71%"></div></div>
+          </div>
+          <div class="rc-body">
+            <div class="rc-img">🏨</div>
+            <div class="rc-info">
+              <div class="rc-guest">شركة أرامكو - الموظفون</div>
+              <div class="rc-hotel">🏨 الريتز كارلتون الرياض - 5 غرف</div>
+              <div class="rc-schedule">
+                <div class="rs-item"><label>التكرار:</label><strong>كل إثنين</strong></div>
+                <div class="rs-item"><label>المدة:</label><strong>أسبوع</strong></div>
+                <div class="rs-item"><label>تجديد:</label><strong>52 مرة</strong></div>
+                <div class="rs-item"><label>الخصم:</label><strong style="color:var(--green)">-20%</strong></div>
+              </div>
+            </div>
+            <div class="rc-price-col">
+              <div class="rc-price">3,400 ر.س</div>
+              <div class="rc-price-per">/ أسبوع (5 غرف)</div>
+              <div class="rc-total">+176,800 ر.س/سنة</div>
+            </div>
+          </div>
+          <div class="rc-footer">
+            <div class="rc-next">🗓️ التجديد التالي: <strong>الإثنين 17 يونيو</strong></div>
+            <div class="rc-actions">
+              <button class="rc-btn rcb-edit" onclick="alert('تعديل الحجز')">✏️ تعديل</button>
+              <button class="rc-btn rcb-pause" onclick="togglePause(this)">⏸️ إيقاف</button>
+              <button class="rc-btn rcb-cancel" onclick="cancelRecurring()">❌ إلغاء</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RECURRING 3 -->
+        <div class="rec-card">
+          <div class="rc-header">
+            <div class="rc-id">رقم الحجز<strong>#REC-1015</strong></div>
+            <div class="rc-badges">
+              <span class="rc-freq rf-yearly">🔄 سنوي</span>
+              <span class="rc-status rs-active">✅ نشط</span>
+            </div>
+          </div>
+          <div class="rc-progress">
+            <div class="rcp-label"><span>تقدم السنة</span><span>167 / 365 يوم</span></div>
+            <div class="rcp-bar"><div class="rcp-fill" style="width:46%"></div></div>
+          </div>
+          <div class="rc-body">
+            <div class="rc-img">🏡</div>
+            <div class="rc-info">
+              <div class="rc-guest">عبدالله الشمري</div>
+              <div class="rc-hotel">🏡 فيلا الملكية - الياسمين</div>
+              <div class="rc-schedule">
+                <div class="rs-item"><label>الفترة:</label><strong>يونيو - أغسطس</strong></div>
+                <div class="rs-item"><label>سنوات:</label><strong>3 سنوات</strong></div>
+                <div class="rs-item"><label>الخصم:</label><strong style="color:var(--green)">-35%</strong></div>
+              </div>
+            </div>
+            <div class="rc-price-col">
+              <div class="rc-price">1,381 ر.س</div>
+              <div class="rc-price-per">/ ليلة (بدل 2,125)</div>
+              <div class="rc-total">+124,290 ر.س/سنة</div>
+            </div>
+          </div>
+          <div class="rc-footer">
+            <div class="rc-next">🗓️ التجديد التالي: <strong>1 يونيو 2025</strong></div>
+            <div class="rc-actions">
+              <button class="rc-btn rcb-edit" onclick="alert('تعديل')">✏️ تعديل</button>
+              <button class="rc-btn rcb-pause" onclick="togglePause(this)">⏸️ إيقاف</button>
+              <button class="rc-btn rcb-cancel" onclick="cancelRecurring()">❌ إلغاء</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- PAUSED -->
+      <div class="tab-content" id="tab-paused">
+        <div class="rec-card">
+          <div class="rc-header">
+            <div class="rc-id">رقم الحجز<strong>#REC-1008</strong></div>
+            <div class="rc-badges">
+              <span class="rc-freq rf-monthly">🔄 شهري</span>
+              <span class="rc-status rs-paused">⏸️ متوقف</span>
+            </div>
+          </div>
+          <div class="rc-body">
+            <div class="rc-img">🏖️</div>
+            <div class="rc-info">
+              <div class="rc-guest">سارة العمري</div>
+              <div class="rc-hotel">🏖️ منتجع شرم البيضاء - تبوك</div>
+              <div class="rc-schedule">
+                <div class="rs-item"><label>سبب الإيقاف:</label><strong style="color:var(--orange)">طلب العميلة</strong></div>
+                <div class="rs-item"><label>تاريخ الإيقاف:</label><strong>1 يونيو 2024</strong></div>
+              </div>
+            </div>
+            <div class="rc-price-col">
+              <div class="rc-price">840 ر.س</div>
+              <div class="rc-price-per">/ ليلة</div>
+            </div>
+          </div>
+          <div class="rc-footer">
+            <div class="rc-next" style="color:var(--orange);">⏸️ موقوف - لن يتجدد حتى الاستئناف</div>
+            <div class="rc-actions">
+              <button class="rc-btn rcb-resume" onclick="alert('✅ تم استئناف الحجز المتكرر!')">▶️ استئناف</button>
+              <button class="rc-btn rcb-cancel" onclick="cancelRecurring()">❌ إلغاء نهائي</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HISTORY -->
+      <div class="tab-content" id="tab-history">
+        <div style="font-size:14px;font-weight:700;margin-bottom:14px;color:var(--gray);">سجل التجديدات التلقائية</div>
+
+        <div class="history-item"><div class="hi-icon hi-green">✅</div><div class="hi-info"><div class="hi-title">تجديد تلقائي - خالد المطيري</div><div class="hi-sub">فور سيزونز الرياض · الدورة 6/12</div></div><div class="hi-right"><div class="hi-amount">22,008 ر.س</div><div class="hi-date">1 يونيو 2024</div></div></div>
+        <div class="history-item"><div class="hi-icon hi-green">✅</div><div class="hi-info"><div class="hi-title">تجديد تلقائي - أرامكو</div><div class="hi-sub">ريتز كارلتون · 5 غرف · أسبوع</div></div><div class="hi-right"><div class="hi-amount">3,400 ر.س</div><div class="hi-date">10 يونيو 2024</div></div></div>
+        <div class="history-item"><div class="hi-icon hi-gold">💳</div><div class="hi-info"><div class="hi-title">خصم إخلاص مطبّق</div><div class="hi-sub">خالد المطيري - خصم إضافي 5% لتجديد السنة الثانية</div></div><div class="hi-right"><div class="hi-amount">-1,100 ر.س</div><div class="hi-date">1 يونيو 2024</div></div></div>
+        <div class="history-item"><div class="hi-icon hi-green">✅</div><div class="hi-info"><div class="hi-title">تجديد تلقائي - عبدالله الشمري</div><div class="hi-sub">فيلا الياسمين · فصل الصيف</div></div><div class="hi-right"><div class="hi-amount">124,290 ر.س</div><div class="hi-date">1 يونيو 2024</div></div></div>
+        <div class="history-item"><div class="hi-icon hi-red">❌</div><div class="hi-info"><div class="hi-title">إلغاء حجز متكرر - نورة الغامدي</div><div class="hi-sub">شقق ماريوت · انتهاء العقد</div></div><div class="hi-right"><div class="hi-amount">0 ر.س</div><div class="hi-date">31 مايو 2024</div></div></div>
+        <div class="history-item"><div class="hi-icon hi-green">✅</div><div class="hi-info"><div class="hi-title">تجديد تلقائي - أرامكو</div><div class="hi-sub">ريتز كارلتون · 5 غرف · أسبوع</div></div><div class="hi-right"><div class="hi-amount">3,400 ر.س</div><div class="hi-date">3 يونيو 2024</div></div></div>
+        <div class="history-item"><div class="hi-icon hi-green">✅</div><div class="hi-info"><div class="hi-title">تجديد تلقائي - أرامكو</div><div class="hi-sub">ريتز كارلتون · 5 غرف · أسبوع</div></div><div class="hi-right"><div class="hi-amount">3,400 ر.س</div><div class="hi-date">27 مايو 2024</div></div></div>
+      </div>
+
+    </div>
+
+    <!-- CREATE FORM -->
+    <div>
+      <div class="create-card">
+        <div class="create-header"><h3>🔄 إنشاء حجز متكرر</h3><p>احجز مرة وتجدد تلقائياً</p></div>
+        <div class="create-body">
+
+          <div class="field"><label>👤 اسم النزيل / الشركة</label><input type="text" placeholder="محمد العتيبي أو شركة أرامكو" id="guestName"></div>
+          <div class="field"><label>🏨 العقار والغرفة</label>
+            <select id="propSelect">
+              <option>الريتز كارلتون - غرفة ديلوكس (850 ر.س)</option>
+              <option>فور سيزونز - جناح تنفيذي (975 ر.س)</option>
+              <option>شقق ماريوت - شقة (480 ر.س)</option>
+              <option>فيلا الياسمين - كاملة (2,125 ر.س)</option>
+              <option>منتجع درة العروس (1,100 ر.س)</option>
+            </select>
+          </div>
+
+          <div style="font-size:12px;color:var(--gold);font-weight:700;margin-bottom:8px;">🔄 تكرار الحجز</div>
+          <div class="freq-grid">
+            <div class="freq-btn" onclick="selectFreq(this,'weekly')"><div class="fb-icon">📅</div><div class="fb-name">أسبوعي</div><div class="fb-disc">خصم 15%</div></div>
+            <div class="freq-btn selected" onclick="selectFreq(this,'monthly')"><div class="fb-icon">🗓️</div><div class="fb-name">شهري</div><div class="fb-disc">خصم 25%</div></div>
+            <div class="freq-btn" onclick="selectFreq(this,'yearly')"><div class="fb-icon">📆</div><div class="fb-name">سنوي</div><div class="fb-disc">خصم 35%</div></div>
+          </div>
+
+          <div class="field-row" style="margin-bottom:14px;">
+            <div class="field"><label>📅 تاريخ البداية</label><input type="date" value="2024-07-01" id="startDate" oninput="calcDiscount()"></div>
+            <div class="field"><label>📅 تاريخ الانتهاء</label><input type="date" value="2024-12-31" id="endDate" oninput="calcDiscount()"></div>
+          </div>
+
+          <div class="field"><label>👥 عدد الغرف</label>
+            <select id="roomCount" oninput="calcDiscount()">
+              <option value="1">غرفة واحدة</option>
+              <option value="2">غرفتان</option>
+              <option value="3">3 غرف</option>
+              <option value="5">5 غرف</option>
+              <option value="10">10 غرف</option>
+            </select>
+          </div>
+
+          <!-- DISCOUNT PREVIEW -->
+          <div class="disc-preview" id="discPreview">
+            <div class="dp-title">💰 تفاصيل التسعير</div>
+            <div class="dp-row"><label>السعر الأصلي</label><span class="dp-val" id="origPrice">850 ر.س/ليلة</span></div>
+            <div class="dp-row"><label>خصم التكرار (25%)</label><span class="dp-val" style="color:var(--green)" id="discPct">-212 ر.س</span></div>
+            <div class="dp-row"><label>السعر بعد الخصم</label><span class="dp-val" id="discPrice">638 ر.س/ليلة</span></div>
+            <div class="dp-row"><label>عدد الدورات</label><span class="dp-val" id="cyclesCount">6 دورات</span></div>
+            <div class="dp-total"><span>الإجمالي المتوقع</span><span style="color:var(--gold)" id="totalEstimate">115,080 ر.س</span></div>
+            <div class="dp-savings" id="savingsText">🎉 توفيرك: 38,360 ر.س مقارنة بالحجز العادي!</div>
+          </div>
+
+          <div class="field"><label>📝 ملاحظات خاصة</label><input type="text" placeholder="شروط إضافية أو طلبات..."></div>
+
+          <button class="btn-create" onclick="createRecurring()">🔄 إنشاء الحجز المتكرر</button>
+
+          <div class="benefits-card">
+            <div class="bc-title">✨ مميزات الحجز المتكرر</div>
+            <div class="benefit-item">💰 خصم تلقائي حتى 35%</div>
+            <div class="benefit-item">🔄 تجديد تلقائي بدون تدخل</div>
+            <div class="benefit-item">🔔 إشعار قبل كل تجديد بـ 7 أيام</div>
+            <div class="benefit-item">❌ إلغاء مجاني قبل 30 يوم</div>
+            <div class="benefit-item">🎯 أولوية في الغرف المفضلة</div>
+            <div class="benefit-item">📊 تقارير إنفاق شهرية للشركات</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let selectedFreq = 'monthly';
+const discounts = { weekly:0.15, monthly:0.25, yearly:0.35 };
+const prices = { 0:850, 1:975, 2:480, 3:2125, 4:1100 };
+
+function selectFreq(el, freq) {
+  document.querySelectorAll('.freq-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedFreq = freq;
+  calcDiscount();
+}
+
+function calcDiscount() {
+  const propIdx = document.getElementById('propSelect').selectedIndex;
+  const basePrice = prices[propIdx] || 850;
+  const rooms = parseInt(document.getElementById('roomCount').value) || 1;
+  const disc = discounts[selectedFreq] || 0.25;
+  const discPrice = Math.round(basePrice * (1 - disc));
+  const start = new Date(document.getElementById('startDate').value);
+  const end = new Date(document.getElementById('endDate').value);
+  const daysPerCycle = selectedFreq==='weekly'?7:selectedFreq==='monthly'?30:365;
+  const totalDays = Math.max(0, Math.round((end-start)/(1000*60*60*24)));
+  const cycles = Math.max(1, Math.round(totalDays/daysPerCycle));
+  const totalDisc = discPrice * daysPerCycle * cycles * rooms;
+  const totalOrig = basePrice * daysPerCycle * cycles * rooms;
+  const savings = totalOrig - totalDisc;
+
+  document.getElementById('origPrice').textContent = basePrice.toLocaleString('ar') + ' ر.س/ليلة';
+  document.getElementById('discPct').textContent = '-' + Math.round(basePrice*disc).toLocaleString('ar') + ' ر.س';
+  document.getElementById('discPrice').textContent = discPrice.toLocaleString('ar') + ' ر.س/ليلة';
+  document.getElementById('cyclesCount').textContent = cycles + ' دورة';
+  document.getElementById('totalEstimate').textContent = totalDisc.toLocaleString('ar') + ' ر.س';
+  document.getElementById('savingsText').textContent = `🎉 توفيرك: ${savings.toLocaleString('ar')} ر.س مقارنة بالحجز العادي!`;
+}
+
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+}
+
+function togglePause(btn) {
+  const card = btn.closest('.rec-card');
+  const statusEl = card.querySelector('.rc-status');
+  if(btn.textContent.includes('إيقاف')) {
+    btn.textContent = '▶️ استئناف';
+    btn.className = 'rc-btn rcb-resume';
+    statusEl.textContent = '⏸️ متوقف';
+    statusEl.className = 'rc-status rs-paused';
+    alert('⏸️ تم إيقاف الحجز المتكرر مؤقتاً');
+  } else {
+    btn.textContent = '⏸️ إيقاف';
+    btn.className = 'rc-btn rcb-pause';
+    statusEl.textContent = '✅ نشط';
+    statusEl.className = 'rc-status rs-active';
+    alert('▶️ تم استئناف الحجز المتكرر');
+  }
+}
+
+function cancelRecurring() {
+  if(confirm('هل أنت متأكد من إلغاء الحجز المتكرر نهائياً؟\nسيتوقف التجديد فوراً.')) {
+    alert('✅ تم إلغاء الحجز المتكرر. لن يتجدد مرة أخرى.');
+  }
+}
+
+function createRecurring() {
+  const name = document.getElementById('guestName').value.trim();
+  if(!name) { alert('يرجى إدخال اسم النزيل أو الشركة'); return; }
+  document.getElementById('successModal').classList.add('show');
+}
+
+// Init
+calcDiscount();
+document.getElementById('propSelect').addEventListener('change', calcDiscount);
+</script>
+</body>
+</html>

@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الرسائل | بوكنق السعودية</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C; --gold-light: #E8C97A;
+    --dark: #0A0A0F; --dark2: #13131A; --dark3: #1C1C26; --dark4: #22222E;
+    --white: #F8F4EE; --gray: #8A8A9A;
+    --green: #2ECC71; --red: #E74C3C; --blue: #3498DB; --purple: #9B59B6;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Tajawal',sans-serif; background:var(--dark); color:var(--white); height:100vh; display:flex; flex-direction:column; overflow:hidden; }
+
+  /* NAV */
+  nav {
+    background:rgba(10,10,15,0.98); border-bottom:1px solid rgba(201,168,76,0.2);
+    padding:0 4%; height:60px; display:flex; align-items:center;
+    justify-content:space-between; flex-shrink:0; z-index:100;
+  }
+  .logo { display:flex; align-items:center; gap:9px; text-decoration:none; }
+  .logo-icon { width:34px; height:34px; background:linear-gradient(135deg,var(--gold),var(--gold-light)); border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:16px; }
+  .logo-text { font-size:16px; font-weight:800; background:linear-gradient(135deg,var(--gold),var(--gold-light)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .nav-title { font-size:16px; font-weight:800; display:flex; align-items:center; gap:8px; }
+  .nav-badge { background:var(--red); color:white; font-size:10px; font-weight:800; padding:2px 7px; border-radius:8px; }
+  .nav-back { color:var(--gold); text-decoration:none; font-size:13px; }
+
+  /* LAYOUT */
+  .chat-layout { flex:1; display:flex; overflow:hidden; }
+
+  /* CONVERSATIONS LIST */
+  .conv-list {
+    width:320px; flex-shrink:0; background:var(--dark2);
+    border-left:1px solid rgba(255,255,255,0.06);
+    display:flex; flex-direction:column; overflow:hidden;
+  }
+
+  .conv-header { padding:16px; border-bottom:1px solid rgba(255,255,255,0.06); }
+  .conv-search {
+    background:var(--dark3); border:1px solid rgba(255,255,255,0.08);
+    border-radius:10px; padding:10px 14px; display:flex; align-items:center; gap:8px;
+  }
+  .conv-search input { background:none; border:none; outline:none; color:var(--white); font-family:'Tajawal',sans-serif; font-size:13px; flex:1; }
+  .conv-search input::placeholder { color:var(--gray); }
+
+  .conv-tabs { display:flex; gap:4px; padding:12px 16px 0; }
+  .ctab { flex:1; padding:7px; text-align:center; border-radius:8px; cursor:pointer; font-size:12px; font-weight:700; transition:0.2s; color:var(--gray); border:none; font-family:'Tajawal',sans-serif; background:transparent; }
+  .ctab.active { background:var(--gold); color:var(--dark); }
+
+  .conv-items { flex:1; overflow-y:auto; padding:8px; }
+  .conv-items::-webkit-scrollbar { width:4px; }
+  .conv-items::-webkit-scrollbar-track { background:transparent; }
+  .conv-items::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.1); border-radius:2px; }
+
+  .conv-item {
+    display:flex; gap:12px; padding:12px; border-radius:12px;
+    cursor:pointer; transition:0.2s; margin-bottom:4px; position:relative;
+  }
+  .conv-item:hover { background:rgba(255,255,255,0.04); }
+  .conv-item.active { background:rgba(201,168,76,0.1); border:1px solid rgba(201,168,76,0.2); }
+  .conv-avatar { width:48px; height:48px; border-radius:50%; background:var(--dark3); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; position:relative; }
+  .online-dot { position:absolute; bottom:2px; left:2px; width:12px; height:12px; border-radius:50%; background:var(--green); border:2px solid var(--dark2); }
+  .conv-info { flex:1; min-width:0; }
+  .conv-name { font-size:14px; font-weight:800; margin-bottom:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .conv-preview { font-size:12px; color:var(--gray); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .conv-preview.unread { color:var(--white); font-weight:600; }
+  .conv-meta { display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex-shrink:0; }
+  .conv-time { font-size:11px; color:var(--gray); }
+  .unread-badge { background:var(--gold); color:var(--dark); font-size:10px; font-weight:900; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+
+  /* CHAT AREA */
+  .chat-area { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+
+  /* CHAT HEADER */
+  .chat-header {
+    padding:14px 20px; border-bottom:1px solid rgba(255,255,255,0.06);
+    display:flex; align-items:center; gap:14px; background:var(--dark2); flex-shrink:0;
+  }
+  .chat-avatar { width:44px; height:44px; border-radius:50%; background:var(--dark3); display:flex; align-items:center; justify-content:center; font-size:20px; position:relative; }
+  .chat-hotel-info { flex:1; }
+  .chat-hotel-name { font-size:16px; font-weight:800; }
+  .chat-status { font-size:12px; color:var(--green); display:flex; align-items:center; gap:5px; }
+  .chat-status::before { content:''; width:7px; height:7px; border-radius:50%; background:var(--green); display:inline-block; }
+  .chat-actions { display:flex; gap:8px; }
+  .chat-action-btn { width:36px; height:36px; border-radius:9px; background:var(--dark3); border:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:16px; transition:0.2s; }
+  .chat-action-btn:hover { border-color:rgba(201,168,76,0.3); background:rgba(201,168,76,0.08); }
+
+  /* BOOKING INFO BAR */
+  .booking-bar {
+    padding:10px 20px; background:rgba(201,168,76,0.06);
+    border-bottom:1px solid rgba(201,168,76,0.12);
+    display:flex; align-items:center; gap:16px; flex-wrap:wrap; flex-shrink:0;
+  }
+  .booking-bar-item { font-size:12px; display:flex; align-items:center; gap:5px; }
+  .booking-bar-item label { color:var(--gray); }
+  .booking-bar-item strong { color:var(--white); }
+  .booking-bar-item .ref { color:var(--gold); font-weight:800; }
+
+  /* MESSAGES */
+  .messages-area { flex:1; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:12px; }
+  .messages-area::-webkit-scrollbar { width:4px; }
+  .messages-area::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.1); border-radius:2px; }
+
+  /* DATE DIVIDER */
+  .date-divider { text-align:center; font-size:12px; color:var(--gray); margin:8px 0; display:flex; align-items:center; gap:10px; }
+  .date-divider::before, .date-divider::after { content:''; flex:1; height:1px; background:rgba(255,255,255,0.06); }
+
+  /* MESSAGE BUBBLE */
+  .msg-wrap { display:flex; gap:10px; max-width:75%; animation:msgIn 0.2s ease; }
+  @keyframes msgIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  .msg-wrap.sent { flex-direction:row-reverse; margin-right:auto; margin-left:0; }
+  .msg-wrap.received { margin-left:auto; margin-right:0; }
+  .msg-avatar-sm { width:32px; height:32px; border-radius:50%; background:var(--dark3); display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; align-self:flex-end; }
+  .msg-content { display:flex; flex-direction:column; gap:4px; }
+  .msg-wrap.sent .msg-content { align-items:flex-start; }
+  .msg-wrap.received .msg-content { align-items:flex-end; }
+
+  .bubble {
+    padding:12px 16px; border-radius:18px; font-size:14px; line-height:1.6;
+    max-width:100%; word-wrap:break-word;
+  }
+  .bubble.sent {
+    background:linear-gradient(135deg,var(--gold),var(--gold-light));
+    color:var(--dark); border-bottom-right-radius:4px;
+  }
+  .bubble.received {
+    background:var(--dark3); color:var(--white);
+    border:1px solid rgba(255,255,255,0.06); border-bottom-left-radius:4px;
+  }
+  .msg-time { font-size:10px; color:var(--gray); padding:0 4px; display:flex; align-items:center; gap:4px; }
+  .msg-status { font-size:12px; }
+  .msg-status.read { color:var(--blue); }
+
+  /* SPECIAL MESSAGES */
+  .bubble.system {
+    background:rgba(201,168,76,0.08); border:1px solid rgba(201,168,76,0.2);
+    color:var(--gold); text-align:center; font-size:13px;
+    border-radius:12px; padding:10px 16px;
+  }
+  .msg-wrap.system { max-width:80%; margin:0 auto; }
+
+  /* IMAGE MESSAGE */
+  .bubble.image { padding:4px; background:var(--dark3); border:1px solid rgba(255,255,255,0.08); }
+  .bubble.image .img-preview { width:200px; height:150px; background:var(--dark4); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:48px; cursor:pointer; }
+
+  /* QUICK REPLIES */
+  .quick-replies { display:flex; gap:8px; flex-wrap:wrap; padding:0 20px 12px; }
+  .quick-reply { background:var(--dark3); border:1px solid rgba(201,168,76,0.25); color:var(--gold); padding:7px 14px; border-radius:20px; font-size:12px; font-weight:700; cursor:pointer; transition:0.2s; font-family:'Tajawal',sans-serif; white-space:nowrap; }
+  .quick-reply:hover { background:rgba(201,168,76,0.1); }
+
+  /* INPUT AREA */
+  .input-area {
+    padding:12px 16px; border-top:1px solid rgba(255,255,255,0.06);
+    background:var(--dark2); flex-shrink:0;
+  }
+  .input-wrap { display:flex; align-items:flex-end; gap:10px; background:var(--dark3); border:1.5px solid rgba(255,255,255,0.08); border-radius:16px; padding:10px 14px; transition:0.2s; }
+  .input-wrap:focus-within { border-color:rgba(201,168,76,0.4); }
+  .input-actions { display:flex; gap:6px; }
+  .input-action { width:32px; height:32px; border-radius:8px; background:transparent; border:none; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center; transition:0.2s; color:var(--gray); }
+  .input-action:hover { background:rgba(255,255,255,0.06); color:var(--white); }
+  .msg-input { flex:1; background:none; border:none; outline:none; color:var(--white); font-family:'Tajawal',sans-serif; font-size:14px; resize:none; max-height:120px; min-height:24px; line-height:1.5; }
+  .msg-input::placeholder { color:var(--gray); }
+  .send-btn { width:38px; height:38px; border-radius:10px; background:linear-gradient(135deg,var(--gold),var(--gold-light)); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:18px; transition:0.3s; flex-shrink:0; }
+  .send-btn:hover { transform:scale(1.1); box-shadow:0 4px 14px rgba(201,168,76,0.4); }
+  .send-btn:disabled { opacity:0.4; transform:none; }
+
+  /* TYPING INDICATOR */
+  .typing-indicator { display:none; padding:0 20px 8px; }
+  .typing-indicator.show { display:flex; align-items:center; gap:8px; }
+  .typing-dots { display:flex; gap:4px; }
+  .typing-dot { width:7px; height:7px; border-radius:50%; background:var(--gray); animation:typingBounce 1.2s infinite; }
+  .typing-dot:nth-child(2) { animation-delay:0.2s; }
+  .typing-dot:nth-child(3) { animation-delay:0.4s; }
+  @keyframes typingBounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+  .typing-text { font-size:12px; color:var(--gray); }
+
+  /* EMPTY STATE */
+  .empty-chat { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--gray); text-align:center; padding:40px; }
+  .empty-chat .icon { font-size:64px; margin-bottom:16px; }
+  .empty-chat h3 { font-size:18px; font-weight:800; color:var(--white); margin-bottom:8px; }
+  .empty-chat p { font-size:14px; line-height:1.7; }
+
+  /* RATING REQUEST */
+  .rating-card { background:var(--dark3); border:1px solid rgba(201,168,76,0.2); border-radius:14px; padding:16px; margin:4px 0; }
+  .rating-title { font-size:13px; font-weight:800; margin-bottom:10px; }
+  .rating-stars { display:flex; gap:6px; font-size:24px; cursor:pointer; margin-bottom:10px; }
+  .rating-btn { background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--dark); border:none; padding:8px 20px; border-radius:8px; font-family:'Tajawal',sans-serif; font-size:13px; font-weight:800; cursor:pointer; }
+
+  @media(max-width:768px) {
+    .conv-list { width:100%; position:absolute; z-index:10; height:100%; transition:0.3s; }
+    .conv-list.hidden { transform:translateX(100%); }
+    .chat-area { width:100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-icon">🏨</div>
+    <div class="logo-text">بوكنق السعودية</div>
+  </a>
+  <div class="nav-title">💬 الرسائل <span class="nav-badge">3</span></div>
+  <a href="my-account.html" class="nav-back">← حسابي</a>
+</nav>
+
+<div class="chat-layout">
+
+  <!-- CONVERSATIONS LIST -->
+  <div class="conv-list" id="convList">
+    <div class="conv-header">
+      <div class="conv-search">
+        <span>🔍</span>
+        <input type="text" placeholder="بحث في الرسائل..." oninput="searchChats(this.value)">
+      </div>
+    </div>
+    <div class="conv-tabs">
+      <button class="ctab active" onclick="filterChats('all',this)">الكل</button>
+      <button class="ctab" onclick="filterChats('unread',this)">غير مقروء</button>
+      <button class="ctab" onclick="filterChats('active',this)">نشط</button>
+    </div>
+    <div class="conv-items" id="convItems">
+
+      <div class="conv-item active" onclick="openChat(this,'ritz')">
+        <div class="conv-avatar">🏨<div class="online-dot"></div></div>
+        <div class="conv-info">
+          <div class="conv-name">الريتز كارلتون الرياض</div>
+          <div class="conv-preview unread">تفضل! سنجهز غرفتك مبكراً 😊</div>
+        </div>
+        <div class="conv-meta">
+          <div class="conv-time">الآن</div>
+          <div class="unread-badge">2</div>
+        </div>
+      </div>
+
+      <div class="conv-item" onclick="openChat(this,'villa')">
+        <div class="conv-avatar">🏡</div>
+        <div class="conv-info">
+          <div class="conv-name">فيلا الملكية - الياسمين</div>
+          <div class="conv-preview">شكراً لحجزك، نراك غداً!</div>
+        </div>
+        <div class="conv-meta">
+          <div class="conv-time">أمس</div>
+        </div>
+      </div>
+
+      <div class="conv-item" onclick="openChat(this,'resort')">
+        <div class="conv-avatar">🏖️<div class="online-dot"></div></div>
+        <div class="conv-info">
+          <div class="conv-name">منتجع شرم البيضاء</div>
+          <div class="conv-preview unread">هل تحتاج خدمة نقل من المطار؟</div>
+        </div>
+        <div class="conv-meta">
+          <div class="conv-time">منذ 2س</div>
+          <div class="unread-badge">1</div>
+        </div>
+      </div>
+
+      <div class="conv-item" onclick="openChat(this,'marriott')">
+        <div class="conv-avatar">🏠</div>
+        <div class="conv-info">
+          <div class="conv-name">شقق ماريوت التنفيذية</div>
+          <div class="conv-preview">أنت: هل الواي فاي يعمل؟</div>
+        </div>
+        <div class="conv-meta">
+          <div class="conv-time">3 يونيو</div>
+        </div>
+      </div>
+
+      <div class="conv-item" onclick="openChat(this,'support')">
+        <div class="conv-avatar">🎧<div class="online-dot"></div></div>
+        <div class="conv-info">
+          <div class="conv-name">دعم بوكنق السعودية</div>
+          <div class="conv-preview">كيف يمكنني مساعدتك؟</div>
+        </div>
+        <div class="conv-meta">
+          <div class="conv-time">1 يونيو</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CHAT AREA -->
+  <div class="chat-area">
+
+    <!-- CHAT HEADER -->
+    <div class="chat-header">
+      <div class="chat-avatar">🏨</div>
+      <div class="chat-hotel-info">
+        <div class="chat-hotel-name">الريتز كارلتون الرياض</div>
+        <div class="chat-status">متصل الآن · يرد عادةً خلال دقائق</div>
+      </div>
+      <div class="chat-actions">
+        <div class="chat-action-btn" title="مكالمة" onclick="alert('📞 جاري الاتصال...')">📞</div>
+        <div class="chat-action-btn" title="تفاصيل الحجز" onclick="location.href='hotel-page.html'">📄</div>
+        <div class="chat-action-btn" title="خيارات" onclick="showOptions()">⋮</div>
+      </div>
+    </div>
+
+    <!-- BOOKING BAR -->
+    <div class="booking-bar">
+      <div class="booking-bar-item">🔖 <label>رقم الحجز:</label> <span class="ref">#BSA-7831</span></div>
+      <div class="booking-bar-item">📅 <label>الوصول:</label> <strong>15 يونيو</strong></div>
+      <div class="booking-bar-item">🚪 <label>المغادرة:</label> <strong>18 يونيو</strong></div>
+      <div class="booking-bar-item">🛏️ <label>الغرفة:</label> <strong>ديلوكس 302</strong></div>
+    </div>
+
+    <!-- MESSAGES -->
+    <div class="messages-area" id="messagesArea">
+
+      <div class="date-divider">اليوم</div>
+
+      <!-- SYSTEM MESSAGE -->
+      <div class="msg-wrap system">
+        <div class="bubble system">🎉 تم تأكيد حجزك في الريتز كارلتون الرياض - غرفة ديلوكس · 15-18 يونيو</div>
+      </div>
+
+      <!-- HOTEL MESSAGE -->
+      <div class="msg-wrap received">
+        <div class="msg-avatar-sm">🏨</div>
+        <div class="msg-content">
+          <div class="bubble received">مرحباً بك محمد! نحن سعداء جداً بحجزك لدينا 🌟<br>هل لديك أي طلبات خاصة قبل وصولك؟</div>
+          <div class="msg-time">10:15 ص</div>
+        </div>
+      </div>
+
+      <!-- USER MESSAGE -->
+      <div class="msg-wrap sent">
+        <div class="msg-avatar-sm">م</div>
+        <div class="msg-content">
+          <div class="bubble sent">مرحباً! هل يمكن تجهيز الغرفة مبكراً؟ سأصل الساعة 11 صباحاً</div>
+          <div class="msg-time">10:18 ص <span class="msg-status read">✓✓</span></div>
+        </div>
+      </div>
+
+      <!-- HOTEL REPLY -->
+      <div class="msg-wrap received">
+        <div class="msg-avatar-sm">🏨</div>
+        <div class="msg-content">
+          <div class="bubble received">بالتأكيد! سنبذل قصارى جهدنا لتجهيز غرفتك مبكراً ✅<br><br>وقت تسجيل الدخول الرسمي 3 مساءً، لكن سنحاول تجهيزها قبل ذلك.</div>
+          <div class="msg-time">10:20 ص</div>
+        </div>
+      </div>
+
+      <!-- USER MESSAGE -->
+      <div class="msg-wrap sent">
+        <div class="msg-avatar-sm">م</div>
+        <div class="msg-content">
+          <div class="bubble sent">شكراً جزيلاً! هل يوجد موقف للسيارات؟</div>
+          <div class="msg-time">10:22 ص <span class="msg-status read">✓✓</span></div>
+        </div>
+      </div>
+
+      <!-- IMAGE MESSAGE -->
+      <div class="msg-wrap received">
+        <div class="msg-avatar-sm">🏨</div>
+        <div class="msg-content">
+          <div class="bubble received">نعم! الموقف مجاني ومغطى 🚗<br>إليك خريطة الوصول:</div>
+          <div class="bubble image" onclick="alert('🗺️ عرض الخريطة الكاملة')">
+            <div class="img-preview">🗺️</div>
+          </div>
+          <div class="msg-time">10:25 ص</div>
+        </div>
+      </div>
+
+      <div class="date-divider">قبل قليل</div>
+
+      <!-- HOTEL NEW MESSAGE -->
+      <div class="msg-wrap received">
+        <div class="msg-avatar-sm">🏨</div>
+        <div class="msg-content">
+          <div class="bubble received">تفضل! سنجهز غرفتك مبكراً 😊<br>كما نريد تهنئتك بمناسبة قدومك، هل هناك مناسبة خاصة؟ 🎊</div>
+          <div class="msg-time">منذ 5 دقائق</div>
+        </div>
+      </div>
+
+      <!-- RATING REQUEST -->
+      <div class="msg-wrap received">
+        <div class="msg-avatar-sm">🏨</div>
+        <div class="msg-content">
+          <div class="rating-card">
+            <div class="rating-title">⭐ كيف تقيّم تجربة التواصل معنا؟</div>
+            <div class="rating-stars" id="ratingStars" onclick="rateChat(event)">⭐⭐⭐⭐⭐</div>
+            <button class="rating-btn" onclick="submitChatRating()">إرسال التقييم</button>
+          </div>
+          <div class="msg-time">منذ دقيقة</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TYPING INDICATOR -->
+    <div class="typing-indicator" id="typingIndicator">
+      <div class="msg-avatar-sm">🏨</div>
+      <div class="typing-dots">
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      </div>
+      <div class="typing-text">الريتز كارلتون يكتب...</div>
+    </div>
+
+    <!-- QUICK REPLIES -->
+    <div class="quick-replies" id="quickReplies">
+      <button class="quick-reply" onclick="sendQuick(this)">🕐 وقت تسجيل الدخول؟</button>
+      <button class="quick-reply" onclick="sendQuick(this)">🍳 هل الإفطار مشمول؟</button>
+      <button class="quick-reply" onclick="sendQuick(this)">🚗 خدمة التوصيل من المطار؟</button>
+      <button class="quick-reply" onclick="sendQuick(this)">♿ احتياجات خاصة</button>
+      <button class="quick-reply" onclick="sendQuick(this)">📶 رمز الواي فاي؟</button>
+    </div>
+
+    <!-- INPUT AREA -->
+    <div class="input-area">
+      <div class="input-wrap">
+        <div class="input-actions">
+          <button class="input-action" onclick="attachFile()" title="مرفق">📎</button>
+          <button class="input-action" onclick="sendLocation()" title="موقع">📍</button>
+          <button class="input-action" onclick="openEmoji()" title="إيموجي">😊</button>
+        </div>
+        <textarea class="msg-input" id="msgInput" placeholder="اكتب رسالتك..." rows="1"
+          oninput="autoResize(this);toggleSend(this)"
+          onkeydown="handleKey(event)"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()" disabled>➤</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const hotelReplies = {
+  ritz: [
+    "بالتأكيد! سيسعدنا مساعدتك في ذلك 😊",
+    "شكراً على تواصلك! سنتابع طلبك فوراً ✅",
+    "تم استلام طلبك، سيتم تنفيذه قبل وصولك",
+    "رائع! نتطلع لاستقبالك في الريتز كارلتون 🌟",
+    "بالتأكيد، رمز الواي فاي: RitzRiyadh2024 📶",
+    "الإفطار يقدم من 6:30 إلى 10:30 صباحاً في المطعم الرئيسي 🍳",
+  ],
+  villa: [
+    "أهلاً! كيف يمكنني مساعدتك؟ 🏡",
+    "تم الاستلام! سنجهز الفيلا لاستقبالك",
+    "المفاتيح ستكون جاهزة عند وصولك ✅",
+  ],
+  resort: [
+    "مرحباً بك في منتجع شرم البيضاء! 🏖️",
+    "هل تحتاج خدمة نقل من مطار تبوك؟",
+    "الغوص متاح يومياً من 8 صباحاً حتى 6 مساءً 🤿",
+  ],
+  marriott: [
+    "أهلاً! الواي فاي يعمل بشكل ممتاز 📶",
+    "رمز الواي فاي: Marriott_SA_2024",
+    "سنرسل لك تأكيد الحجز على بريدك ✅",
+  ],
+  support: [
+    "مرحباً! أنا هنا لمساعدتك 🎧",
+    "سأتحقق من طلبك وأعود إليك فوراً",
+    "تم إرسال الطلب لفريق الدعم المختص ✅",
+  ]
+};
+
+let currentHotel = 'ritz';
+let messageCount = 0;
+
+function openChat(el, hotel) {
+  document.querySelectorAll('.conv-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+  el.querySelector('.unread-badge')?.remove();
+  el.querySelector('.conv-preview')?.classList.remove('unread');
+  currentHotel = hotel;
+  // Update header
+  const names = { ritz:'الريتز كارلتون الرياض', villa:'فيلا الملكية - الياسمين', resort:'منتجع شرم البيضاء', marriott:'شقق ماريوت التنفيذية', support:'دعم بوكنق السعودية' };
+  const avatars = { ritz:'🏨', villa:'🏡', resort:'🏖️', marriott:'🏠', support:'🎧' };
+  document.querySelector('.chat-hotel-name').textContent = names[hotel];
+  document.querySelector('.chat-avatar').textContent = avatars[hotel];
+}
+
+function sendMessage() {
+  const input = document.getElementById('msgInput');
+  const text = input.value.trim();
+  if(!text) return;
+  addMessage(text, 'sent');
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('sendBtn').disabled = true;
+  document.getElementById('quickReplies').style.display = 'none';
+  // Show typing
+  setTimeout(() => showTyping(), 800);
+  setTimeout(() => { hideTyping(); addHotelReply(); }, 2500);
+}
+
+function addMessage(text, type) {
+  const area = document.getElementById('messagesArea');
+  const wrap = document.createElement('div');
+  wrap.className = `msg-wrap ${type}`;
+  const avatar = type==='sent' ? 'م' : (currentHotel==='ritz'?'🏨':currentHotel==='villa'?'🏡':currentHotel==='resort'?'🏖️':currentHotel==='marriott'?'🏠':'🎧');
+  const time = new Date().toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'});
+  wrap.innerHTML = `
+    <div class="msg-avatar-sm">${avatar}</div>
+    <div class="msg-content">
+      <div class="bubble ${type}">${text}</div>
+      <div class="msg-time">${time} ${type==='sent'?'<span class="msg-status">✓</span>':''}</div>
+    </div>`;
+  area.appendChild(wrap);
+  area.scrollTop = area.scrollHeight;
+  messageCount++;
+}
+
+function addHotelReply() {
+  const replies = hotelReplies[currentHotel] || hotelReplies.ritz;
+  const reply = replies[Math.floor(Math.random()*replies.length)];
+  addMessage(reply, 'received');
+  document.getElementById('quickReplies').style.display = 'flex';
+  // Mark sent as read
+  document.querySelectorAll('.msg-status').forEach(s => { s.textContent='✓✓'; s.classList.add('read'); });
+}
+
+function showTyping() {
+  document.getElementById('typingIndicator').classList.add('show');
+  document.getElementById('messagesArea').scrollTop = document.getElementById('messagesArea').scrollHeight;
+}
+function hideTyping() { document.getElementById('typingIndicator').classList.remove('show'); }
+
+function sendQuick(btn) {
+  const text = btn.textContent.replace(/^[^\s]+\s/,'');
+  document.getElementById('msgInput').value = text;
+  sendMessage();
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function toggleSend(el) {
+  document.getElementById('sendBtn').disabled = !el.value.trim();
+}
+
+function handleKey(e) {
+  if(e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function filterChats(type, btn) {
+  document.querySelectorAll('.ctab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function searchChats(q) {
+  document.querySelectorAll('.conv-item').forEach(item => {
+    const name = item.querySelector('.conv-name').textContent.toLowerCase();
+    item.style.display = name.includes(q) ? 'flex' : 'none';
+  });
+}
+
+function attachFile() { alert('📎 اختر ملفاً أو صورة لإرسالها'); }
+function sendLocation() { alert('📍 سيتم مشاركة موقعك الحالي مع الفندق'); }
+function openEmoji() { alert('😊 لوحة الإيموجي ستظهر هنا'); }
+function showOptions() { alert('خيارات المحادثة:\n• حذف المحادثة\n• كتم الإشعارات\n• الإبلاغ عن مشكلة'); }
+function submitChatRating() { alert('✅ شكراً على تقييمك! تم الإرسال بنجاح'); }
+function rateChat(e) { }
+
+// Auto scroll to bottom on load
+window.onload = () => {
+  const area = document.getElementById('messagesArea');
+  area.scrollTop = area.scrollHeight;
+};
+</script>
+</body>
+</html>

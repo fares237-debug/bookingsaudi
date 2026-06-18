@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الخدمات الإضافية | بوكنق السعودية</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold:#C9A84C; --gold-light:#E8C97A;
+    --dark:#0A0A0F; --dark2:#13131A; --dark3:#1C1C26; --dark4:#22222E;
+    --white:#F8F4EE; --gray:#8A8A9A;
+    --green:#2ECC71; --red:#E74C3C; --blue:#3498DB; --purple:#9B59B6; --orange:#E67E22;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Tajawal',sans-serif;background:var(--dark);color:var(--white);}
+
+  nav{background:rgba(10,10,15,0.98);border-bottom:1px solid rgba(201,168,76,0.2);padding:0 5%;height:65px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+  .logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+  .logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--gold),var(--gold-light));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+  .logo-text{font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .nav-back{color:var(--gold);font-size:13px;text-decoration:none;}
+
+  /* HERO */
+  .hero{background:linear-gradient(135deg,rgba(52,152,219,0.08),rgba(201,168,76,0.06),rgba(46,204,113,0.04)),var(--dark2);padding:56px 5% 44px;border-bottom:1px solid rgba(255,255,255,0.05);text-align:center;}
+  .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(52,152,219,0.12);border:1px solid rgba(52,152,219,0.25);color:var(--blue);padding:6px 16px;border-radius:50px;font-size:13px;font-weight:700;margin-bottom:16px;}
+  .hero h1{font-size:clamp(26px,4vw,46px);font-weight:900;margin-bottom:10px;}
+  .hero h1 span{background:linear-gradient(135deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .hero p{font-size:15px;color:var(--gray);max-width:560px;margin:0 auto;line-height:1.8;}
+
+  /* SERVICE TABS */
+  .service-tabs{background:var(--dark2);border-bottom:1px solid rgba(255,255,255,0.05);padding:0 5%;display:flex;gap:0;overflow-x:auto;}
+  .service-tabs::-webkit-scrollbar{display:none;}
+  .stab{display:flex;align-items:center;gap:8px;padding:16px 22px;font-size:14px;font-weight:700;cursor:pointer;color:var(--gray);border-bottom:3px solid transparent;white-space:nowrap;transition:0.2s;font-family:'Tajawal',sans-serif;background:transparent;border-top:none;border-left:none;border-right:none;}
+  .stab.active{color:var(--gold);border-bottom-color:var(--gold);}
+  .stab:hover:not(.active){color:var(--white);}
+  .stab-icon{font-size:20px;}
+
+  .tab-content{display:none;animation:fadeIn 0.3s ease;}
+  .tab-content.active{display:block;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+  .container{max-width:1100px;margin:0 auto;padding:32px 5% 80px;}
+
+  /* BOOKING FORM */
+  .booking-form{background:var(--dark3);border:1px solid rgba(201,168,76,0.15);border-radius:20px;overflow:hidden;margin-bottom:28px;}
+  .bf-header{background:linear-gradient(135deg,var(--gold),var(--gold-light));padding:18px 24px;display:flex;align-items:center;gap:12px;}
+  .bfh-icon{font-size:28px;}
+  .bfh-title{font-size:17px;font-weight:800;color:var(--dark);}
+  .bfh-sub{font-size:12px;color:rgba(0,0,0,0.6);}
+  .bf-body{padding:24px;}
+  .fields-grid{display:grid;gap:14px;margin-bottom:14px;}
+  .fg-2{grid-template-columns:1fr 1fr;}
+  .fg-3{grid-template-columns:1fr 1fr 1fr;}
+  .fg-4{grid-template-columns:1fr 1fr 1fr 1fr;}
+  .field{display:flex;flex-direction:column;gap:5px;}
+  .field label{font-size:12px;color:var(--gold);font-weight:700;}
+  .field input,.field select,.field textarea{background:var(--dark2);border:1.5px solid rgba(255,255,255,0.08);border-radius:10px;padding:11px 13px;color:var(--white);font-family:'Tajawal',sans-serif;font-size:13px;outline:none;transition:0.2s;}
+  .field input:focus,.field select:focus{border-color:var(--gold);}
+  .field input::placeholder{color:var(--gray);}
+  .btn-search{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--dark);border:none;padding:14px;border-radius:12px;font-family:'Tajawal',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:0.3s;}
+  .btn-search:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(201,168,76,0.3);}
+
+  /* RESULTS LAYOUT */
+  .results-layout{display:grid;grid-template-columns:1fr 320px;gap:22px;}
+
+  /* SERVICE CARD */
+  .service-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:16px;overflow:hidden;margin-bottom:14px;transition:0.3s;cursor:pointer;display:grid;grid-template-columns:180px 1fr;}
+  .service-card:hover{border-color:rgba(201,168,76,0.25);transform:translateX(-3px);box-shadow:0 8px 30px rgba(0,0,0,0.4);}
+  .sc-img{background:var(--dark2);display:flex;align-items:center;justify-content:center;font-size:56px;position:relative;}
+  .sc-badge{position:absolute;top:10px;right:10px;padding:3px 10px;border-radius:6px;font-size:10px;font-weight:800;}
+  .badge-best{background:var(--gold);color:var(--dark);}
+  .badge-cheap{background:var(--green);color:white;}
+  .badge-lux{background:var(--purple);color:white;}
+  .badge-eco{background:var(--blue);color:white;}
+  .sc-body{padding:16px;}
+  .sc-type{font-size:10px;color:var(--gold);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
+  .sc-name{font-size:16px;font-weight:800;margin-bottom:4px;}
+  .sc-provider{font-size:12px;color:var(--gray);margin-bottom:8px;}
+  .sc-features{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+  .sc-feat{background:rgba(255,255,255,0.05);padding:3px 8px;border-radius:5px;font-size:11px;color:var(--gray);}
+  .sc-footer{display:flex;justify-content:space-between;align-items:flex-end;}
+  .sc-rating{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--gray);}
+  .rating-box{background:var(--gold);color:var(--dark);padding:2px 8px;border-radius:5px;font-size:12px;font-weight:900;}
+  .sc-price-col{text-align:left;}
+  .sc-old-price{font-size:11px;color:var(--gray);text-decoration:line-through;}
+  .sc-price{font-size:22px;font-weight:900;color:var(--gold);}
+  .sc-price-unit{font-size:11px;color:var(--gray);}
+  .sc-availability{font-size:11px;font-weight:700;margin-top:3px;}
+  .avail-good{color:var(--green);}
+  .avail-low{color:var(--orange);}
+  .btn-book-now{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--dark);border:none;padding:8px 18px;border-radius:9px;font-family:'Tajawal',sans-serif;font-size:13px;font-weight:800;cursor:pointer;transition:0.2s;margin-top:8px;display:block;text-align:center;}
+  .btn-book-now:hover{transform:scale(1.05);}
+
+  /* ORDER SUMMARY */
+  .order-summary{background:var(--dark3);border:1px solid rgba(201,168,76,0.15);border-radius:16px;overflow:hidden;position:sticky;top:80px;}
+  .os-header{background:linear-gradient(135deg,var(--gold),var(--gold-light));padding:16px 18px;}
+  .os-header h3{font-size:16px;font-weight:800;color:var(--dark);}
+  .os-body{padding:18px;}
+  .booking-ref{background:var(--dark2);border-radius:10px;padding:12px;margin-bottom:14px;}
+  .br-label{font-size:11px;color:var(--gray);margin-bottom:4px;}
+  .br-ref{font-size:16px;font-weight:900;color:var(--gold);}
+  .os-item{display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+  .os-item:last-child{border-bottom:none;}
+  .os-item label{color:var(--gray);}
+  .os-total{display:flex;justify-content:space-between;font-size:17px;font-weight:900;padding:14px 0 0;border-top:1px solid rgba(255,255,255,0.08);margin-top:6px;}
+  .os-total-price{color:var(--gold);}
+  .selected-services{margin-bottom:14px;}
+  .ss-title{font-size:12px;color:var(--gray);margin-bottom:8px;font-weight:700;}
+  .ss-item{display:flex;justify-content:space-between;background:var(--dark2);border-radius:8px;padding:8px 12px;margin-bottom:6px;font-size:12px;}
+  .ss-remove{color:var(--red);cursor:pointer;font-size:14px;}
+  .btn-checkout{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--dark);border:none;padding:13px;border-radius:12px;font-family:'Tajawal',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:0.3s;margin-top:10px;}
+  .btn-checkout:hover{transform:translateY(-2px);}
+  .checkout-note{font-size:11px;color:var(--gray);text-align:center;margin-top:8px;line-height:1.5;}
+
+  /* MODAL */
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);z-index:1000;align-items:center;justify-content:center;}
+  .modal-overlay.show{display:flex;}
+  .modal{background:var(--dark3);border:1px solid rgba(201,168,76,0.2);border-radius:20px;padding:32px;max-width:440px;width:90%;text-align:center;animation:popIn 0.3s ease;}
+  @keyframes popIn{from{transform:scale(0.85);opacity:0}to{transform:scale(1);opacity:1}}
+  .modal-icon{font-size:60px;margin-bottom:14px;}
+  .modal-title{font-size:22px;font-weight:900;margin-bottom:8px;}
+  .modal-title span{background:linear-gradient(135deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .modal-desc{color:var(--gray);font-size:14px;line-height:1.7;margin-bottom:20px;}
+  .modal-ref{background:var(--dark2);border:1px dashed rgba(201,168,76,0.3);border-radius:10px;padding:14px;margin-bottom:20px;}
+  .modal-ref label{font-size:11px;color:var(--gold);display:block;margin-bottom:5px;}
+  .modal-ref-num{font-size:20px;font-weight:900;letter-spacing:2px;}
+  .modal-btn{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--dark);border:none;padding:13px;border-radius:11px;font-family:'Tajawal',sans-serif;font-size:15px;font-weight:800;cursor:pointer;}
+
+  @media(max-width:900px){
+    .results-layout{grid-template-columns:1fr;}
+    .order-summary{position:static;}
+    .service-card{grid-template-columns:1fr;}
+    .sc-img{height:140px;}
+    .fields-grid.fg-3,.fields-grid.fg-4{grid-template-columns:1fr 1fr;}
+  }
+  @media(max-width:600px){
+    .fields-grid.fg-2,.fields-grid.fg-3,.fields-grid.fg-4{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<!-- SUCCESS MODAL -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal">
+    <div class="modal-icon" id="modalIcon">🚗</div>
+    <div class="modal-title">تم الحجز <span>بنجاح!</span></div>
+    <div class="modal-desc" id="modalDesc">سيتم التواصل معك قبل 2 ساعة من الموعد لتأكيد التفاصيل.</div>
+    <div class="modal-ref"><label>رقم الحجز</label><div class="modal-ref-num" id="modalRef">SRV-4821</div></div>
+    <button class="modal-btn" onclick="document.getElementById('successModal').classList.remove('show')">✅ رائع!</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo"><div class="logo-icon">🏨</div><div class="logo-text">بوكنق السعودية</div></a>
+  <a href="hotel-page.html" class="nav-back">← صفحة الفندق</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">🛎️ خدمات إضافية</div>
+  <h1>أضف <span>خدماتك</span> لحجزك</h1>
+  <p>مواصلات من المطار، تأجير سيارات، جولات سياحية، وأكثر - كل شيء في مكان واحد</p>
+</div>
+
+<!-- SERVICE TABS -->
+<div class="service-tabs">
+  <button class="stab active" onclick="switchTab('transport',this)"><span class="stab-icon">🚗</span>نقل من/إلى المطار</button>
+  <button class="stab" onclick="switchTab('rental',this)"><span class="stab-icon">🏎️</span>تأجير سيارات</button>
+  <button class="stab" onclick="switchTab('tours',this)"><span class="stab-icon">🗺️</span>جولات سياحية</button>
+  <button class="stab" onclick="switchTab('spa',this)"><span class="stab-icon">💆</span>سبا ومساج</button>
+  <button class="stab" onclick="switchTab('food',this)"><span class="stab-icon">🍽️</span>طلبات طعام</button>
+  <button class="stab" onclick="switchTab('activities',this)"><span class="stab-icon">🎯</span>أنشطة وترفيه</button>
+</div>
+
+<div class="container">
+
+  <!-- ===== TRANSPORT ===== -->
+  <div class="tab-content active" id="tab-transport">
+    <div class="booking-form">
+      <div class="bf-header"><div class="bfh-icon">🚗</div><div><div class="bfh-title">حجز نقل من/إلى المطار</div><div class="bfh-sub">وصول مريح وآمن لباب الفندق</div></div></div>
+      <div class="bf-body">
+        <div class="fields-grid fg-2">
+          <div class="field"><label>✈️ المطار</label>
+            <select><option>🏙️ مطار الملك خالد - الرياض</option><option>🌊 مطار الملك عبدالعزيز - جدة</option><option>🕋 مطار الملك عبدالله - مكة</option><option>🌴 مطار تبوك</option></select>
+          </div>
+          <div class="field"><label>🏨 الفندق</label><input type="text" value="الريتز كارلتون الرياض" placeholder="اسم الفندق"></div>
+        </div>
+        <div class="fields-grid fg-4">
+          <div class="field"><label>📅 تاريخ الرحلة</label><input type="date" value="2024-06-15"></div>
+          <div class="field"><label>⏰ وقت الوصول</label><input type="time" value="14:00"></div>
+          <div class="field"><label>👥 عدد الركاب</label><select><option>1-2</option><option selected>3-4</option><option>5-6</option><option>7+</option></select></div>
+          <div class="field"><label>🧳 الحقائب</label><select><option>1-2 حقيبة</option><option selected>3-4 حقائب</option><option>5+</option></select></div>
+        </div>
+        <button class="btn-search" onclick="searchServices()">🔍 بحث عن السيارات المتاحة</button>
+      </div>
+    </div>
+    <div class="results-layout">
+      <div>
+        <div class="service-card" onclick="addService('سيارة اقتصادية · كامري','95 ر.س')">
+          <div class="sc-img">🚗<div class="sc-badge badge-cheap">💰 الأرخص</div></div>
+          <div class="sc-body">
+            <div class="sc-type">نقل عادي</div>
+            <div class="sc-name">سيارة اقتصادية - كامري أو مماثل</div>
+            <div class="sc-provider">🚖 كريم · تقييم 4.8</div>
+            <div class="sc-features"><span class="sc-feat">👤 حتى 4 ركاب</span><span class="sc-feat">🧳 3 حقائب</span><span class="sc-feat">❄️ تكييف</span><span class="sc-feat">📶 واي فاي</span></div>
+            <div class="sc-footer">
+              <div class="sc-rating"><span class="rating-box">4.8</span>ممتاز · 2,840 رحلة</div>
+              <div class="sc-price-col"><div class="sc-old-price">140 ر.س</div><div class="sc-price">95 ر.س</div><div class="sc-price-unit">رحلة واحدة</div><div class="sc-availability avail-good">✅ متاح فوراً</div><button class="btn-book-now">أضف للحجز</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="service-card" onclick="addService('SUV فاخر · تاهو','185 ر.س')">
+          <div class="sc-img">🚙<div class="sc-badge badge-best">⭐ الأفضل</div></div>
+          <div class="sc-body">
+            <div class="sc-type">SUV فاخر</div>
+            <div class="sc-name">SUV فاخر - شيفروليه تاهو</div>
+            <div class="sc-provider">🚖 أوبر بلاك · تقييم 4.9</div>
+            <div class="sc-features"><span class="sc-feat">👤 حتى 6 ركاب</span><span class="sc-feat">🧳 5 حقائب</span><span class="sc-feat">💧 مياه مجانية</span><span class="sc-feat">📶 واي فاي</span></div>
+            <div class="sc-footer">
+              <div class="sc-rating"><span class="rating-box">4.9</span>ممتاز جداً · 1,240 رحلة</div>
+              <div class="sc-price-col"><div class="sc-old-price">260 ر.س</div><div class="sc-price">185 ر.س</div><div class="sc-price-unit">رحلة واحدة</div><div class="sc-availability avail-low">⚠️ 3 سيارات متبقية</div><button class="btn-book-now">أضف للحجز</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="service-card" onclick="addService('ليموزين VIP','320 ر.س')">
+          <div class="sc-img">🚘<div class="sc-badge badge-lux">👑 VIP</div></div>
+          <div class="sc-body">
+            <div class="sc-type">ليموزين فاخرة</div>
+            <div class="sc-name">ليموزين VIP - مرسيدس S Class</div>
+            <div class="sc-provider">🎩 رويال ليمو · تقييم 5.0</div>
+            <div class="sc-features"><span class="sc-feat">👤 حتى 4 ركاب</span><span class="sc-feat">🍾 مشروبات</span><span class="sc-feat">🌹 زهور ترحيب</span><span class="sc-feat">📺 شاشة</span></div>
+            <div class="sc-footer">
+              <div class="sc-rating"><span class="rating-box">5.0</span>استثنائي · 890 رحلة</div>
+              <div class="sc-price-col"><div class="sc-price">320 ر.س</div><div class="sc-price-unit">رحلة واحدة</div><div class="sc-availability avail-good">✅ متاح</div><button class="btn-book-now">أضف للحجز</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="orderPanel"><!-- filled by JS --></div>
+    </div>
+  </div>
+
+  <!-- ===== RENTAL ===== -->
+  <div class="tab-content" id="tab-rental">
+    <div class="booking-form">
+      <div class="bf-header"><div class="bfh-icon">🏎️</div><div><div class="bfh-title">تأجير سيارة</div><div class="bfh-sub">سيارتك تنتظرك عند وصولك</div></div></div>
+      <div class="bf-body">
+        <div class="fields-grid fg-3">
+          <div class="field"><label>📍 مكان الاستلام</label><select><option>🏨 من الفندق مباشرة</option><option>✈️ من المطار</option><option>📍 موقع مخصص</option></select></div>
+          <div class="field"><label>📅 تاريخ الاستلام</label><input type="date" value="2024-06-15"></div>
+          <div class="field"><label>📅 تاريخ الإعادة</label><input type="date" value="2024-06-18"></div>
+        </div>
+        <div class="fields-grid fg-2">
+          <div class="field"><label>🚗 نوع السيارة</label><select><option>أي نوع</option><option>اقتصادية</option><option>متوسطة</option><option>SUV</option><option>فاخرة</option><option>سبورت</option></select></div>
+          <div class="field"><label>⚙️ ناقل الحركة</label><select><option>أوتوماتيك</option><option>يدوي</option></select></div>
+        </div>
+        <button class="btn-search" onclick="searchServices()">🔍 ابحث عن السيارات</button>
+      </div>
+    </div>
+    <div class="results-layout">
+      <div>
+        <div class="service-card" onclick="addService('هيونداي إيلانترا · 3 أيام','420 ر.س')">
+          <div class="sc-img">🚗<div class="sc-badge badge-cheap">💰 الأوفر</div></div>
+          <div class="sc-body">
+            <div class="sc-type">اقتصادية</div>
+            <div class="sc-name">هيونداي إيلانترا 2024</div>
+            <div class="sc-provider">🏢 زاهد · تأجير سيارات</div>
+            <div class="sc-features"><span class="sc-feat">⛽ بنزين</span><span class="sc-feat">❄️ تكييف</span><span class="sc-feat">🔵 بلوتوث</span><span class="sc-feat">🚗 أوتو</span></div>
+            <div class="sc-footer">
+              <div class="sc-rating"><span class="rating-box">4.6</span>ممتاز · 3,200 إيجار</div>
+              <div class="sc-price-col"><div class="sc-old-price">600 ر.س</div><div class="sc-price">420 ر.س</div><div class="sc-price-unit">3 أيام</div><div class="sc-availability avail-good">✅ متاح</div><button class="btn-book-now">استأجر الآن</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="service-card" onclick="addService('تويوتا لاندكروزر · 3 أيام','980 ر.س')">
+          <div class="sc-img">🚙<div class="sc-badge badge-best">⭐ الأكثر طلباً</div></div>
+          <div class="sc-body">
+            <div class="sc-type">SUV فاخر</div>
+            <div class="sc-name">تويوتا لاندكروزر 2024</div>
+            <div class="sc-provider">🏢 يلو · تأجير سيارات</div>
+            <div class="sc-features"><span class="sc-feat">⛽ بنزين</span><span class="sc-feat">👥 7 مقاعد</span><span class="sc-feat">📺 شاشة</span><span class="sc-feat">🌐 GPS</span></div>
+            <div class="sc-footer">
+              <div class="sc-rating"><span class="rating-box">4.8</span>ممتاز · 1,840 إيجار</div>
+              <div class="sc-price-col"><div class="sc-old-price">1,350 ر.س</div><div class="sc-price">980 ر.س</div><div class="sc-price-unit">3 أيام</div><div class="sc-availability avail-low">⚠️ 2 سيارة فقط</div><button class="btn-book-now">استأجر الآن</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="service-card" onclick="addService('مرسيدس GLE · 3 أيام','1,650 ر.س')">
+          <div class="sc-img">🏎️<div class="sc-badge badge-lux">👑 فاخر</div></div>
+          <div class="sc-body">
+            <div class="sc-type">فاخرة</div>
+            <div class="sc-name">مرسيدس GLE 2024</div>
+            <div class="sc-provider">🏢 بريستيج · سيارات فاخرة</div>
+            <div class="sc-features"><span class="sc-feat">⛽ هايبرد</span><span class="sc-feat">🌹 جلد أبيض</span><span class="sc-feat">📺 شاشة 12"</span><span class="sc-feat">🔊 باناسونيك</span></div>
+            <div class="sc-footer">
+              <div class="sc-rating"><span class="rating-box">5.0</span>استثنائي · 420 إيجار</div>
+              <div class="sc-price-col"><div class="sc-price">1,650 ر.س</div><div class="sc-price-unit">3 أيام</div><div class="sc-availability avail-good">✅ متاح</div><button class="btn-book-now">استأجر الآن</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="orderPanel2"><!-- filled by JS --></div>
+    </div>
+  </div>
+
+  <!-- ===== TOURS ===== -->
+  <div class="tab-content" id="tab-tours">
+    <div class="booking-form">
+      <div class="bf-header"><div class="bfh-icon">🗺️</div><div><div class="bfh-title">جولات سياحية</div><div class="bfh-sub">استكشف المملكة مع مرشد خبير</div></div></div>
+      <div class="bf-body">
+        <div class="fields-grid fg-3">
+          <div class="field"><label>📍 المدينة</label><select><option>الرياض</option><option>جدة</option><option>العُلا</option><option>أبها</option><option>تبوك</option></select></div>
+          <div class="field"><label>📅 التاريخ</label><input type="date" value="2024-06-16"></div>
+          <div class="field"><label>👥 عدد الأشخاص</label><select><option>1-2</option><option selected>3-4</option><option>5-8</option><option>9+</option></select></div>
+        </div>
+        <button class="btn-search" onclick="searchServices()">🔍 ابحث عن الجولات</button>
+      </div>
+    </div>
+    <div class="results-layout">
+      <div>
+        <div class="service-card" onclick="addService('جولة الدرعية التاريخية','280 ر.س')">
+          <div class="sc-img">🏛️<div class="sc-badge badge-best">⭐ الأكثر حجزاً</div></div>
+          <div class="sc-body">
+            <div class="sc-type">جولة تاريخية · 4 ساعات</div>
+            <div class="sc-name">الدرعية التاريخية - جولة شاملة</div>
+            <div class="sc-provider">🎭 آراء سياحية · مرشد معتمد</div>
+            <div class="sc-features"><span class="sc-feat">🚌 مواصلات</span><span class="sc-feat">🎧 سماعة</span><span class="sc-feat">🧃 ضيافة</span><span class="sc-feat">📸 تصوير</span></div>
+            <div class="sc-footer">
+              <div class="sc-rating"><span class="rating-box">4.9</span>استثنائي · 890 جولة</div>
+              <div class="sc-price-col"><div class="sc-old-price">380 ر.س</div><div class="sc-price">280 ر.س</div><div class="sc-price-unit">/شخص</div><div class="sc-availability avail-low">⚠️ 5 أماكن فقط</div><button class="btn-book-now">احجز الجولة</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="service-card" onclick="addService('جولة وادي حنيفة · سانست','350 ر.س')">
+          <div class="sc-img">🌅<div class="sc-badge badge-eco">🌿 طبيعية</div></div>
+          <div class="sc-body">
+            <div class="sc-type">جولة طبيعية · 3 ساعات</div>
+            <div class="sc-name">وادي حنيفة - جولة الغروب</div>
+            <div class="sc-provider">🌿 نيتشر تورز الرياض</div>
+            <div class="sc-features"><span class="sc-feat">🚵 دراجات</span><span class="sc-feat">🍱 بيك نيك</span><span class="sc-feat">📸 تصوير</span></div>
+            <div class="sc-footer">
+              <div class="sc-rating"><span class="rating-box">4.7</span>ممتاز · 340 جولة</div>
+              <div class="sc-price-col"><div class="sc-price">350 ر.س</div><div class="sc-price-unit">/شخص</div><div class="sc-availability avail-good">✅ متاح</div><button class="btn-book-now">احجز الجولة</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="orderPanel3"><!-- filled by JS --></div>
+    </div>
+  </div>
+
+  <!-- ===== SPA ===== -->
+  <div class="tab-content" id="tab-spa">
+    <div class="booking-form">
+      <div class="bf-header"><div class="bfh-icon">💆</div><div><div class="bfh-title">حجز سبا ومساج</div><div class="bfh-sub">استرخِ واستمتع بتجربة سبا فاخرة</div></div></div>
+      <div class="bf-body">
+        <div class="fields-grid fg-3">
+          <div class="field"><label>📅 التاريخ</label><input type="date" value="2024-06-16"></div>
+          <div class="field"><label>⏰ الوقت</label><select><option>10:00 ص</option><option>12:00 م</option><option selected>3:00 م</option><option>5:00 م</option><option>7:00 م</option></select></div>
+          <div class="field"><label>👥 عدد الأشخاص</label><select><option>1 شخص</option><option>2 (للزوجين)</option></select></div>
+        </div>
+        <button class="btn-search" onclick="searchServices()">🔍 عرض الباقات المتاحة</button>
+      </div>
+    </div>
+    <div class="results-layout">
+      <div>
+        <div class="service-card" onclick="addService('مساج سويدي 60 دقيقة','320 ر.س')">
+          <div class="sc-img">💆<div class="sc-badge badge-best">⭐ الأكثر طلباً</div></div>
+          <div class="sc-body">
+            <div class="sc-type">مساج علاجي · 60 دقيقة</div>
+            <div class="sc-name">المساج السويدي الكلاسيكي</div>
+            <div class="sc-provider">💆 سبا الريتز كارلتون</div>
+            <div class="sc-features"><span class="sc-feat">🧴 زيوت فاخرة</span><span class="sc-feat">☕ استراحة شاي</span><span class="sc-feat">🌸 رائحة</span></div>
+            <div class="sc-footer">
+              <div class="sc-rating"><span class="rating-box">4.9</span>استثنائي · 1,240 جلسة</div>
+              <div class="sc-price-col"><div class="sc-old-price">450 ر.س</div><div class="sc-price">320 ر.س</div><div class="sc-price-unit">/شخص</div><div class="sc-availability avail-good">✅ متاح</div><button class="btn-book-now">احجز الآن</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="service-card" onclick="addService('باقة سبا للزوجين 2 ساعة','850 ر.س')">
+          <div class="sc-img">💑<div class="sc-badge badge-lux">💕 للزوجين</div></div>
+          <div class="sc-body">
+            <div class="sc-type">باقة رومانسية · 2 ساعة</div>
+            <div class="sc-name">تجربة السبا للزوجين - شاملة</div>
+            <div class="sc-provider">💆 سبا الريتز كارلتون</div>
+            <div class="sc-features"><span class="sc-feat">🛁 حمام بخار</span><span class="sc-feat">💆 مساج</span><span class="sc-feat">🍓 فاكهة</span><span class="sc-feat">🍾 شاي وردي</span></div>
+            <div class="sc-footer">
+              <div class="sc-rating"><span class="rating-box">5.0</span>استثنائي · 580 جلسة</div>
+              <div class="sc-price-col"><div class="sc-old-price">1,200 ر.س</div><div class="sc-price">850 ر.س</div><div class="sc-price-unit">/شخصين</div><div class="sc-availability avail-low">⚠️ 3 مواعيد فقط</div><button class="btn-book-now">احجز الآن</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="orderPanel4"><!-- filled by JS --></div>
+    </div>
+  </div>
+
+  <!-- ===== FOOD ===== -->
+  <div class="tab-content" id="tab-food">
+    <div class="booking-form">
+      <div class="bf-header"><div class="bfh-icon">🍽️</div><div><div class="bfh-title">طلبات طعام للغرفة</div><div class="bfh-sub">مطاعم الفندق وخارجها توصل لغرفتك</div></div></div>
+      <div class="bf-body">
+        <div class="fields-grid fg-2">
+          <div class="field"><label>🍽️ نوع المطبخ</label><select><option>الكل</option><option>عربي سعودي</option><option>مطبخ دولي</option><option>مأكولات بحرية</option><option>حلويات</option><option>صحي</option></select></div>
+          <div class="field"><label>⏰ وقت التوصيل</label><select><option>في أسرع وقت (30-45 دقيقة)</option><option>خلال ساعة</option><option>وقت محدد</option></select></div>
+        </div>
+        <button class="btn-search" onclick="searchServices()">🔍 عرض المطاعم والقوائم</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:8px;">
+      <div class="service-card" style="grid-template-columns:100px 1fr;" onclick="addService('وجبة منزلية فاخرة','180 ر.س')">
+        <div class="sc-img" style="font-size:40px;">🍖</div>
+        <div class="sc-body">
+          <div class="sc-type">مطعم الفندق · 35 دقيقة</div>
+          <div class="sc-name">طقم عشاء فاخر للشخصين</div>
+          <div class="sc-features"><span class="sc-feat">🥗 سلطة</span><span class="sc-feat">🍖 ستيك</span><span class="sc-feat">🍰 حلوى</span></div>
+          <div class="sc-footer"><div></div><div class="sc-price-col"><div class="sc-price">180 ر.س</div><button class="btn-book-now">اطلب الآن</button></div></div>
+        </div>
+      </div>
+      <div class="service-card" style="grid-template-columns:100px 1fr;" onclick="addService('إفطار في الغرفة','95 ر.س')">
+        <div class="sc-img" style="font-size:40px;">🍳</div>
+        <div class="sc-body">
+          <div class="sc-type">إفطار في الغرفة · 20 دقيقة</div>
+          <div class="sc-name">إفطار كونتيننتال فاخر</div>
+          <div class="sc-features"><span class="sc-feat">☕ قهوة</span><span class="sc-feat">🥐 معجنات</span><span class="sc-feat">🍳 بيض</span></div>
+          <div class="sc-footer"><div></div><div class="sc-price-col"><div class="sc-price">95 ر.س</div><button class="btn-book-now">اطلب الآن</button></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ACTIVITIES ===== -->
+  <div class="tab-content" id="tab-activities">
+    <div class="booking-form">
+      <div class="bf-header"><div class="bfh-icon">🎯</div><div><div class="bfh-title">أنشطة وترفيه</div><div class="bfh-sub">تجارب لا تُنسى في الرياض</div></div></div>
+      <div class="bf-body">
+        <div class="fields-grid fg-2">
+          <div class="field"><label>📅 التاريخ</label><input type="date" value="2024-06-16"></div>
+          <div class="field"><label>👥 عدد الأشخاص</label><select><option>1-2</option><option selected>3-4</option><option>عائلة (5+)</option></select></div>
+        </div>
+        <button class="btn-search" onclick="searchServices()">🔍 عرض الأنشطة المتاحة</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:8px;">
+      <div class="service-card" style="grid-template-columns:120px 1fr;" onclick="addService('تذاكر بوليفارد الرياض','120 ر.س')">
+        <div class="sc-img" style="font-size:40px;">🎡</div>
+        <div class="sc-body">
+          <div class="sc-type">ترفيه · نهار كامل</div>
+          <div class="sc-name">بوليفارد الرياض - تذكرة شاملة</div>
+          <div class="sc-features"><span class="sc-feat">🎢 ألعاب</span><span class="sc-feat">🎭 عروض</span><span class="sc-feat">🍔 مطاعم</span></div>
+          <div class="sc-footer"><div></div><div class="sc-price-col"><div class="sc-price">120 ر.س</div><div class="sc-price-unit">/شخص</div><button class="btn-book-now">احجز التذاكر</button></div></div>
+        </div>
+      </div>
+      <div class="service-card" style="grid-template-columns:120px 1fr;" onclick="addService('رحلة صحراوية وسفاري','450 ر.س')">
+        <div class="sc-img" style="font-size:40px;">🏜️</div>
+        <div class="sc-body">
+          <div class="sc-type">مغامرة · 6 ساعات</div>
+          <div class="sc-name">سفاري الصحراء + عشاء بدوي</div>
+          <div class="sc-features"><span class="sc-feat">🐫 ركوب جمال</span><span class="sc-feat">🏂 تزلج رمال</span><span class="sc-feat">🍖 عشاء</span></div>
+          <div class="sc-footer"><div></div><div class="sc-price-col"><div class="sc-price">450 ر.س</div><div class="sc-price-unit">/شخص</div><button class="btn-book-now">احجز الآن</button></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Order panel HTML
+const orderPanelHTML = `
+  <div class="order-summary">
+    <div class="os-header"><h3>🛒 سلة الخدمات</h3></div>
+    <div class="os-body">
+      <div class="booking-ref"><div class="br-label">حجز مرتبط بـ</div><div class="br-ref">#BSA-7831 · الريتز كارلتون</div></div>
+      <div class="selected-services">
+        <div class="ss-title">الخدمات المختارة:</div>
+        <div id="servicesList">
+          <div style="font-size:13px;color:var(--gray);text-align:center;padding:12px 0;">لم تُضف خدمات بعد</div>
+        </div>
+      </div>
+      <div class="os-item"><label>الفندق</label><strong>الريتز كارلتون</strong></div>
+      <div class="os-item"><label>تاريخ الوصول</label><strong>15 يونيو</strong></div>
+      <div class="os-item"><label>المغادرة</label><strong>18 يونيو</strong></div>
+      <div class="os-total"><span>الإجمالي</span><span class="os-total-price" id="totalPrice">0 ر.س</span></div>
+      <button class="btn-checkout" onclick="checkout()" id="checkoutBtn" disabled style="opacity:0.5">💳 إتمام الحجز</button>
+      <div class="checkout-note">✅ إلغاء مجاني قبل 24 ساعة · بدون رسوم إضافية</div>
+    </div>
+  </div>`;
+
+// Fill all order panels
+['orderPanel','orderPanel2','orderPanel3','orderPanel4'].forEach(id => {
+  const el = document.getElementById(id);
+  if(el) el.innerHTML = orderPanelHTML;
+});
+
+let selectedServices = [];
+let total = 0;
+
+function addService(name, price) {
+  const priceNum = parseInt(price.replace(/[^0-9]/g,''));
+  selectedServices.push({name, price: priceNum});
+  total += priceNum;
+
+  // Update all panels
+  updatePanels();
+
+  // Visual feedback
+  const toast = document.createElement('div');
+  toast.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1C1C26;border:1px solid rgba(46,204,113,0.4);color:#2ECC71;padding:12px 24px;border-radius:12px;font-family:Tajawal,sans-serif;font-size:14px;font-weight:700;z-index:9999;animation:fadeIn 0.3s ease;';
+  toast.textContent = '✅ تمت الإضافة: ' + name;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2500);
+}
+
+function updatePanels() {
+  document.querySelectorAll('#servicesList').forEach(list => {
+    if(selectedServices.length === 0) {
+      list.innerHTML = '<div style="font-size:13px;color:var(--gray);text-align:center;padding:12px 0;">لم تُضف خدمات بعد</div>';
+    } else {
+      list.innerHTML = selectedServices.map((s,i) => `
+        <div class="ss-item">
+          <span>${s.name}</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="color:var(--gold);font-weight:700;">${s.price} ر.س</span>
+            <span class="ss-remove" onclick="removeService(${i})">×</span>
+          </div>
+        </div>`).join('');
+    }
+    document.querySelectorAll('#totalPrice').forEach(el => el.textContent = total.toLocaleString('ar') + ' ر.س');
+    document.querySelectorAll('#checkoutBtn').forEach(btn => {
+      btn.disabled = selectedServices.length === 0;
+      btn.style.opacity = selectedServices.length === 0 ? '0.5' : '1';
+    });
+  });
+}
+
+function removeService(idx) {
+  total -= selectedServices[idx].price;
+  selectedServices.splice(idx, 1);
+  updatePanels();
+}
+
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+}
+
+function searchServices() {
+  document.querySelectorAll('.service-card').forEach((c,i) => {
+    c.style.opacity='0';
+    setTimeout(()=>c.style.opacity='1', i*80);
+  });
+}
+
+function checkout() {
+  if(selectedServices.length === 0) return;
+  const ref = 'SRV-' + Math.floor(Math.random()*9000+1000);
+  const icons = ['🚗','🏎️','🗺️','💆','🍽️','🎯'];
+  document.getElementById('modalIcon').textContent = icons[Math.floor(Math.random()*icons.length)];
+  document.getElementById('modalRef').textContent = ref;
+  document.getElementById('modalDesc').textContent = `تم حجز ${selectedServices.length} خدمة بإجمالي ${total} ر.س. سيتم التواصل معك قبل كل موعد.`;
+  document.getElementById('successModal').classList.add('show');
+}
+
+document.getElementById('successModal').addEventListener('click', e => {
+  if(e.target === document.getElementById('successModal')) document.getElementById('successModal').classList.remove('show');
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+الأستاذ تركي، تحية طيبة،
+
+شكراً لكم على تفعيل الخدمة على البيئة التجريبية.
+
+قمنا اليوم الأحد 4 أكتوبر 2026 الساعة 1:27 ظهراً (بتوقيت الرياض) باختبار البيئة التجريبية من خادمنا (130.110.122.217)، وكانت النتيجة كالتالي:
+
+1- الطلب: GET https://rabet-nafath.api.elm.sa/nafath-sandbox/api/v1/mfa/jwk
+   مع الترويسات: APP-ID و APP-KEY و X-Forwarded-For و Content-Type: application/json
+   النتيجة: 403 Authentication failed
+
+2- الطلب نفسه على: /nafath-sandbox/api/v2/oidc/jwk
+   النتيجة: 403 Authentication failed
+
+3- للتحقق، أرسلنا الطلب نفسه بدون APP-ID و APP-KEY فكانت النتيجة: 403 Authentication parameters missing
+   أي أن بيانات الاعتماد تصل إليكم ولكن يتم رفضها.
+
+نستخدم App ID و App Key الظاهرة في صفحة تطبيقنا (Hajz Shahr Platform) على منصة رابط، وقد تأكدنا من مطابقتها.
+كما أن الاشتراك رقم 225320260908140232 (Nafath App Trial) ما زال يظهر في المنصة بحالة Pending Approval / InActive.
+
+مرفق صورتان: نتيجة الاختبار، وحالة الاشتراك في منصة رابط.
+
+نرجو التكرم باعتماد وتفعيل الاشتراك، أو إفادتنا إن كان هناك إجراء مطلوب من جهتنا.
+
+مع خالص الشكر،
+فارس
+حجز شهر
+```
+
+---
+
+## English (for the record, or send under the Arabic)
+
+```
+Dear Mr. Turki,
+
+Thank you for activating the service on the test environment.
+
+Today, Sunday 4 October 2026 at 1:27 PM (Riyadh time), we tested the sandbox from our server (130.110.122.217). The results:
+
+1. Request: GET https://rabet-nafath.api.elm.sa/nafath-sandbox/api/v1/mfa/jwk
+   Headers: APP-ID, APP-KEY, X-Forwarded-For, Content-Type: application/json
+   Result: 403 Authentication failed
+
+2. The same request to /nafath-sandbox/api/v2/oidc/jwk
+   Result: 403 Authentication failed
+
+3. As a check, the same request WITHOUT APP-ID and APP-KEY returns: 403 Authentication parameters missing
+   This shows our credentials reach you but are being rejected.
+
+We use the App ID and App Key shown on our application page (Hajz Shahr Platform) on the Rabet portal, and we have confirmed they match.
+Subscription 225320260908140232 (Nafath App Trial) still shows Pending Approval / InActive on the portal.
+
+Attached: the test result and the subscription status on the Rabet portal.
+
+Kindly approve and activate the subscription, or let us know if any action is needed from our side.
+
+Best regards,
+Faris
+Hajz Shahr
